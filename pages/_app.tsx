@@ -1,9 +1,7 @@
 import "../styles/styles.scss";
-import "semantic-ui-css/semantic.min.css";
 import type { AppProps } from "next/app";
-import Header from "../components/common/Header";
 import React from "react";
-import SideBar from "../components/common/SideBar";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   // props로 넘어온 Component는 현재 페이지를 의미한다.
@@ -11,14 +9,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   // pageProps는 dataFetching 메서드를 통해 미리 가져온 초기 객체임.
   // 이 메서드를 사용하지 않는다면 빈객체가 전달됨.
 
-  return (
-    <>
-      <Header />
-      <SideBar>
-        <Component {...pageProps} />
-      </SideBar>
-    </>
-  );
+  <Head>
+    <title>Blog</title>
+    <meta
+      name="viewport"
+      content="minimum-scale=1, initial-scale=1, width=device-width"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+  </Head>;
+
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;
