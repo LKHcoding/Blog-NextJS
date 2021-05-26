@@ -1,9 +1,9 @@
-import "../styles/styles.scss";
-import type { AppProps } from "next/app";
-import React from "react";
-import Head from "next/head";
-import { QueryClientProvider, QueryClient } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import '../styles/styles.scss';
+import type { AppProps } from 'next/app';
+import React from 'react';
+import Head from 'next/head';
+import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 const queryClient = new QueryClient();
 
@@ -15,21 +15,17 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   <Head>
     <title>Blog</title>
-    <meta
-      name="viewport"
-      content="minimum-scale=1, initial-scale=1, width=device-width"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-    />
+    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
   </Head>;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
-      {process.env.NODE_ENV === "production" ? null : <ReactQueryDevtools />}
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+        {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />}
+      </QueryClientProvider>
+    </>
   );
 }
 

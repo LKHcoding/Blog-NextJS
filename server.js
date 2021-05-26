@@ -1,21 +1,22 @@
-const express = require("express");
-const next = require("next");
-const morgan = require("morgan");
+const express = require('express');
+const next = require('next');
+const morgan = require('morgan');
 // const cookieParser = require("cookie-parser");
 // const expressSession = require("express-session");
-const axios = require("axios");
+const axios = require('axios');
 
 // 실행 환경 여부 가져오기
-const dev = process.env.NODE_ENV !== "production";
+const dev = process.env.NODE_ENV !== 'production';
 
 // 원래 express에서 next를 굳이 가져올 필요 없지만 next앱이기때문에 구조 맞춰주기위해서 불러옴
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
+  const port = process.env.PORT || 3000;
   const server = express();
 
-  server.use(morgan("dev"));
+  server.use(morgan('dev'));
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
   // server.use(cookieParser("!ASD!@ASd!AVZXC!@#123"));
@@ -43,8 +44,8 @@ app.prepare().then(() => {
   // });
 
   //직접 라우팅 제어하는 방식
-  server.get("/card_detail/:idx", async (req, res) => {
-    const actualPage = "/card_detail";
+  server.get('/card_detail/:idx', async (req, res) => {
+    const actualPage = '/card_detail';
 
     let result = await axios
       .get(`https://jsonplaceholder.typicode.com/users/${req.params.idx}`)
@@ -62,14 +63,17 @@ app.prepare().then(() => {
    * 라우팅 과정을 간단하게 만들어놓은 것
    * 이 코드가 없으면 원래 넥스트가 가지고 있는 페이지 단위 라우팅이 되지 않는다.
    */
-  server.get("*", (req, res) => {
+  server.get('*', (req, res) => {
     // handle은 next의 핸들러임 이렇게 하면 ssr이 가능
     return handle(req, res);
   });
 
   // 서버 실행중
-  server.listen(process.env.PORT, () => {
-    console.log(`this Environment is : ${process.env.NODE_ENV}`);
-    console.log(`next + express running on port ${process.env.PORT}`);
+  server.listen(port, () => {
+    console.log(
+      `> Next + Express Server listening at http://localhost:${port} as ${
+        dev ? 'development' : process.env.NODE_ENV
+      }`
+    );
   });
 });
