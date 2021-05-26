@@ -69,6 +69,7 @@ app.prepare().then(() => {
 
   // 서버 실행중
   server.listen(process.env.PORT, () => {
+    console.log(`this Environment is : ${process.env.NODE_ENV}`);
     console.log(`next + express running on port ${process.env.PORT}`);
   });
 });

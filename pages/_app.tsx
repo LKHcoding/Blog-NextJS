@@ -2,6 +2,10 @@ import "../styles/styles.scss";
 import type { AppProps } from "next/app";
 import React from "react";
 import Head from "next/head";
+import { QueryClientProvider, QueryClient } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   // props로 넘어온 Component는 현재 페이지를 의미한다.
@@ -21,7 +25,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     />
   </Head>;
 
-  return <Component {...pageProps} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+      {process.env.NODE_ENV === "production" ? null : <ReactQueryDevtools />}
+    </QueryClientProvider>
+  );
 }
 
 export default MyApp;
