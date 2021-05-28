@@ -1,0 +1,30 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": ["import", "react", "react-hooks", "@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    // 1: Turn off rules that are no longer necessary in React 17 and in Next.js
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    // 2: We do not need to use prop types with TypeScript
+    "react/prop-types": "off",
+    "react/require-default-props": "off"
+  }
+}
