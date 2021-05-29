@@ -19,7 +19,6 @@ import MailIcon from '@material-ui/icons/Mail';
 import { useState } from 'react';
 
 const drawerWidth = 240;
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

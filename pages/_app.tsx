@@ -2,12 +2,13 @@ import '../styles/styles.scss';
 import React, { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { QueryClientProvider, QueryClient } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+// import { QueryClientProvider, QueryClient } from 'react-query';
+// import { ReactQueryDevtools } from 'react-query/devtools';
 import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline } from '@material-ui/core';
-import theme from './theme/theme';
-const queryClient = new QueryClient();
+import theme from '../theme/theme';
+
+// const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   // props로 넘어온 Component는 현재 페이지를 의미한다.
@@ -31,14 +32,15 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Blog - LKHcoding</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
+      {/* <QueryClientProvider client={queryClient}> */}
+      <ThemeProvider theme={theme}>
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
 
-        {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />}
-      </QueryClientProvider>
+      {/* {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />} */}
+      {/* </QueryClientProvider> */}
     </>
   );
 }

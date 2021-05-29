@@ -1,8 +1,5 @@
 import { Button } from '@material-ui/core';
-import axios from 'axios';
-import { GetServerSideProps } from 'next';
 import React, { FC, useEffect } from 'react';
-import cookie from 'js-cookie';
 
 interface Props {
   query: any;
