@@ -7,7 +7,6 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
-  Typography,
 } from '@material-ui/core';
 import { createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import React, { FC } from 'react';
@@ -17,6 +16,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import useMenuStore from '../../stores/useMenuStore';
+import Footer from './Footer';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       flexGrow: 1,
-      padding: theme.spacing(3),
+      // padding: theme.spacing(3),
     },
   })
 );
@@ -117,8 +117,9 @@ const SideBar: FC = ({ children }) => {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {children}
-          <Typography paragraph>메인 컨텐츠 영역</Typography>
-          <Typography paragraph>서브 컨텐츠 영역</Typography>
+          <Footer />
+          {/* <Typography paragraph>메인 컨텐츠 영역</Typography> */}
+          {/* <Typography paragraph>서브 컨텐츠 영역</Typography> */}
         </main>
       </div>
     </>
