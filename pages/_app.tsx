@@ -7,6 +7,10 @@ import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline } from '@material-ui/core';
 import theme from '../theme/theme';
+import SWRDevtools from '@jjordy/swr-devtools';
+import { cache, mutate } from 'swr';
+import Header from '../components/common/Header';
+import SideBar from '../components/common/SideBar';
 
 // const queryClient = new QueryClient();
 
@@ -34,9 +38,15 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       {/* <QueryClientProvider client={queryClient}> */}
       <ThemeProvider theme={theme}>
+        {process.env.NODE_ENV === 'production' ? null : (
+          <SWRDevtools cache={cache} mutate={mutate} />
+        )}
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <Header />
+        <SideBar>
+          <Component {...pageProps} />
+        </SideBar>
       </ThemeProvider>
 
       {/* {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />} */}
