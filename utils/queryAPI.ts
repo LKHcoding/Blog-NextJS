@@ -3,11 +3,13 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
-//fetcher를 다양하게 만들어서 그때그때 서버에서 오는 데이터를 변형해서 프론트에서 활용하면 좋다.
+
+// serverSide에서 호출할 경우 apiCall에 cookie의 token값을 넣어서 호출하여
+// 함수를 재활용한다.
 export const getMyUserData = {
   key: 'getMyUserData',
   apiCall: async (Authentication?: string | null) => {
-    console.log(Authentication);
+    // console.log(Authentication);
     return await api
       .get(
         `/api/users`,
@@ -24,7 +26,8 @@ export const getMyUserData = {
       )
       .then((response) => response.data)
       .catch((err) => {
-        console.log(err);
+        console.log(err.message);
+        return false;
       });
   },
 };

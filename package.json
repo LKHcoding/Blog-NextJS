@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon",
+    "dev": "cross-env NODE_ENV=development next dev -p 3031",
     "build": "cross-env NODE_ENV=production next build",
     "start": "cross-env NODE_ENV=production node server.js",
-    "dev-backup": "cross-env NODE_ENV=development next dev -p 3031",
+    "dev-backup": "cross-env NODE_ENV=development nodemon",
     "build-backup": "next build",
     "start-backup": "next start"
   },
@@ -16,6 +16,7 @@
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
+    "cookie": "^0.4.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -31,6 +32,7 @@
     "zustand": "^3.5.1"
   },
   "devDependencies": {
+    "@types/cookie": "^0.4.0",
     "@types/js-cookie": "^2.2.6",
     "@types/node": "^14.14.35",
     "@types/react": "17.0.6",

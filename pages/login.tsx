@@ -19,6 +19,8 @@ import getFetcher from './../utils/getFetcher';
 import Link from 'next/link';
 import cookie, { CookieAttributes } from 'js-cookie';
 import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import { getMyUserDataApi } from '../utils/rqApis';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,6 +47,10 @@ const LogIn = () => {
 
   const [email, onChangeEmail] = useInput('test4@gmail.com');
   const [password, onChangePassword] = useInput('test4');
+  const { data, isLoading, isError, error, refetch } = useQuery(
+    getMyUserDataApi.key,
+    getMyUserDataApi.apiCall
+  );
 
   // const { data, mutate, revalidate } = useSWR(`/api/users`, getFetcher);
 
@@ -53,23 +59,20 @@ const LogIn = () => {
   const handleLogInFormSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      // console.log('email : ', email);
-      // console.log('password : ', password);
       axios
         .post(
-          `/login`,
+          `/api/login`,
           { email, password },
           {
             withCredentials: true,
           }
         )
         .then((response) => {
-          console.log('response : ', response.data);
-          //revalidate은 swr호출을 한번더시킨다.
-          // revalidate();
-          //mutate는 요청을 다시보내지 않고 데이터를 넣는다.
-          //optimistic ui (좋은 사용자 경험을 위해 2번째 인자 true주면 서버에 재확인 요청을 함)
-          // mutate(response.data, false);
+          // console.log('response : ', response.data.data);
+          refetch();
+          // if (response.data.data === '로그인 성공') {
+          //   router.push('/');
+          // }
         })
         .catch((error) => {
           console.log(error);
@@ -79,20 +82,24 @@ const LogIn = () => {
     [email, password]
   );
 
-  // if (data === undefined) {
-  //   return <div>로딩중...</div>;
-  // }
+  if (isLoading) {
+    return <div>로딩중...</div>;
+  }
+
+  if (isError) {
+    return <div>에러 메세지 : {error}</div>;
+  }
 
   // console.log(data);
-  // if (data) {
-  //   // return <Link href="/" />;
-  //   router.push('/');
-  //   return (
-  //     <>
-  //       <div>이미 로그인 한 유저입니다.</div>
-  //     </>
-  //   );
-  // }
+  if (data) {
+    // return <Link href="/" />;
+    router.push('/');
+    return (
+      <>
+        <div>이미 로그인 한 유저입니다.</div>
+      </>
+    );
+  }
 
   return (
     <Container component="main" maxWidth="xs">

@@ -7,6 +7,21 @@ import { getMyUserDataApi } from '../utils/rqApis';
 import { getMyUserData } from '../utils/queryAPI';
 import { dehydrate } from 'react-query/hydration';
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { query, req } = context;
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery(getMyUserData.key, () =>
+    getMyUserData.apiCall(req.cookies?.Authentication)
+  );
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};
+
 const Sup = () => {
   const { data, isLoading, isError, error } = useQuery(
     getMyUserDataApi.key,
@@ -62,67 +77,5 @@ const Sup = () => {
     </>
   );
 };
-
-// Sup.getInitialProps = async (context: { query: any }) => {
-//   const ApiUrl = process.env.NEXT_PUBLIC_API_URL;
-//   const data = await axios
-//     .get(`${ApiUrl}/api/users/all`)
-//     .then((res) => res.data)
-//     .catch((err) => console.log(err.message));
-//   return {
-//     props: {
-//       data: data || null,
-//     },
-//   };
-// };
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { query, req } = context;
-  const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery(getMyUserData.key, () =>
-    getMyUserData.apiCall(req.cookies?.Authentication)
-  );
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
-
-// Sup.getInitialProps = async (context: { query: any; req: any }) => {
-//   const { query, req } = context;
-//   // console.log(query.dehydratedState);
-
-//   return {
-//     dehydratedState: query.dehydratedState,
-//   };
-// };
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const ApiUrl = process.env.NEXT_PUBLIC_API_URL;
-//   const data = await axios
-//     .post(
-//       `${ApiUrl}/auth/login`,
-//       {
-//         email: 'test4@gmail.com',
-//         password: 'test4',
-//       },
-//       {
-//         withCredentials: true,
-//         headers: {
-//           origin: 'http://localhost:3031',
-//         },
-//       }
-//     )
-//     .then((res) => res.data)
-//     .catch((err) => console.log(err.message));
-//   return {
-//     props: {
-//       data: data || null,
-//     },
-//   };
-// };
 
 export default Sup;
