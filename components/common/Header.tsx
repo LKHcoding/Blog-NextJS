@@ -1,5 +1,5 @@
 import { AppBar, Badge, fade, IconButton, InputBase, Toolbar, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { useCallback } from 'react';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -9,6 +9,8 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { AccountCircle } from '@material-ui/icons';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -89,6 +91,9 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'flex',
       },
     },
+    titleStyle: {
+      cursor: 'pointer',
+    },
     // sectionMobile: {
     //   display: 'flex',
     //   [theme.breakpoints.up('md')]: {
@@ -100,6 +105,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const header = () => {
   const classes = useStyles();
+  const router = useRouter();
 
   const open = useMenuStore((state) => state.open);
   const openMenu = useMenuStore((state) => state.openMenu);
@@ -107,6 +113,10 @@ const header = () => {
   const handleDrawerOpen = () => {
     openMenu();
   };
+
+  const handleGoIndex = useCallback(() => {
+    router.push('/');
+  }, [router]);
 
   return (
     <>
@@ -129,9 +139,15 @@ const header = () => {
               })}>
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap>
-              Blog
-            </Typography>
+            <Link href="/">
+              <Typography
+                variant="h6"
+                noWrap
+                // onClick={handleGoIndex}
+                className={clsx(classes.titleStyle)}>
+                Blog
+              </Typography>
+            </Link>
 
             {/* 서치인풋박스 시작 */}
             <div className={classes.search}>

@@ -2,13 +2,14 @@ import '../styles/styles.scss';
 import React, { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-// import { QueryClientProvider, QueryClient } from 'react-query';
-// import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { Hydrate } from 'react-query/hydration';
 import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline } from '@material-ui/core';
 import theme from '../theme/theme';
-import SWRDevtools from '@jjordy/swr-devtools';
-import { cache, mutate } from 'swr';
+// import SWRDevtools from '@jjordy/swr-devtools';
+// import { cache, mutate } from 'swr';
 import Header from '../components/common/Header';
 import SideBar from '../components/common/SideBar';
 
@@ -19,6 +20,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   // 페이지 전환시에 이 컴포넌트 프롭스가 변경된다.
   // pageProps는 dataFetching 메서드를 통해 미리 가져온 초기 객체임.
   // 이 메서드를 사용하지 않는다면 빈객체가 전달됨.
+
+  const queryClientRef = React.useRef<QueryClient>();
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient();
+  }
 
   useEffect(() => {
     /**
@@ -36,21 +42,22 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Blog - LKHcoding</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </Head>
-      {/* <QueryClientProvider client={queryClient}> */}
-      <ThemeProvider theme={theme}>
-        {process.env.NODE_ENV === 'production' ? null : (
+      <QueryClientProvider client={queryClientRef.current}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <ThemeProvider theme={theme}>
+            {/* {process.env.NODE_ENV === 'production' ? null : (
           <SWRDevtools cache={cache} mutate={mutate} />
-        )}
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Header />
-        <SideBar>
-          <Component {...pageProps} />
-        </SideBar>
-      </ThemeProvider>
-
-      {/* {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />} */}
-      {/* </QueryClientProvider> */}
+        )} */}
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Header />
+            <SideBar>
+              <Component {...pageProps} />
+            </SideBar>
+          </ThemeProvider>
+        </Hydrate>
+        {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />}
+      </QueryClientProvider>
     </>
   );
 }

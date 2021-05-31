@@ -6,6 +6,13 @@ const cookieParser = require('cookie-parser');
 // const expressSession = require("express-session");
 const axios = require('axios');
 
+const getMyUserDataApi = require('./utils/rqApis.js').getMyUserDataApi;
+
+//react-query serverside에서 다루기위한 설정
+const QueryClient = require('react-query').QueryClient;
+const useQuery = require('react-query').useQuery;
+const dehydrate = require('react-query/hydration').dehydrate;
+
 // 실행 환경 여부 가져오기
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -47,6 +54,11 @@ app.prepare().then(() => {
   //   return app.render(req, res, actualPage, queryParams);
   // });
 
+  server.get('/', async (req, res) => {
+    const actualPage = '/login';
+    return app.render(req, res, actualPage);
+  });
+
   //직접 라우팅 제어하는 방식
   server.get('/card_detail/:idx', async (req, res) => {
     const actualPage = '/card_detail';
@@ -59,6 +71,11 @@ app.prepare().then(() => {
       data: result,
     };
     return app.render(req, res, actualPage, queryParams);
+  });
+
+  server.get('/login', async (req, res) => {
+    const actualPage = '/login';
+    return app.render(req, res, actualPage);
   });
 
   // 프론트에서 여기를 거쳐서 백엔드로 가서 토큰을 받아오고
@@ -92,45 +109,20 @@ app.prepare().then(() => {
   });
 
   server.get('/sup', async (req, res) => {
+    console.log('여기는 supppppppppppppppppppppppppppppppppppppp');
     const actualPage = '/sup';
-    let result = await axios
-      .post(
-        `${ApiUrl}/auth/login`,
-        {
-          email: 'test4@gmail.com',
-          password: 'test4',
-        },
-        { withCredentials: true }
-      )
-      .then((res) => res.data)
-      .catch((err) => console.log(err.message));
+    const queryClient = new QueryClient();
+    // console.log(getMyUserDataApi, getMyUserDataApi.key);
 
-    // return app.render(req, res, actualPage, { data: result });
-    const queryParams = {
-      data: result,
-    };
-    // console.log(result.token);
-    let token = result.token;
-    const options = {
-      domain: 'localhost', // 하위 도메인을 제외한 도메인이 일치하는 경우에만 쿠키 설정. defalt: loaded
-      path: '/', // 경로. 주어진 경로의 하위 디렉토리에 있는 경우에만 쿠키 설정. defalt: '/' 는 전체.
-      httpOnly: true, // http에서만 쿠키활용 가능. defalt: true
-      maxAge: Number(process.env.COOKIE_MAX_AGE) * 24 * 60 * 1000,
-      // maxAge : 60 * 1000 = 60000 = 60초 // 쿠키가 만료되는 시간. 밀리초 단위. 0으로 설정하면 쿠키가 지워진다.
-      // expires: null, // 쿠키의 만료 시간을 표준 시간으로 설정
-      // signed: , // 쿠키의 서명 여부
-      // secure: true, // 주소가 "https"로 시작하는 경우에만 쿠키 생성
-      sameSite: 'strict', // 서로 다른 도메인간의 쿠키 전송에 대한 보안을 설정. defalt: "lax"
-      // "strict" : 서로 다른 도메인에서 아예 전송 불가능. 보안성은 높으나 편의가 낮다.
-      // "lax" : 서로 다른 도메인이지만 일부 예외( HTTP get method / a href / link href )에서는 전송 가능.
-      // "none" : 모든 도메인에서 전송 가능
-      // 좀더 자세히는 https://web.dev/samesite-cookies-explained/
+    await queryClient.prefetchQuery(getMyUserDataApi.key, () =>
+      getMyUserDataApi.apiCall(req.cookies?.Authentication)
+    );
+
+    let query = {
+      dehydratedState: dehydrate(queryClient),
     };
 
-    res.cookie('Authentication', token, options);
-    // res.send('login 성공');
-    return app.render(req, res, actualPage, queryParams);
-    // return app.render(req, res, actualPage);
+    return app.render(req, res, actualPage, query);
   });
 
   server.get('/myprofile', async (req, res) => {

@@ -9,7 +9,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { createStyles, Theme, useTheme } from '@material-ui/core/styles';
-import React, { FC } from 'react';
+import React, { ChangeEvent, FC, MouseEventHandler } from 'react';
 import clsx from 'clsx';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -17,6 +17,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import useMenuStore from '../../stores/useMenuStore';
 import Footer from './Footer';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -63,6 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SideBar: FC = ({ children }) => {
+  const router = useRouter();
   const classes = useStyles();
 
   const open = useMenuStore((state) => state.open);
@@ -70,8 +73,15 @@ const SideBar: FC = ({ children }) => {
 
   const theme = useTheme();
 
-  const handleDrawerClose = () => {
-    closeMenu();
+  const handleDrawerClose = async () => {
+    await closeMenu();
+    // console.log(open);
+  };
+  // console.log(open);
+
+  const handleSup = (e: any) => {
+    e.preventDefault();
+    router.push('/sup');
   };
 
   return (
@@ -96,6 +106,12 @@ const SideBar: FC = ({ children }) => {
           </div>
           <Divider />
           <List>
+            {/* <Link href="/sup"> */}
+            <ListItem button key={'Sup'} onClick={handleSup}>
+              <ListItemIcon>{<InboxIcon />}</ListItemIcon>
+              <ListItemText primary={'Sup'} />
+            </ListItem>
+            {/* </Link> */}
             {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>

@@ -1,11 +1,20 @@
 import { Button } from '@material-ui/core';
-import React, { FC, useEffect } from 'react';
+import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import React from 'react';
+import { QueryClient, useQuery } from 'react-query';
+import { getMyUserDataApi } from '../utils/rqApis';
+import { getMyUserData } from '../utils/queryAPI';
+import { dehydrate } from 'react-query/hydration';
 
-interface Props {
-  query: any;
-  token: string;
-}
-const Sup = ({ query, token }: Props) => {
+const Sup = () => {
+  const { data, isLoading, isError, error } = useQuery(
+    getMyUserDataApi.key,
+    getMyUserDataApi.apiCall
+  );
+
+  console.log(data);
+
   // console.log('query : ', query);
   // console.log('token : ', token);
   // cookie.set('Authentication', query, {});
@@ -31,10 +40,24 @@ const Sup = ({ query, token }: Props) => {
   //   test();
   // }, []);
 
+  // if (isLoading) {
+  //   return <div>로딩중 입니다.</div>;
+  // }
+  // if (isError) {
+  //   return <div>에러 메시지 : {error}</div>;
+  // }
+
+  // if (!data) {
+  //   return <div>데이터가 없습니다.</div>;
+  // }
+
   return (
     <>
+      <Head>
+        <title>{data && data.email}</title>
+      </Head>
       <Button color="primary" variant="contained">
-        asdf
+        {data && data.email}
       </Button>
     </>
   );
@@ -53,11 +76,29 @@ const Sup = ({ query, token }: Props) => {
 //   };
 // };
 
-Sup.getInitialProps = async (context: { query: any; req: any }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, req } = context;
+  const queryClient = new QueryClient();
 
-  return { query, token: req.cookies?.token || '' };
+  await queryClient.prefetchQuery(getMyUserData.key, () =>
+    getMyUserData.apiCall(req.cookies?.Authentication)
+  );
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 };
+
+// Sup.getInitialProps = async (context: { query: any; req: any }) => {
+//   const { query, req } = context;
+//   // console.log(query.dehydratedState);
+
+//   return {
+//     dehydratedState: query.dehydratedState,
+//   };
+// };
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   const ApiUrl = process.env.NEXT_PUBLIC_API_URL;
