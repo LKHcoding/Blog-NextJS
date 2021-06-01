@@ -21,6 +21,7 @@ import cookie, { CookieAttributes } from 'js-cookie';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import { getMyUserDataApi } from '../utils/rqApis';
+import GitHubIcon from '@material-ui/icons/GitHub';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,7 +39,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(0, 0, 2),
+  },
+  github: {
+    margin: theme.spacing(2, 0, 2),
   },
 }));
 
@@ -143,6 +147,10 @@ const LogIn = () => {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
+          <Button fullWidth variant="outlined" className={classes.github}>
+            <GitHubIcon fontSize="small" />
+            <div style={{ marginLeft: '5px' }}>github login</div>
+          </Button>
           <Button
             type="submit"
             fullWidth
@@ -155,14 +163,14 @@ const LogIn = () => {
             <Grid item xs>
               <Link href="/">
                 <MaterialLink href="/" variant="body2">
-                  Forgot password?
+                  비밀번호 찾기
                 </MaterialLink>
               </Link>
             </Grid>
             <Grid item>
               <Link href="/">
                 <MaterialLink href="/" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  {'회원가입'}
                 </MaterialLink>
               </Link>
             </Grid>
