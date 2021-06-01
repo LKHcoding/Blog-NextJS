@@ -1,5 +1,21 @@
-import { AppBar, Badge, fade, IconButton, InputBase, Toolbar, Typography } from '@material-ui/core';
-import React, { useCallback } from 'react';
+import {
+  AppBar,
+  Badge,
+  Button,
+  ClickAwayListener,
+  fade,
+  Grow,
+  IconButton,
+  InputBase,
+  ListItemIcon,
+  MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
+import React from 'react';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -8,9 +24,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { AccountCircle } from '@material-ui/icons';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
+import SendIcon from '@material-ui/icons/Send';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import { useQuery } from 'react-query';
+import { getMyUserDataApi } from '../../utils/rqApis';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -94,6 +114,17 @@ const useStyles = makeStyles((theme: Theme) =>
     titleStyle: {
       cursor: 'pointer',
     },
+    paper: {
+      marginRight: theme.spacing(2),
+    },
+    dropDownMenu: {
+      width: 180,
+      boxShadow:
+        '0px 2px 10px -1px rgb(0 0 0 / 40%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+    },
+    dropDownMenuIcon: {
+      minWidth: 40,
+    },
     // sectionMobile: {
     //   display: 'flex',
     //   [theme.breakpoints.up('md')]: {
@@ -104,8 +135,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const header = () => {
+  const { data, isLoading, isError, error, refetch } = useQuery(
+    getMyUserDataApi.key,
+    getMyUserDataApi.apiCall
+  );
+
   const classes = useStyles();
-  const router = useRouter();
 
   const open = useMenuStore((state) => state.open);
   const openMenu = useMenuStore((state) => state.openMenu);
@@ -114,9 +149,38 @@ const header = () => {
     openMenu();
   };
 
-  const handleGoIndex = useCallback(() => {
-    router.push('/');
-  }, [router]);
+  const [dropDownOpen, setDropDownOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLButtonElement>(null);
+
+  const handleToggle = () => {
+    setDropDownOpen((prevOpen) => !prevOpen);
+  };
+  //
+
+  const handleClose = (event: React.MouseEvent<EventTarget>) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return;
+    }
+
+    setDropDownOpen(false);
+  };
+
+  function handleListKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setDropDownOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !dropDownOpen -> dropDownOpen
+  const prevOpen = React.useRef(dropDownOpen);
+  React.useEffect(() => {
+    if (prevOpen.current === true && dropDownOpen === false) {
+      anchorRef.current!.focus();
+    }
+
+    prevOpen.current = dropDownOpen;
+  }, [dropDownOpen]);
 
   return (
     <>
@@ -140,11 +204,7 @@ const header = () => {
               <MenuIcon />
             </IconButton>
             <Link href="/">
-              <Typography
-                variant="h6"
-                noWrap
-                // onClick={handleGoIndex}
-                className={clsx(classes.titleStyle)}>
+              <Typography variant="h6" noWrap className={clsx(classes.titleStyle)}>
                 Blog
               </Typography>
             </Link>
@@ -168,17 +228,22 @@ const header = () => {
             {/* 네비바 우측 아이콘 모음 시작 */}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton aria-label="show 17 new notifications" color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
+              {data && (
+                <>
+                  <IconButton aria-label="show 4 new mails" color="inherit">
+                    <Badge badgeContent={4} color="secondary">
+                      <MailIcon />
+                    </Badge>
+                  </IconButton>
+                  <IconButton aria-label="show 17 new notifications" color="inherit">
+                    <Badge badgeContent={17} color="secondary">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+                </>
+              )}
+
+              {/* <IconButton
                 edge="end"
                 aria-label="account of current user"
                 // aria-controls={menuId}
@@ -186,7 +251,70 @@ const header = () => {
                 // onClick={handleProfileMenuOpen}
                 color="inherit">
                 <AccountCircle />
-              </IconButton>
+              </IconButton> */}
+
+              <div>
+                {/* <Button
+                  ref={anchorRef}
+                  aria-controls={dropDownOpen ? 'menu-list-grow' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleToggle}>
+                  Toggle Menu Grow
+                </Button> */}
+                <IconButton
+                  ref={anchorRef}
+                  aria-controls={dropDownOpen ? 'menu-list-grow' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleToggle}
+                  edge="end"
+                  color="inherit">
+                  <AccountCircle />
+                </IconButton>
+                <Popper
+                  open={dropDownOpen}
+                  anchorEl={anchorRef.current}
+                  role={undefined}
+                  transition
+                  disablePortal>
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                      }}>
+                      <Paper className={clsx(classes.dropDownMenu)}>
+                        <ClickAwayListener onClickAway={handleClose}>
+                          <MenuList
+                            autoFocusItem={dropDownOpen}
+                            id="menu-list-grow"
+                            onKeyDown={handleListKeyDown}>
+                            <Link href="/login">
+                              <MenuItem onClick={handleClose}>
+                                <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                  <VerifiedUserIcon fontSize="small" />
+                                </ListItemIcon>
+                                <Typography variant="inherit" noWrap>
+                                  로그인
+                                </Typography>
+                              </MenuItem>
+                            </Link>
+
+                            <MenuItem onClick={handleClose}>
+                              <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                <PersonAddIcon fontSize="small" />
+                              </ListItemIcon>
+                              <Typography variant="inherit" noWrap>
+                                회원가입
+                              </Typography>
+                            </MenuItem>
+                            {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              </div>
             </div>
 
             {/* 네비바 우측 아이콘 모음 끝 */}

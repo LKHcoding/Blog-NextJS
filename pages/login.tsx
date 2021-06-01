@@ -45,12 +45,13 @@ const useStyles = makeStyles((theme) => ({
 const LogIn = () => {
   const router = useRouter();
 
-  const [email, onChangeEmail] = useInput('test4@gmail.com');
-  const [password, onChangePassword] = useInput('test4');
   const { data, isLoading, isError, error, refetch } = useQuery(
     getMyUserDataApi.key,
     getMyUserDataApi.apiCall
   );
+
+  const [email, onChangeEmail] = useInput('test4@gmail.com');
+  const [password, onChangePassword] = useInput('test4');
 
   // const { data, mutate, revalidate } = useSWR(`/api/users`, getFetcher);
 
