@@ -87,6 +87,18 @@ const LogIn = () => {
     [email, password]
   );
 
+  // 깃허브 로그인
+  const handleGithubLogin = useCallback(() => {
+    const CLIENT_ID = 'b8a44b2b988a36fd9f9e';
+    const REDIRECT_URL = 'http://localhost:3031/github-login';
+
+    // OAuth app을 등록할때 작성했던 redirect url과 발급받은 CLIENT_ID를 바탕으로 URL을 생성합니다.
+    const url = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}`;
+
+    // window.open(url);
+    location.href = url;
+  }, []);
+
   if (isLoading) {
     return <div>로딩중...</div>;
   }
@@ -147,7 +159,11 @@ const LogIn = () => {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button fullWidth variant="outlined" className={classes.github}>
+          <Button
+            fullWidth
+            variant="outlined"
+            className={classes.github}
+            onClick={handleGithubLogin}>
             <GitHubIcon fontSize="small" />
             <div style={{ marginLeft: '5px' }}>github login</div>
           </Button>

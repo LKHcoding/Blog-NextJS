@@ -10,7 +10,7 @@ type Data = {
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  // console.log(email, password);
 
   const result = await axios
     .post(
