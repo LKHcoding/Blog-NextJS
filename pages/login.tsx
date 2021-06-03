@@ -54,7 +54,7 @@ const LogIn = () => {
     getMyUserDataApi.apiCall
   );
 
-  const [email, onChangeEmail] = useInput('test4@gmail.com');
+  const [loginID, onChangeLoginID] = useInput('test4');
   const [password, onChangePassword] = useInput('test4');
 
   // const { data, mutate, revalidate } = useSWR(`/api/users`, getFetcher);
@@ -67,7 +67,7 @@ const LogIn = () => {
       axios
         .post(
           `/api/login`,
-          { email, password },
+          { loginID, password },
           {
             withCredentials: true,
           }
@@ -84,7 +84,7 @@ const LogIn = () => {
           // setLogInError(error.response?.data?.statusCode === 401);
         });
     },
-    [email, password]
+    [loginID, password]
   );
 
   // 깃허브 로그인
@@ -132,20 +132,18 @@ const LogIn = () => {
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="loginID"
+            label="Login ID"
+            name="loginID"
+            autoComplete="loginID"
             autoFocus
-            value={email}
-            onChange={onChangeEmail}
+            value={loginID}
+            onChange={onChangeLoginID}
           />
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             name="password"
             label="Password"

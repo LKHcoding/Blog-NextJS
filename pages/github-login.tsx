@@ -30,7 +30,9 @@ const githubLogin = () => {
 
   useEffect(() => {
     const { code } = router.query;
-    gitApi(code);
+    if (code) {
+      gitApi(code);
+    }
   }, []);
 
   return (

@@ -9,13 +9,13 @@ type Data = {
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { email, password } = req.body;
+  const { loginID, password } = req.body;
   // console.log(email, password);
 
   const result = await axios
     .post(
       `${process.env.API_URL}/auth/login`,
-      { email, password },
+      { loginID, password },
       {
         withCredentials: true,
       }
