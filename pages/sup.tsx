@@ -3,16 +3,16 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import { QueryClient, useQuery } from 'react-query';
-import { getMyUserDataApi } from '../utils/rqApis';
-import { getMyUserData } from '../utils/queryAPI';
+// import { getMyUserDataApi } from '../utils/rqApis';
+import { getMyUserDataApi } from '../utils/queryAPI';
 import { dehydrate } from 'react-query/hydration';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, req } = context;
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery(getMyUserData.key, () =>
-    getMyUserData.apiCall(req.cookies?.Authentication)
+  await queryClient.prefetchQuery(getMyUserDataApi.key, () =>
+    getMyUserDataApi.apiCall(req.cookies?.Authentication)
   );
 
   return {

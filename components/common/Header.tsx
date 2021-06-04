@@ -30,7 +30,9 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { useQuery } from 'react-query';
-import { getMyUserDataApi } from '../../utils/rqApis';
+import { getMyUserDataApi } from '../../utils/queryAPI';
+import Avatar from '@material-ui/core/Avatar';
+import axios from 'axios';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -125,6 +127,10 @@ const useStyles = makeStyles((theme: Theme) =>
     dropDownMenuIcon: {
       minWidth: 40,
     },
+    largeIcon: {
+      width: 47,
+      height: 47,
+    },
     // sectionMobile: {
     //   display: 'flex',
     //   [theme.breakpoints.up('md')]: {
@@ -163,6 +169,21 @@ const header = () => {
     }
 
     setDropDownOpen(false);
+  };
+
+  const handleLogout = async (event: React.MouseEvent<EventTarget>) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+      return;
+    }
+    setDropDownOpen(false);
+
+    const logoutResult = await axios
+      .get('api/logout')
+      .then((res) => res.data)
+      .catch((err) => err);
+
+    // console.log(logoutResult);
+    refetch();
   };
 
   function handleListKeyDown(event: React.KeyboardEvent) {
@@ -230,65 +251,55 @@ const header = () => {
             <div className={classes.sectionDesktop}>
               {data && (
                 <>
-                  <IconButton aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="secondary">
-                      <MailIcon />
-                    </Badge>
-                  </IconButton>
-                  <IconButton aria-label="show 17 new notifications" color="inherit">
+                  <IconButton
+                    className={clsx(classes.largeIcon)}
+                    aria-label="show 17 new notifications"
+                    color="default">
                     <Badge badgeContent={17} color="secondary">
-                      <NotificationsIcon />
+                      <NotificationsIcon style={{ height: '24px', width: '24px' }} />
                     </Badge>
                   </IconButton>
                 </>
               )}
 
-              {/* <IconButton
-                edge="end"
-                aria-label="account of current user"
-                // aria-controls={menuId}
+              <IconButton
+                className={clsx(classes.largeIcon)}
+                ref={anchorRef}
+                aria-controls={dropDownOpen ? 'menu-list-grow' : undefined}
                 aria-haspopup="true"
-                // onClick={handleProfileMenuOpen}
-                color="inherit">
-                <AccountCircle />
-              </IconButton> */}
+                onClick={handleToggle}
+                edge="end"
+                color="default">
+                {/* <AccountCircle /> */}
+                <Avatar
+                  color="default"
+                  alt="Travis Howard"
+                  src={`${data?.avatarUrl || ''}`}
+                  style={{ height: '31px', width: '31px' }}
+                />
+              </IconButton>
 
-              <div>
-                {/* <Button
-                  ref={anchorRef}
-                  aria-controls={dropDownOpen ? 'menu-list-grow' : undefined}
-                  aria-haspopup="true"
-                  onClick={handleToggle}>
-                  Toggle Menu Grow
-                </Button> */}
-                <IconButton
-                  ref={anchorRef}
-                  aria-controls={dropDownOpen ? 'menu-list-grow' : undefined}
-                  aria-haspopup="true"
-                  onClick={handleToggle}
-                  edge="end"
-                  color="inherit">
-                  <AccountCircle />
-                </IconButton>
-                <Popper
-                  open={dropDownOpen}
-                  anchorEl={anchorRef.current}
-                  role={undefined}
-                  transition
-                  disablePortal>
-                  {({ TransitionProps, placement }) => (
-                    <Grow
-                      {...TransitionProps}
-                      style={{
-                        transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                      }}>
-                      <Paper className={clsx(classes.dropDownMenu)}>
-                        <ClickAwayListener onClickAway={handleClose}>
-                          <MenuList
-                            autoFocusItem={dropDownOpen}
-                            id="menu-list-grow"
-                            onKeyDown={handleListKeyDown}>
-                            <Link href="/login">
+              <Popper
+                open={dropDownOpen}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                transition
+                disablePortal>
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                    }}>
+                    <Paper className={clsx(classes.dropDownMenu)}>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={dropDownOpen}
+                          id="menu-list-grow"
+                          onKeyDown={handleListKeyDown}>
+                          {/* 로그인 안한 상태 */}
+                          {!data && [
+                            <Link href="/login" key="logIn">
                               <MenuItem onClick={handleClose}>
                                 <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
                                   <VerifiedUserIcon fontSize="small" />
@@ -297,24 +308,36 @@ const header = () => {
                                   로그인
                                 </Typography>
                               </MenuItem>
-                            </Link>
+                            </Link>,
+                            <Link href="/login" key="signUp">
+                              <MenuItem onClick={handleClose}>
+                                <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                  <PersonAddIcon fontSize="small" />
+                                </ListItemIcon>
+                                <Typography variant="inherit" noWrap>
+                                  회원가입
+                                </Typography>
+                              </MenuItem>
+                            </Link>,
+                          ]}
 
-                            <MenuItem onClick={handleClose}>
+                          {/* 로그인 한 상태 */}
+                          {data && [
+                            <MenuItem onClick={handleLogout} key="logOut">
                               <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
-                                <PersonAddIcon fontSize="small" />
+                                <VerifiedUserIcon fontSize="small" />
                               </ListItemIcon>
                               <Typography variant="inherit" noWrap>
-                                회원가입
+                                로그아웃
                               </Typography>
-                            </MenuItem>
-                            {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
-                          </MenuList>
-                        </ClickAwayListener>
-                      </Paper>
-                    </Grow>
-                  )}
-                </Popper>
-              </div>
+                            </MenuItem>,
+                          ]}
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
             </div>
 
             {/* 네비바 우측 아이콘 모음 끝 */}

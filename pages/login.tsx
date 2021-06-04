@@ -20,7 +20,7 @@ import Link from 'next/link';
 import cookie, { CookieAttributes } from 'js-cookie';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
-import { getMyUserDataApi } from '../utils/rqApis';
+import { getMyUserDataApi } from '../utils/queryAPI';
 import GitHubIcon from '@material-ui/icons/GitHub';
 
 const useStyles = makeStyles((theme) => ({
@@ -110,6 +110,7 @@ const LogIn = () => {
   // console.log(data);
   if (data) {
     // return <Link href="/" />;
+    console.log(data);
     router.push('/');
     return (
       <>

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { IUser } from '../types/UserType';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -6,9 +7,9 @@ const api = axios.create({
 
 // serverSide에서 호출할 경우 apiCall에 cookie의 token값을 넣어서 호출하여
 // 함수를 재활용한다.
-export const getMyUserData = {
+export const getMyUserDataApi = {
   key: 'getMyUserData',
-  apiCall: async (Authentication?: string | null) => {
+  apiCall: async (Authentication?: any): Promise<IUser> => {
     // console.log(Authentication);
     return await api
       .get(
