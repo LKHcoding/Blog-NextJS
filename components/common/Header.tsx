@@ -33,6 +33,7 @@ import { useQuery } from 'react-query';
 import { getMyUserDataApi } from '../../utils/queryAPI';
 import Avatar from '@material-ui/core/Avatar';
 import axios from 'axios';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -325,7 +326,7 @@ const header = () => {
                           {data && [
                             <MenuItem onClick={handleLogout} key="logOut">
                               <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
-                                <VerifiedUserIcon fontSize="small" />
+                                <ExitToAppIcon fontSize="small" />
                               </ListItemIcon>
                               <Typography variant="inherit" noWrap>
                                 로그아웃
