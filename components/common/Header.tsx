@@ -1,7 +1,6 @@
 import {
   AppBar,
   Badge,
-  Button,
   ClickAwayListener,
   fade,
   Grow,
@@ -21,12 +20,8 @@ import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import useMenuStore from './../../stores/useMenuStore';
 import SearchIcon from '@material-ui/icons/Search';
-import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { AccountCircle } from '@material-ui/icons';
 import Link from 'next/link';
-import SendIcon from '@material-ui/icons/Send';
-import DraftsIcon from '@material-ui/icons/Drafts';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { useQuery } from 'react-query';
@@ -34,6 +29,8 @@ import { getMyUserDataApi } from '../../utils/queryAPI';
 import Avatar from '@material-ui/core/Avatar';
 import axios from 'axios';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PersonIcon from '@material-ui/icons/Person';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -142,10 +139,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const header = () => {
-  const { data, isLoading, isError, error, refetch } = useQuery(
-    getMyUserDataApi.key,
-    getMyUserDataApi.apiCall
-  );
+  const { data, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
 
   const classes = useStyles();
 
@@ -183,7 +177,7 @@ const header = () => {
       .then((res) => res.data)
       .catch((err) => err);
 
-    // console.log(logoutResult);
+    console.log(logoutResult);
     refetch();
   };
 
@@ -198,7 +192,7 @@ const header = () => {
   const prevOpen = React.useRef(dropDownOpen);
   React.useEffect(() => {
     if (prevOpen.current === true && dropDownOpen === false) {
-      anchorRef.current!.focus();
+      anchorRef.current?.focus();
     }
 
     prevOpen.current = dropDownOpen;
@@ -226,9 +220,11 @@ const header = () => {
               <MenuIcon />
             </IconButton>
             <Link href="/">
-              <Typography variant="h6" noWrap className={clsx(classes.titleStyle)}>
-                Blog
-              </Typography>
+              <a>
+                <Typography variant="h6" noWrap className={clsx(classes.titleStyle)}>
+                  Develogger
+                </Typography>
+              </a>
             </Link>
 
             {/* 서치인풋박스 시작 */}
@@ -301,29 +297,57 @@ const header = () => {
                           {/* 로그인 안한 상태 */}
                           {!data && [
                             <Link href="/login" key="logIn">
-                              <MenuItem onClick={handleClose}>
-                                <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
-                                  <VerifiedUserIcon fontSize="small" />
-                                </ListItemIcon>
-                                <Typography variant="inherit" noWrap>
-                                  로그인
-                                </Typography>
-                              </MenuItem>
+                              <a>
+                                <MenuItem onClick={handleClose}>
+                                  <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                    <VerifiedUserIcon fontSize="small" />
+                                  </ListItemIcon>
+                                  <Typography variant="inherit" noWrap>
+                                    로그인
+                                  </Typography>
+                                </MenuItem>
+                              </a>
                             </Link>,
                             <Link href="/login" key="signUp">
-                              <MenuItem onClick={handleClose}>
-                                <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
-                                  <PersonAddIcon fontSize="small" />
-                                </ListItemIcon>
-                                <Typography variant="inherit" noWrap>
-                                  회원가입
-                                </Typography>
-                              </MenuItem>
+                              <a>
+                                <MenuItem onClick={handleClose}>
+                                  <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                    <PersonAddIcon fontSize="small" />
+                                  </ListItemIcon>
+                                  <Typography variant="inherit" noWrap>
+                                    회원가입
+                                  </Typography>
+                                </MenuItem>
+                              </a>
                             </Link>,
                           ]}
 
                           {/* 로그인 한 상태 */}
                           {data && [
+                            <Link href="/profile" key="profile">
+                              <a>
+                                <MenuItem onClick={handleClose}>
+                                  <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                    <PersonIcon fontSize="small" />
+                                  </ListItemIcon>
+                                  <Typography variant="inherit" noWrap>
+                                    프로필
+                                  </Typography>
+                                </MenuItem>
+                              </a>
+                            </Link>,
+                            <Link href="/blog" key="blog">
+                              <a>
+                                <MenuItem onClick={handleClose}>
+                                  <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                    <LibraryBooksIcon fontSize="small" />
+                                  </ListItemIcon>
+                                  <Typography variant="inherit" noWrap>
+                                    내블로그
+                                  </Typography>
+                                </MenuItem>
+                              </a>
+                            </Link>,
                             <MenuItem onClick={handleLogout} key="logOut">
                               <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
                                 <ExitToAppIcon fontSize="small" />

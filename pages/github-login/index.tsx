@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { getMyUserDataApi } from '../utils/queryAPI';
+import { getMyUserDataApi } from '../../utils/queryAPI';
 import { useQuery } from 'react-query';
 
 // export async function getServerSideProps() {
