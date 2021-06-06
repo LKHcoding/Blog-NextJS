@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const SideBar: FC = ({ children }) => {
   const router = useRouter();
   const classes = useStyles();
+  // console.log('pathname : ', router.pathname);
 
   const open = useMenuStore((state) => state.open);
   const closeMenu = useMenuStore((state) => state.closeMenu);
@@ -133,9 +134,11 @@ const SideBar: FC = ({ children }) => {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {children}
+
           <Footer />
-          {/* <Typography paragraph>메인 컨텐츠 영역</Typography> */}
-          {/* <Typography paragraph>서브 컨텐츠 영역</Typography> */}
+
+          {/* 경로에 따라 Footer를 안보여주려면 이렇게 */}
+          {/* {router.pathname !== '/blog/write' && <Footer />} */}
         </main>
       </div>
     </>

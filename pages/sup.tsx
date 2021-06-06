@@ -72,7 +72,7 @@ const Sup = () => {
         <title>{data && data.email}</title>
       </Head>
       <Button color="primary" variant="contained">
-        {data && data.email}
+        {data && data.loginID}
       </Button>
     </>
   );

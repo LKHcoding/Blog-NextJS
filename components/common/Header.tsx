@@ -14,7 +14,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import React from 'react';
+import React, { useCallback } from 'react';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -31,6 +31,11 @@ import axios from 'axios';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonIcon from '@material-ui/icons/Person';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import Button from '@material-ui/core/Button';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CreateIcon from '@material-ui/icons/Create';
+import { useRouter } from 'next/router';
+import FullScreenDialog from '../write/FullScreenDialog';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -106,6 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
     sectionDesktop: {
       // display: 'none',
       display: 'flex',
+      marginRight: '10px',
 
       [theme.breakpoints.up('md')]: {
         display: 'flex',
@@ -118,6 +124,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2),
     },
     dropDownMenu: {
+      marginRight: '5px',
       width: 180,
       boxShadow:
         '0px 2px 10px -1px rgb(0 0 0 / 40%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
@@ -126,8 +133,13 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 40,
     },
     largeIcon: {
-      width: 47,
-      height: 47,
+      width: 50,
+      height: 50,
+      marginTop: '2px',
+      marginLeft: '5px',
+    },
+    button: {
+      margin: theme.spacing(1),
     },
     // sectionMobile: {
     //   display: 'flex',
@@ -139,6 +151,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const header = () => {
+  const router = useRouter();
+
   const { data, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
 
   const classes = useStyles();
@@ -173,7 +187,7 @@ const header = () => {
     setDropDownOpen(false);
 
     const logoutResult = await axios
-      .get('api/logout')
+      .get('/api/logout')
       .then((res) => res.data)
       .catch((err) => err);
 
@@ -197,6 +211,10 @@ const header = () => {
 
     prevOpen.current = dropDownOpen;
   }, [dropDownOpen]);
+
+  const handleWriteBtn = useCallback(() => {
+    router.push(`/blog/write`);
+  }, []);
 
   return (
     <>
@@ -248,12 +266,24 @@ const header = () => {
             <div className={classes.sectionDesktop}>
               {data && (
                 <>
+                  {/* {router.pathname !== '/blog/write' && (
+                    <Button
+                      variant="outlined"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<CreateIcon />}
+                      onClick={handleWriteBtn}>
+                      New Log
+                    </Button>
+                  )} */}
+                  <FullScreenDialog />
+
                   <IconButton
                     className={clsx(classes.largeIcon)}
                     aria-label="show 17 new notifications"
                     color="default">
                     <Badge badgeContent={17} color="secondary">
-                      <NotificationsIcon style={{ height: '24px', width: '24px' }} />
+                      <NotificationsIcon style={{ height: '27px', width: '27px' }} />
                     </Badge>
                   </IconButton>
                 </>
@@ -272,7 +302,7 @@ const header = () => {
                   color="default"
                   alt="Travis Howard"
                   src={`${data?.avatarUrl || ''}`}
-                  style={{ height: '31px', width: '31px' }}
+                  style={{ height: '35px', width: '35px' }}
                 />
               </IconButton>
 
@@ -308,7 +338,7 @@ const header = () => {
                                 </MenuItem>
                               </a>
                             </Link>,
-                            <Link href="/login" key="signUp">
+                            <Link href="/signup" key="signUp">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
@@ -324,26 +354,36 @@ const header = () => {
 
                           {/* 로그인 한 상태 */}
                           {data && [
-                            <Link href="/profile" key="profile">
+                            <Link
+                              href={{
+                                pathname: '/profile/[loginID]',
+                                query: { loginID: `${data.loginID}` },
+                              }}
+                              key="profile">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
                                     <PersonIcon fontSize="small" />
                                   </ListItemIcon>
                                   <Typography variant="inherit" noWrap>
-                                    프로필
+                                    내 프로필
                                   </Typography>
                                 </MenuItem>
                               </a>
                             </Link>,
-                            <Link href="/blog" key="blog">
+                            <Link
+                              href={{
+                                pathname: '/blog/[loginID]',
+                                query: { loginID: `${data.loginID}` },
+                              }}
+                              key="blog">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
                                     <LibraryBooksIcon fontSize="small" />
                                   </ListItemIcon>
                                   <Typography variant="inherit" noWrap>
-                                    내블로그
+                                    내 블로그
                                   </Typography>
                                 </MenuItem>
                               </a>

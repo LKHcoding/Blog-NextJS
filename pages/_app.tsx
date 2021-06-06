@@ -13,6 +13,9 @@ import theme from '../theme/theme';
 import Header from '../components/common/Header';
 import SideBar from '../components/common/SideBar';
 
+import 'codemirror/lib/codemirror.css';
+import '@toast-ui/editor/dist/toastui-editor.css';
+
 // const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -41,6 +44,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Blog - LKHcoding</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"
+        />
       </Head>
       <QueryClientProvider client={queryClientRef.current}>
         <Hydrate state={pageProps.dehydratedState}>
@@ -50,6 +61,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         )} */}
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
+
             <Header />
             <SideBar>
               <Component {...pageProps} />

@@ -31,6 +31,9 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,500,700&display=swap"
           />
+          {/* <!-- Create a simple CodeMirror instance --> */}
+          {/* <link rel="stylesheet" href="lib/codemirror.css" /> */}
+          {/* <script src="lib/codemirror.js"></script> */}
         </Head>
         <body>
           <Main />
