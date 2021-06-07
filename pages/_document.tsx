@@ -38,6 +38,15 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+
+          {/* <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"
+          />
+          <link
+            rel="stylesheet"
+            href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"
+          /> */}
         </body>
       </Html>
     );
