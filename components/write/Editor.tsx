@@ -26,8 +26,8 @@ const Editor = () => {
 
   const btnClickListener = () => {
     const editorInstance = editorRef.current?.getInstance();
-    // console.log('마크다운 : ', editorInstance.getMarkdown());
-    console.log('HTML : ', editorInstance.getHtml());
+    console.log('마크다운 : ', editorInstance.getMarkdown());
+    // console.log('HTML : ', editorInstance.getHtml());
   };
 
   return (

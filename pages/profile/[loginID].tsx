@@ -6,11 +6,13 @@ const Profile: FC = () => {
   const router = useRouter();
 
   // console.log(router.query);
-
+  if (!router.query.loginID) {
+    return null;
+  }
   return (
     <>
       <Button color="primary" variant="contained">
-        유저 : {router.query.loginID}
+        {router.query.loginID && `유저 : ${router.query.loginID}`}
       </Button>
     </>
   );
