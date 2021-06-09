@@ -172,18 +172,24 @@ const LogIn = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="/">
-                <MaterialLink href="/" variant="body2">
-                  비밀번호 찾기
-                </MaterialLink>
-              </Link>
+              {/* <Link href="/"> */}
+              <MaterialLink
+                href="#"
+                variant="body2"
+                onClick={() => alert('현재 Github Login만 사용 가능합니다.')}>
+                비밀번호 찾기
+              </MaterialLink>
+              {/* </Link> */}
             </Grid>
             <Grid item>
-              <Link href="/">
-                <MaterialLink href="/" variant="body2">
-                  {'회원가입'}
-                </MaterialLink>
-              </Link>
+              {/* <Link href="/"> */}
+              <MaterialLink
+                href="#"
+                variant="body2"
+                onClick={() => alert('현재 Github Login만 사용 가능합니다.')}>
+                {'회원가입'}
+              </MaterialLink>
+              {/* </Link> */}
             </Grid>
           </Grid>
         </form>

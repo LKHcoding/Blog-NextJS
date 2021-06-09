@@ -125,6 +125,12 @@ https://example.com
     'mysql',
     'react-query',
     'ssr',
+    'Nest.js2',
+    'Next.js2',
+    'react.js2',
+    'mysql2',
+    'react-query2',
+    'ssr2',
   ]);
 
   //글 제목
@@ -195,6 +201,7 @@ https://example.com
             autoComplete={true}
             autoHighlight={true}
             freeSolo={true}
+            filterSelectedOptions={true}
             options={tagValues}
             getOptionLabel={(option) => option}
             // defaultValue={[tagValues[0]]}
