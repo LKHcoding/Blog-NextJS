@@ -14,7 +14,19 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useInput from './../../hooks/useInput';
 
-// import Editor from './Editor';
+import gfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
+import rehypeRaw from 'rehype-raw';
+
+import dynamic from 'next/dynamic';
+import 'react-markdown-editor-lite/lib/index.css';
+import ReactMarkdown from 'react-markdown';
+
+const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
+  ssr: false,
+});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button: {
       margin: theme.spacing(1),
+      display: 'none',
+      [theme.breakpoints.up('md')]: {
+        display: 'flex',
+        margin: theme.spacing(1),
+      },
     },
   })
 );
@@ -39,7 +56,67 @@ const Transition = forwardRef(function Transition(
 });
 
 const FullScreenDialog = () => {
-  const [value, setValue] = useState<string>('# Hi Develogger!');
+  const [initialData, setInitialData] = useState<string>(`
+# Hi, Develogger!
+
+여러가지 예제를 참고하여 작성해보세요
+***
+
+> 👉 우측은 HTML형태의 프리뷰 영역입니다.
+
+> 👈 좌측은 MarkDown을 작성하는 영역입니다.
+
+
+## Overview
+
+* 링크 [클릭시인덱스로이동](/)
+* \`CodeBlock 예제\`
+
+
+## Table of contents
+
+| 1번 | 2번 | 3번 |
+| --- | --- | --- |
+| Data1 | Data2 | Data3 |
+| Data4 | Data5 | Data6 |
+
+
+## Syntax highlighting
+
+\`\`\`ts
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+
+ReactDOM.render(
+  <App>{'# Your markdown here'}</App>,
+  document.querySelector('#root')
+)
+\`\`\`
+
+~~strikethrough~~
+
+
+> * Wrappers
+>    1. [x] React
+>    2. [x] Vue
+>    3. [ ] Svelte
+
+
+https://example.com
+
+## HTML in markdown
+
+### ⚠️ HTML Tag Example
+
+<blockquote>
+  👆 Use the tag like this stuff
+</blockquote>
+
+
+
+
+  `);
 
   const [tagValues, setTagValues] = useState([
     'Nest.js',
@@ -126,16 +203,44 @@ const FullScreenDialog = () => {
             )}
           />
         </div>
-        {/* <Editor /> */}
-        {/* <MDEditor
-          height={925}
-          highlightEnable={false}
-          value={value}
-          onChange={(changedValue) => setValue(changedValue || '')}
-        /> */}
+
+        <MdEditor
+          style={{ height: '100%', zIndex: 1101 }}
+          value={initialData}
+          renderHTML={(text) => (
+            <ReactMarkdown
+              className="markdown-body"
+              components={components}
+              remarkPlugins={[gfm]}
+              rehypePlugins={[rehypeRaw]}>
+              {text}
+            </ReactMarkdown>
+          )}
+          onChange={({ html, text }) => setInitialData(text)}
+        />
       </Dialog>
     </div>
   );
 };
 
 export default FullScreenDialog;
+
+const components: Partial<NormalComponents & SpecialComponents> = {
+  code({ node, inline, className, children, ...props }) {
+    const match = /language-(\w+)/.exec(className || '');
+    return !inline && match ? (
+      <SyntaxHighlighter
+        style={prism}
+        language={match[1]}
+        PreTag="div"
+        // children={String(children).replace(/\n$/, '')}
+        {...props}>
+        {String(children).replace(/\n$/, '')}{' '}
+      </SyntaxHighlighter>
+    ) : (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  },
+};

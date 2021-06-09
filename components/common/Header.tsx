@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: 0,
       width: '100%',
       display: 'none',
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up(800)]: {
         display: 'flex',
         marginLeft: theme.spacing(3),
         width: 'auto',
@@ -300,7 +300,7 @@ const header = () => {
                 {/* <AccountCircle /> */}
                 <Avatar
                   color="default"
-                  alt="Travis Howard"
+                  alt="User Profile Icon"
                   src={`${data?.avatarUrl || ''}`}
                   style={{ height: '35px', width: '35px' }}
                 />

@@ -44,9 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: 'hidden',
-      width: theme.spacing(7) + 1,
+      width: theme.spacing(7.5) + 1,
       [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9) + 1,
+        width: theme.spacing(7.5) + 1,
       },
     },
     toolbar: {
