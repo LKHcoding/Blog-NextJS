@@ -44,9 +44,11 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: 'hidden',
-      width: theme.spacing(7.5) + 1,
+      // width: theme.spacing(7.5) + 1,
+      width: 0,
       [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(7.5) + 1,
+        // width: theme.spacing(7.5) + 1,
+        width: 0,
       },
     },
     toolbar: {
@@ -133,7 +135,7 @@ const SideBar: FC = ({ children }) => {
 
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          {children}
+          <div style={{ marginTop: '10px' }}>{children}</div>
 
           <Footer />
 
