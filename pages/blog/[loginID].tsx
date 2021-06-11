@@ -1,43 +1,134 @@
-import { Button, Container, Grid } from '@material-ui/core';
+import {
+  Button,
+  Container,
+  createStyles,
+  Grid,
+  makeStyles,
+  Theme,
+  Tooltip,
+} from '@material-ui/core';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import { useQuery } from 'react-query';
 import { getMyUserDataApi } from '../../utils/queryAPI';
+import Paper from '@material-ui/core/Paper';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import IconButton from '@material-ui/core/IconButton';
+import MailIcon from '@material-ui/icons/Mail';
+import LanguageIcon from '@material-ui/icons/Language';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      '& > *': {
+        margin: theme.spacing(1),
+        boxShadow:
+          '0 16px 24px 2px rgb(0 0 0 / 14%), 0 6px 30px 5px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%)',
+        width: '100%',
+        height: '100%',
+        minHeight: '1500px',
+      },
+    },
+    blogTitleStyle: {
+      color: '#3C4858',
+      margin: '1.75rem 0 0.875rem',
+      display: 'inline-block',
+      position: 'relative',
+      marginTop: '18px',
+      minHeight: '32px',
+      fontFamily: 'Roboto Slab,Times New Roman, serif',
+      fontWeight: 700,
+      textDecoration: 'none',
+      fontSize: ' 1.5625rem',
+      lineHeight: '1.4em',
+    },
+    blogSubTitleStyle: {
+      fontSize: '.75rem',
+      textTransform: 'uppercase',
+      fontWeight: 500,
+      margin: '10px 0',
+      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+      lineHeight: '1.5em',
+    },
+    blogBioStyle: {
+      fontSize: '14px',
+      margin: '0 0 10px',
+      color: '#999',
+      textAlign: 'center',
+    },
+  })
+);
 
 const BlogPage = () => {
+  const classes = useStyles();
+
   const { data, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
 
   const router = useRouter();
 
   return (
     <div>
-      <Container maxWidth="lg">
-        <div>블로그 페이지 입니다. {router.query && router.query.loginID}</div>
-        {/* 블로그 상단 회원정보 소개 영역 */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+      <div className={classes.root}>
+        <Paper style={{ borderRadius: '10px', margin: '100px 30px 0 30px' }} elevation={3}>
+          {/* 블로그 상단 회원정보 소개 영역 */}
           <div
             style={{
               display: 'flex',
-              flexDirection: 'row',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
             <Avatar
               color="default"
               alt="User Profile Icon"
               src={`${data?.avatarUrl || ''}`}
-              style={{ height: '150px', width: '150px' }}
+              style={{ marginTop: '-82px', height: '160px', width: '160px' }}
             />
-            {data?.loginID}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <h3 className={classes.blogTitleStyle}>{data?.loginID}</h3>
+                <h6 className={classes.blogSubTitleStyle}>{data?.positionType}</h6>
+                <div>
+                  <Tooltip title={`${data?.githubPageUrl}`} arrow placement="top">
+                    <IconButton aria-label="github-icon">
+                      <GitHubIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={`${data?.email}`} arrow placement="top">
+                    <IconButton aria-label="mail-icon">
+                      <MailIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={`${data?.blog}`} arrow placement="top">
+                    <IconButton aria-label="web-icon">
+                      <LanguageIcon />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                <p className={classes.blogBioStyle}>{data?.bio}</p>
+              </div>
+            </div>
           </div>
-        </div>
-        {/* 블로그 상단 회원정보 소개 영역 끝 */}
-      </Container>
+          {/* 블로그 상단 회원정보 소개 영역 끝 */}
+          <Container maxWidth="lg">
+            <div style={{ margin: '10px' }}>ddasdfasdfasdfasdfs</div>
+          </Container>
+        </Paper>
+      </div>
     </div>
   );
 };

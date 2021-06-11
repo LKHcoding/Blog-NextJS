@@ -6,6 +6,8 @@ export interface IUser {
 
   githubID: string | null;
 
+  positionType: string;
+
   email: string | null;
 
   nickname: string | null;

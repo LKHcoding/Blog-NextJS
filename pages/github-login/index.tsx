@@ -36,13 +36,13 @@ const githubLogin = () => {
     setBackDropOpen(true);
     let convertedString = '';
     if (selectedValue === 'Front-End Developper') {
-      convertedString = 'FrontEnd';
+      convertedString = 'Front-End';
     }
     if (selectedValue === 'Back-End Developper') {
-      convertedString = 'BackEnd';
+      convertedString = 'Back-End';
     }
     if (selectedValue === 'Full-Stack Developper') {
-      convertedString = 'FullStack';
+      convertedString = 'Full-Stack';
     }
     reCallGitHubSignupApi(convertedString);
   };
