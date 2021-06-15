@@ -10,13 +10,15 @@ import {
 import { useRouter } from 'next/router';
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { useQuery } from 'react-query';
-import { getMyUserDataApi } from '../../utils/queryAPI';
+import { QueryClient, useQuery } from 'react-query';
+import { getOneUserDataApi } from '../../utils/queryAPI';
 import Paper from '@material-ui/core/Paper';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import IconButton from '@material-ui/core/IconButton';
 import MailIcon from '@material-ui/icons/Mail';
 import LanguageIcon from '@material-ui/icons/Language';
+import { GetServerSideProps } from 'next';
+import { dehydrate } from 'react-query/hydration';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,12 +65,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const BlogPage = () => {
+const BlogPage = ({ params }: { params: { loginID: string } }) => {
   const classes = useStyles();
+  // console.log(params);
 
-  const { data, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
-
-  const router = useRouter();
+  const { data, refetch } = useQuery(getOneUserDataApi.key, () =>
+    getOneUserDataApi.apiCall(params.loginID)
+  );
 
   return (
     <div>
@@ -134,3 +137,30 @@ const BlogPage = () => {
 };
 
 export default BlogPage;
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   return {
+//     props: { params: context.params },
+//   };
+// };
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { query, req, params } = context;
+  const queryClient = new QueryClient();
+
+  const paramString = typeof params?.loginID === 'string';
+
+  await queryClient.prefetchQuery(getOneUserDataApi.key, () =>
+    getOneUserDataApi.apiCall(
+      params && 'loginID' in params && typeof params.loginID === 'string' ? params.loginID : '',
+      req.cookies?.Authentication
+    )
+  );
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      params: params,
+    },
+  };
+};

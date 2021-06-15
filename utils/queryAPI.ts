@@ -32,3 +32,29 @@ export const getMyUserDataApi = {
       });
   },
 };
+
+export const getOneUserDataApi = {
+  key: 'getOneUserData',
+  apiCall: async (loginID: string, Authentication?: any): Promise<IUser> => {
+    // console.log(Authentication);
+    return await api
+      .get(
+        `/api/users/${loginID}`,
+        typeof Authentication === 'string'
+          ? {
+              withCredentials: true,
+              headers: {
+                Cookie: `Authentication=${Authentication || ''}`,
+              },
+            }
+          : {
+              withCredentials: true,
+            }
+      )
+      .then((response) => response.data)
+      .catch((err) => {
+        console.log(err.message);
+        return false;
+      });
+  },
+};
