@@ -23,6 +23,7 @@ import rehypeRaw from 'rehype-raw';
 import dynamic from 'next/dynamic';
 import 'react-markdown-editor-lite/lib/index.css';
 import ReactMarkdown from 'react-markdown';
+import removeMD from 'remove-markdown';
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
@@ -223,7 +224,10 @@ https://example.com
               {text}
             </ReactMarkdown>
           )}
-          onChange={({ html, text }) => setInitialData(text)}
+          onChange={({ html, text }) => {
+            console.log(removeMD(text).replaceAll('\n', ' '));
+            setInitialData(text);
+          }}
         />
       </Dialog>
     </div>
