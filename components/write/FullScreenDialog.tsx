@@ -57,6 +57,7 @@ const Transition = forwardRef(function Transition(
 });
 
 const FullScreenDialog = () => {
+  //글 내용
   const [initialData, setInitialData] = useState<string>(`
 # Hi, Develogger!
 
@@ -119,6 +120,10 @@ https://example.com
 
   `);
 
+  //글 제목
+  const [inputTitle, onChangeInputTitle] = useInput('');
+
+  //글 태그
   const [tagValues, setTagValues] = useState([
     'Nest.js',
     'Next.js',
@@ -133,9 +138,6 @@ https://example.com
     'react-query2',
     'ssr2',
   ]);
-
-  //글 제목
-  const [inputTitle, onChangeInputTitle] = useInput('');
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);

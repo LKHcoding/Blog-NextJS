@@ -3,6 +3,14 @@ body,
 #__next {
   width: 100%;
   height: 100%;
+
+  // TOC 를 위한 페이지 이동 스타일 설정
+  // 부드럽게 이동
+  scroll-behavior: smooth;
+
+  // App bar때문에 해당 제목이 가려지므로
+  // 스크롤 이동시 약간 padding top을 준다.
+  scroll-padding-top: 70px;
 }
 
 * {

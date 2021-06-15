@@ -7,6 +7,7 @@ import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-r
 import rehypeRaw from 'rehype-raw';
 import useInput from '../hooks/useInput';
 import useTextArea from '../hooks/useTextArea';
+import Button from '@material-ui/core/Button';
 
 const source = `# A demo of \`react-markdown\`
 
@@ -117,6 +118,15 @@ Much more info is available in the
 A component by [Espen Hovlandsdal](https://espen.codes/)`;
 
 const components: Partial<NormalComponents & SpecialComponents> = {
+  h1({ children }) {
+    return <h1 id={`${children}`}>{children}</h1>;
+  },
+  h2({ children }) {
+    return <h2 id={`${children}`}>{children}</h2>;
+  },
+  h3({ children }) {
+    return <h3 id={`${children}`}>{children}</h3>;
+  },
   code({ node, inline, className, children, ...props }) {
     const match = /language-(\w+)/.exec(className || '');
     return !inline && match ? (
@@ -142,6 +152,30 @@ const Home = () => {
   return (
     <>
       index 페이지입니다.
+      {/* zIndex 주는 이유는 화면이 움직이다가 다른 엘리먼트에 가려지면 클릭이 안되는 경우가생김 */}
+      <div style={{ position: 'fixed', left: '300px', bottom: '10px', zIndex: 1 }}>
+        <div>
+          <a href="#Table of contents">
+            <Button color="primary" variant="contained">
+              Table of contents
+            </Button>
+          </a>
+        </div>
+        <div>
+          <a href="#Hi, Develogger!">
+            <Button color="primary" variant="contained">
+              Hi, Develogger!
+            </Button>
+          </a>
+        </div>
+        <div>
+          <a href="#HTML in markdown">
+            <Button color="primary" variant="contained">
+              HTML in markdown
+            </Button>
+          </a>
+        </div>
+      </div>
       <div>{process.env.NEXT_PUBLIC_API_URL}</div>
       <textarea value={value} onChange={handler} />
       <div style={{ width: '100%', height: '100%' }}>

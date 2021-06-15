@@ -42,7 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Blog - LKHcoding</title>
+        <title>Develogger</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         {/* <link
           rel="stylesheet"
