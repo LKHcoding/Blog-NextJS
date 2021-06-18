@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '100%',
         height: '100%',
         minHeight: '1500px',
+        maxWidth: '1400px',
       },
     },
     blogTitleStyle: {
@@ -103,7 +104,7 @@ const BlogPage = ({ params }: { params: { loginID: string } }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <h3 className={classes.blogTitleStyle}>{data?.loginID}</h3>
+                <h3 className={classes.blogTitleStyle}>{`${data?.loginID}'s Blog`}</h3>
                 <h6 className={classes.blogSubTitleStyle}>{data?.positionType}</h6>
                 <div>
                   <Tooltip title={`${data?.githubPageUrl}`} arrow placement="top">
@@ -128,7 +129,7 @@ const BlogPage = ({ params }: { params: { loginID: string } }) => {
           </div>
           {/* 블로그 상단 회원정보 소개 영역 끝 */}
           <Container maxWidth="lg">
-            <div style={{ margin: '10px' }}>ddasdfasdfasdfasdfs</div>
+            <div style={{ margin: '10px', border: '1px solid black' }}>ddasdfasdfasdfasdfs</div>
           </Container>
         </Paper>
       </div>
@@ -138,17 +139,9 @@ const BlogPage = ({ params }: { params: { loginID: string } }) => {
 
 export default BlogPage;
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   return {
-//     props: { params: context.params },
-//   };
-// };
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, req, params } = context;
   const queryClient = new QueryClient();
-
-  const paramString = typeof params?.loginID === 'string';
 
   await queryClient.prefetchQuery(getOneUserDataApi.key, () =>
     getOneUserDataApi.apiCall(

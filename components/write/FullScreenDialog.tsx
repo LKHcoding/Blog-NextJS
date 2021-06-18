@@ -1,4 +1,12 @@
-import React, { forwardRef, ReactElement, Ref, useEffect, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  ReactElement,
+  Ref,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -24,6 +32,7 @@ import dynamic from 'next/dynamic';
 import 'react-markdown-editor-lite/lib/index.css';
 import ReactMarkdown from 'react-markdown';
 import removeMD from 'remove-markdown';
+import axios from 'axios';
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
@@ -123,7 +132,7 @@ https://example.com
   //글 제목
   const [inputTitle, onChangeInputTitle] = useInput('');
 
-  //글 태그
+  //글 태그 전체 리스트
   const [tagValues, setTagValues] = useState([
     'Nest.js',
     'Next.js',
@@ -139,6 +148,9 @@ https://example.com
     'ssr2',
   ]);
 
+  // const [selectedTagList, setSelectedTagList] = useState<string[]>([]);
+  const selectedTagList = useRef<string[]>();
+
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -149,6 +161,29 @@ https://example.com
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleSave = useCallback(async () => {
+    const result = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/blog`,
+        {
+          title: inputTitle,
+          tags: selectedTagList.current,
+          content: initialData,
+        },
+        { withCredentials: true }
+      )
+      .then((res) => res.data)
+      .catch((err) => err);
+
+    // console.log(result);
+  }, [inputTitle, tagValues, initialData]);
+
+  // const tagChanged = (changedTagList: string[]) => {
+  //   const list = [...changedTagList];
+  //   console.log(list);
+  //   setSelectedTagList(list);
+  // };
 
   return (
     <div>
@@ -169,7 +204,7 @@ https://example.com
             <Typography variant="h6" className={classes.title}>
               Editor
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={handleSave}>
               save
             </Button>
           </Toolbar>
@@ -200,7 +235,7 @@ https://example.com
             multiple
             id="size-small-standard-multi"
             size="small"
-            onChange={(event, value) => console.log(value)}
+            onChange={(event, value) => (selectedTagList.current = value)}
             autoComplete={true}
             autoHighlight={true}
             freeSolo={true}

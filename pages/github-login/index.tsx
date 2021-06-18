@@ -54,7 +54,7 @@ const githubLogin = () => {
     };
 
     const result = await axios
-      .post('http://localhost:3030/auth/github-signup', data, {
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/auth/github-signup`, data, {
         withCredentials: true,
       })
       .then((res) => res.data)
@@ -91,7 +91,7 @@ const githubLogin = () => {
     };
 
     const result = await axios
-      .post('http://localhost:3030/auth/github-info', data, {
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/auth/github-info`, data, {
         withCredentials: true,
       })
       .then((res) => res.data)
