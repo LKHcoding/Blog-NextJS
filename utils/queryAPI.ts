@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ITagInfoType } from '../types/TagInfoType';
 import { IUser } from '../types/UserType';
 
 const api = axios.create({
@@ -33,6 +34,9 @@ export const getMyUserDataApi = {
   },
 };
 
+/**
+ * 유저 1명의 데이터 가져오기
+ */
 export const getOneUserDataApi = {
   key: 'getOneUserData',
   apiCall: async (loginID: string, Authentication?: any): Promise<IUser> => {
@@ -40,6 +44,35 @@ export const getOneUserDataApi = {
     return await api
       .get(
         `/api/users/${loginID}`,
+        typeof Authentication === 'string'
+          ? {
+              withCredentials: true,
+              headers: {
+                Cookie: `Authentication=${Authentication || ''}`,
+              },
+            }
+          : {
+              withCredentials: true,
+            }
+      )
+      .then((response) => response.data)
+      .catch((err) => {
+        console.log(err.message);
+        return false;
+      });
+  },
+};
+
+/**
+ * 유저 한명의 Tag info 가져오기
+ */
+export const getOneUserTagInfoDataApi = {
+  key: 'getOneUserTagInfoData',
+  apiCall: async (userID: string, Authentication?: any): Promise<ITagInfoType> => {
+    // console.log(Authentication);
+    return await api
+      .get(
+        `/api/blog/tags-info/${userID}`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,

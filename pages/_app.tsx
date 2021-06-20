@@ -26,7 +26,14 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const queryClientRef = React.useRef<QueryClient>();
   if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient();
+    queryClientRef.current = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: 1,
+          retryDelay: 1000,
+        },
+      },
+    });
   }
 
   useEffect(() => {
