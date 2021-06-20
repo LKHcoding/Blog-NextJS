@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
           '0 16px 24px 2px rgb(0 0 0 / 14%), 0 6px 30px 5px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%)',
         width: '100%',
         height: '100%',
-        minHeight: '100px',
+        minHeight: '800px',
         maxWidth: '1400px',
       },
     },
@@ -54,12 +54,26 @@ const BlogPage = ({ params }: { params: { loginID: string } }) => {
       <div className={classes.root}>
         <Paper style={{ borderRadius: '10px', margin: '100px 30px 0 30px' }} elevation={3}>
           <BlogProfile params={params} />
-          <Container maxWidth="lg">
-            <div style={{ display: 'flex', marginTop: '30px' }}>
+
+          <div
+            style={{
+              display: 'flex',
+              padding: '0px 20px',
+              width: '100%',
+              justifyContent: 'center',
+            }}>
+            <div
+              style={{
+                display: 'flex',
+                marginTop: '30px',
+                width: '100%',
+                maxWidth: '1200px',
+                justifyContent: 'center',
+              }}>
               <TagList params={params} />
               <PostList />
             </div>
-          </Container>
+          </div>
         </Paper>
       </div>
     </div>
