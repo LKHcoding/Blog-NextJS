@@ -33,6 +33,7 @@ import 'react-markdown-editor-lite/lib/index.css';
 import ReactMarkdown from 'react-markdown';
 import removeMD from 'remove-markdown';
 import axios from 'axios';
+import { UploadDialog } from './UploadDialog';
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
@@ -162,22 +163,43 @@ https://example.com
     setOpen(false);
   };
 
-  const handleSave = useCallback(async () => {
-    const result = await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/blog`,
-        {
-          title: inputTitle,
-          tags: selectedTagList.current,
-          content: initialData,
-        },
-        { withCredentials: true }
-      )
-      .then((res) => res.data)
-      .catch((err) => err);
+  const handleSave = useCallback(
+    async (file: File[]) => {
+      //file: file[0],
+      const formData = new FormData();
+      formData.append('image', file[0]);
 
-    // console.log(result);
-  }, [inputTitle, tagValues, initialData]);
+      const imagePath = await axios
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/image`, formData, {
+          withCredentials: true,
+        })
+        .then((res) => res.data);
+
+      // console.log(imagePath);
+      if (imagePath) {
+        const result = await axios
+          .post(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/blog`,
+            {
+              title: inputTitle,
+              tags: selectedTagList.current,
+              content: initialData,
+              thumbnail: imagePath,
+            },
+            { withCredentials: true }
+          )
+          .then((res) => res)
+          .catch((err) => err);
+
+        if (result.status === 201) {
+          setOpen(false);
+          return 'success';
+        }
+        // console.log(result);
+      }
+    },
+    [inputTitle, selectedTagList.current, initialData]
+  );
 
   // const tagChanged = (changedTagList: string[]) => {
   //   const list = [...changedTagList];
@@ -204,9 +226,10 @@ https://example.com
             <Typography variant="h6" className={classes.title}>
               Editor
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleSave}>
+            <UploadDialog handleSave={handleSave} />
+            {/* <Button autoFocus color="inherit" onClick={handleSave}>
               save
-            </Button>
+            </Button> */}
           </Toolbar>
         </AppBar>
 
