@@ -71,7 +71,7 @@ const BlogPage = ({ params }: { params: { loginID: string } }) => {
                 justifyContent: 'center',
               }}>
               <TagList params={params} />
-              <PostList />
+              <PostList params={params} />
             </div>
           </div>
         </Paper>

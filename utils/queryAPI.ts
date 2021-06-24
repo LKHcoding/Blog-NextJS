@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { IPostInfoType } from '../types/PostInfoType';
 import { ITagInfoType } from '../types/TagInfoType';
 import { IUser } from '../types/UserType';
 
@@ -73,6 +74,35 @@ export const getOneUserTagInfoDataApi = {
     return await api
       .get(
         `/api/blog/tags-info/${userID}`,
+        typeof Authentication === 'string'
+          ? {
+              withCredentials: true,
+              headers: {
+                Cookie: `Authentication=${Authentication || ''}`,
+              },
+            }
+          : {
+              withCredentials: true,
+            }
+      )
+      .then((response) => response.data)
+      .catch((err) => {
+        console.log(err.message);
+        return false;
+      });
+  },
+};
+
+/**
+ * 유저 한명의 Post info 가져오기
+ */
+export const getOneUserPostInfoDataApi = {
+  key: 'getOneUserPostInfoData',
+  apiCall: async (userID: string, Authentication?: any): Promise<IPostInfoType[]> => {
+    // console.log(Authentication);
+    return await api
+      .get(
+        `/api/blog/posts-info/${userID}`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,
