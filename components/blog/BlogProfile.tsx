@@ -39,11 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const BlogProfile = ({ params }: { params: { loginID: string } }) => {
+export const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
 
-  const { data, refetch } = useQuery(`${getOneUserDataApi.key}-${params.loginID}`, () =>
-    getOneUserDataApi.apiCall(params.loginID)
+  const { data, refetch } = useQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>
+    getOneUserDataApi.apiCall(params.BlogUserId)
   );
 
   return (

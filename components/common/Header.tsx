@@ -375,8 +375,8 @@ const header = () => {
                             </Link>,
                             <Link
                               href={{
-                                pathname: '/blog/[loginID]',
-                                query: { loginID: `${data.loginID}` },
+                                pathname: '/blog/[BlogUserId]',
+                                query: { BlogUserId: `${data.loginID}` },
                               }}
                               key="blog">
                               <a>

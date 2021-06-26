@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const TagList = ({ params }: { params: { loginID: string } }) => {
+export const TagList = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
 
-  const { data, refetch } = useQuery(`${getOneUserTagInfoDataApi.key}-${params.loginID}`, () =>
-    getOneUserTagInfoDataApi.apiCall(params.loginID)
+  const { data, refetch } = useQuery(`${getOneUserTagInfoDataApi.key}-${params.BlogUserId}`, () =>
+    getOneUserTagInfoDataApi.apiCall(params.BlogUserId)
   );
 
   return (

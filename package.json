@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development next dev -p 3031",
     "build": "cross-env NODE_ENV=production next build",
-    "start": "cross-env NODE_ENV=production node server.js",
+    "start": "cross-env NODE_ENV=production next start -p 3031",
     "dev-backup": "cross-env NODE_ENV=development nodemon",
     "build-backup": "next build",
     "start-backup": "next start"

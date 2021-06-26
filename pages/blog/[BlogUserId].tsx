@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const BlogPage = ({ params }: { params: { loginID: string } }) => {
+const BlogPage = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
 
   // const { data, refetch } = useQuery(`${getOneUserDataApi.key}-${params.loginID}`, () =>
