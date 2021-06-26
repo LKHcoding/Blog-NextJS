@@ -94,7 +94,7 @@ export const getOneUserTagInfoDataApi = {
 };
 
 /**
- * 유저 한명의 Post info 가져오기
+ * 유저 한명의 Posts info List 가져오기
  */
 export const getOneUserPostInfoDataApi = {
   key: 'getOneUserPostInfoData',
@@ -103,6 +103,35 @@ export const getOneUserPostInfoDataApi = {
     return await api
       .get(
         `/api/blog/posts-info/${BlogUserId}`,
+        typeof Authentication === 'string'
+          ? {
+              withCredentials: true,
+              headers: {
+                Cookie: `Authentication=${Authentication || ''}`,
+              },
+            }
+          : {
+              withCredentials: true,
+            }
+      )
+      .then((response) => response.data)
+      .catch((err) => {
+        console.log(err.message);
+        return false;
+      });
+  },
+};
+
+/**
+ * 특정 Post info 가져오기
+ */
+export const getPostInfoDataApi = {
+  key: 'getPostInfoData',
+  apiCall: async (postId: string, Authentication?: any): Promise<IPostInfoType> => {
+    // console.log(Authentication);
+    return await api
+      .get(
+        `/api/blog/post-info/${postId}`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,

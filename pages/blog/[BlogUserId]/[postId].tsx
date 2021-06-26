@@ -3,9 +3,10 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { Avatar, createStyles, makeStyles, Paper, Theme } from '@material-ui/core';
 import { QueryClient, useQuery } from 'react-query';
-import { getOneUserDataApi } from '../../../utils/queryAPI';
+import { getOneUserDataApi, getPostInfoDataApi } from '../../../utils/queryAPI';
 import Link from 'next/link';
 import { dehydrate } from 'react-query/hydration';
+import { MarkDownContents } from '../../../components/blog/[postID]/MarkDownContents';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,9 +43,14 @@ const useStyles = makeStyles((theme: Theme) =>
 const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) => {
   const classes = useStyles();
 
-  const { data: userData, refetch } = useQuery(
+  const { data: userData, refetch: userRefetch } = useQuery(
     `${getOneUserDataApi.key}-${params.BlogUserId}`,
     () => getOneUserDataApi.apiCall(params.BlogUserId)
+  );
+
+  const { data: postData, refetch: postRefetch } = useQuery(
+    `${getPostInfoDataApi.key}-${params.postId}`,
+    () => getPostInfoDataApi.apiCall(params.postId)
   );
 
   // const router = useRouter();
@@ -109,6 +115,12 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
               maxWidth: '1200px',
               justifyContent: 'center',
             }}>
+            <div style={{ marginBottom: '30px' }}>
+              <div>{postData && postData.title}</div>
+              <div>
+                <MarkDownContents contents={postData ? postData.content : ''} />
+              </div>
+            </div>
             {/* <TagList params={params} /> */}
             {/* <PostList params={params} /> */}
           </div>
@@ -125,6 +137,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const queryClient = new QueryClient();
   if (params) {
+    //유저 정보 프리패치
     await queryClient.prefetchQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>
       getOneUserDataApi.apiCall(
         'BlogUserId' in params && typeof params.BlogUserId === 'string' ? params.BlogUserId : '',
@@ -132,10 +145,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       )
     );
 
-    // const { data: userData, refetch } = useQuery(
-    //   `${getOneUserDataApi.key}-${params.BlogUserId}`,
-    //   () => getOneUserDataApi.apiCall(params.BlogUserId)
-    // );
+    // 게시물 정보 프리패치
+    await queryClient.prefetchQuery(`${getPostInfoDataApi.key}-${params.postId}`, () =>
+      getPostInfoDataApi.apiCall(
+        'postId' in params && typeof params.postId === 'string' ? params.postId : '',
+        req.cookies?.Authentication
+      )
+    );
   }
   return {
     props: {
