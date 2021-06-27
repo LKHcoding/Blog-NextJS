@@ -149,8 +149,11 @@ https://example.com
     'ssr2',
   ]);
 
-  // const [selectedTagList, setSelectedTagList] = useState<string[]>([]);
+  //선택된 태그 값
   const selectedTagList = useRef<string[]>();
+
+  //선택된 태그가 있는지 없는지 여부
+  const [selectedTagInfo, setSelectedTagInfo] = useState(false);
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -226,7 +229,20 @@ https://example.com
             <Typography variant="h6" className={classes.title}>
               Editor
             </Typography>
-            <UploadDialog handleSave={handleSave} />
+            <div style={{ marginRight: '5px' }}>
+              {initialData.length > 65535
+                ? `글자수 초과(현재:${initialData.length}, 최대:65535) `
+                : ''}
+            </div>
+            <UploadDialog
+              handleSave={handleSave}
+              conditionSave={
+                initialData.length > 65535 ||
+                initialData.length === 0 ||
+                inputTitle.length === 0 ||
+                !selectedTagInfo
+              }
+            />
             {/* <Button autoFocus color="inherit" onClick={handleSave}>
               save
             </Button> */}
@@ -258,7 +274,14 @@ https://example.com
             multiple
             id="size-small-standard-multi"
             size="small"
-            onChange={(event, value) => (selectedTagList.current = value)}
+            onChange={(event, value) => {
+              selectedTagList.current = value;
+              if (value.length > 0) {
+                setSelectedTagInfo(true);
+              } else {
+                setSelectedTagInfo(false);
+              }
+            }}
             autoComplete={true}
             autoHighlight={true}
             freeSolo={true}
@@ -285,7 +308,7 @@ https://example.com
             </ReactMarkdown>
           )}
           onChange={({ html, text }) => {
-            console.log(removeMD(text).replaceAll('\n', ' '));
+            // console.log(removeMD(text).replaceAll('\n', ' '));
             setInitialData(text);
           }}
         />

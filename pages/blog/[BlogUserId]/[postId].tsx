@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { Avatar, createStyles, makeStyles, Paper, Theme } from '@material-ui/core';
@@ -7,6 +7,7 @@ import { getOneUserDataApi, getPostInfoDataApi } from '../../../utils/queryAPI';
 import Link from 'next/link';
 import { dehydrate } from 'react-query/hydration';
 import { MarkDownContents } from '../../../components/blog/[postID]/MarkDownContents';
+import { Toc } from '../../../components/blog/[postID]/Toc';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexWrap: 'wrap',
       justifyContent: 'center',
+
       '& > *': {
         margin: theme.spacing(1),
         boxShadow:
@@ -58,7 +60,9 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
 
   return (
     <div className={classes.root}>
-      <Paper style={{ borderRadius: '10px', margin: '100px 30px 0 30px' }} elevation={3}>
+      <Paper
+        style={{ borderRadius: '10px', margin: '100px 30px 0 30px', position: 'relative' }}
+        elevation={3}>
         {/* 블로그 상단 회원정보 소개 영역 */}
         <div
           style={{
@@ -100,6 +104,15 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
         </div>
         {/* 블로그 상단 회원정보 소개 영역 끝 */}
 
+        {/* 우측 toc 영역 시작 */}
+        <div style={{ position: 'absolute', right: '0px', top: '200px', height: '85%' }}>
+          <div style={{ position: 'sticky', top: '150px' }}>
+            <Toc content={postData ? postData.content : ''} />
+          </div>
+        </div>
+        {/* 우측 toc 영역 끝 */}
+
+        {/* 메인 컨텐츠 영역 시작 */}
         <div
           style={{
             display: 'flex',
@@ -115,16 +128,23 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
               maxWidth: '1200px',
               justifyContent: 'center',
             }}>
-            <div style={{ marginBottom: '30px' }}>
+            {/* 메인 컨텐츠 영역 */}
+            <div
+              style={{
+                marginBottom: '30px',
+                width: '100%',
+                height: '100%',
+                maxWidth: '760px',
+                justifyContent: 'center',
+              }}>
               <div>{postData && postData.title}</div>
-              <div>
+              <div style={{ width: '100%', height: '100%' }}>
                 <MarkDownContents contents={postData ? postData.content : ''} />
               </div>
             </div>
-            {/* <TagList params={params} /> */}
-            {/* <PostList params={params} /> */}
           </div>
         </div>
+        {/* 메인 컨텐츠 영역 끝 */}
       </Paper>
     </div>
   );

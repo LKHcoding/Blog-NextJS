@@ -9,6 +9,12 @@ import Paper, { PaperProps } from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { useQuery, useQueryClient } from 'react-query';
+import {
+  getMyUserDataApi,
+  getOneUserPostInfoDataApi,
+  getOneUserTagInfoDataApi,
+} from '../../utils/queryAPI';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,9 +39,14 @@ function PaperComponent(props: PaperProps) {
 
 interface Props {
   handleSave: (file: File[]) => Promise<'success' | undefined>;
+  conditionSave: boolean;
 }
 
-export const UploadDialog = ({ handleSave }: Props) => {
+export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
+  const queryClient = useQueryClient();
+
+  const { data, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
+
   const classes = useStyles();
 
   const [canSave, setCanSave] = useState(false);
@@ -58,6 +69,15 @@ export const UploadDialog = ({ handleSave }: Props) => {
       if (imageFile.current.length > 0) {
         const result = await handleSave(imageFile.current);
         if (result === 'success') {
+          await queryClient.invalidateQueries(`${getOneUserTagInfoDataApi.key}-${data?.loginID}`);
+          await queryClient.invalidateQueries(`${getOneUserPostInfoDataApi.key}-${data?.loginID}`);
+          // await queryClient.refetchQueries(`${getOneUserTagInfoDataApi.key}-${data?.loginID}`, {
+          //   active: true,
+          // });
+          // await queryClient.refetchQueries(`${getOneUserPostInfoDataApi.key}-${data?.loginID}`, {
+          //   active: true,
+          // });
+
           setOpen(false);
         }
       }
@@ -66,7 +86,12 @@ export const UploadDialog = ({ handleSave }: Props) => {
 
   return (
     <div>
-      <Button autoFocus variant="outlined" color="inherit" onClick={handleClickOpen}>
+      <Button
+        disabled={conditionSave}
+        autoFocus
+        variant="outlined"
+        color="inherit"
+        onClick={handleClickOpen}>
         save
       </Button>
       <Dialog
