@@ -78,7 +78,7 @@ export const PostList = ({ params }: { params: { BlogUserId: string } }) => {
               query: { BlogUserId: `${params.BlogUserId}`, postID: `${item.id}` },
             }}
             key={item.id}>
-            <a>
+            <a style={{ width: '100%' }}>
               <Card className={classes.root}>
                 <CardActionArea>
                   <CardMedia

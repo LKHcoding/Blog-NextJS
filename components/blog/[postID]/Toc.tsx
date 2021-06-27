@@ -9,6 +9,11 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      ['@media (max-width:1365px)']: {
+        display: 'none',
+      },
+    },
+    tocFont: {
       '& > span': {
         fontSize: '0.8rem',
       },
@@ -30,13 +35,13 @@ export const Toc = ({ content }: Props) => {
     if (count) {
       count = count * 10;
     }
-    return { title: item.split('# ')[1].replaceAll('`', ''), count };
+    return { title: item.split('# ')[1].replace(/`/g, ''), count };
   });
 
   // console.log(result);
 
   return (
-    <div style={{ minWidth: '170px', maxWidth: '200px' }}>
+    <div style={{ minWidth: '170px', maxWidth: '200px' }} className={classes.root}>
       {/* <Divider /> */}
       <List component="nav" aria-label="secondary mailbox folders">
         {result.map((item, idx) => {
@@ -52,7 +57,7 @@ export const Toc = ({ content }: Props) => {
                     marginLeft: `${item.count}px`,
                     overflow: 'hidden',
                   }}
-                  className={classes.root}
+                  className={classes.tocFont}
                 />
               </ListItemLink>
             );
