@@ -105,7 +105,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
         {/* 블로그 상단 회원정보 소개 영역 끝 */}
 
         {/* 우측 toc 영역 시작 */}
-        <div style={{ position: 'absolute', right: '0px', top: '200px', height: '85%' }}>
+        <div style={{ position: 'absolute', right: '5%', top: '200px', height: '85%' }}>
           <div style={{ position: 'sticky', top: '150px' }}>
             <Toc content={postData ? postData.content : ''} />
           </div>

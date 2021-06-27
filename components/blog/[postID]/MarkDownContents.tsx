@@ -26,7 +26,19 @@ export const MarkDownContents = ({ contents }: Props) => {
 
 const components: Partial<NormalComponents & SpecialComponents> = {
   h1({ children }) {
-    return <h1 id={`${children}`}>{children}</h1>;
+    // console.log(children);
+    let str = '';
+    children.map((item) => {
+      if (typeof item === 'string') {
+        str += item;
+      } else {
+        if (item && typeof item !== 'number' && typeof item !== 'boolean' && 'props' in item) {
+          str += item?.props?.children[0];
+        }
+      }
+    });
+    console.log(str);
+    return <h1 id={`${str}`}>{children}</h1>;
   },
   h2({ children }) {
     return <h2 id={`${children}`}>{children}</h2>;

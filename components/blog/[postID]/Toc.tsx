@@ -30,7 +30,7 @@ export const Toc = ({ content }: Props) => {
     if (count) {
       count = count * 10;
     }
-    return { title: item.split('# ')[1], count };
+    return { title: item.split('# ')[1].replaceAll('`', ''), count };
   });
 
   // console.log(result);
