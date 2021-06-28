@@ -37,7 +37,7 @@ const components: Partial<NormalComponents & SpecialComponents> = {
         }
       }
     });
-    console.log(str);
+    // console.log(str);
     return <h1 id={`${str}`}>{children}</h1>;
   },
   h2({ children }) {

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { Avatar, createStyles, makeStyles, Paper, Theme } from '@material-ui/core';
+import { Avatar, createStyles, Grow, makeStyles, Paper, Theme } from '@material-ui/core';
 import { QueryClient, useQuery } from 'react-query';
 import { getOneUserDataApi, getPostInfoDataApi } from '../../../utils/queryAPI';
 import Link from 'next/link';
@@ -107,7 +107,12 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
         {/* 우측 toc 영역 시작 */}
         <div style={{ position: 'absolute', right: '5%', top: '200px', height: '85%' }}>
           <div style={{ position: 'sticky', top: '150px' }}>
-            <Toc content={postData ? postData.content : ''} />
+            <Grow in timeout={1000}>
+              {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
+              <div>
+                <Toc content={postData ? postData.content : ''} />
+              </div>
+            </Grow>
           </div>
         </div>
         {/* 우측 toc 영역 끝 */}
