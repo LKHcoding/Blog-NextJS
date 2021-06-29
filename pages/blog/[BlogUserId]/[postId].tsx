@@ -110,15 +110,15 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
             position: 'absolute',
             right: '5%',
             top: '200px',
-            height: '85%',
+            height: 'calc(100% - 260px)',
             width: '200px',
           }}>
           <div
             style={{
               position: 'sticky',
               top: '150px',
-              maxHeight: 'calc(100vh - 40px)',
-              overflow: 'auto',
+              // maxHeight: 'calc(100vh - 200px)',
+              // overflow: 'auto',
             }}>
             <Grow in timeout={1000}>
               {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}

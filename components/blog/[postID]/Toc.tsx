@@ -7,6 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
 import clsx from 'clsx';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,30 +84,32 @@ export const Toc = ({ content }: Props) => {
           목차
         </Typography>
         <Divider />
-        {result.map((item, idx) => {
-          if (item?.count && item.count <= 30) {
-            return (
-              <ListItemLink
-                href={`#${item.title}`}
-                key={item.title + idx}
-                style={{ padding: '0px' }}
-                className={clsx(
-                  classes.btnStyle,
-                  activeId === item.title && classes.currentHeading
-                )}>
-                <ListItemText
-                  primary={`${item.title}`}
-                  style={{
-                    marginLeft: `${item.count}px`,
-                    overflow: 'hidden',
-                    color: '#909090',
-                  }}
-                  className={classes.tocFont}
-                />
-              </ListItemLink>
-            );
-          }
-        })}
+        <Scrollbars universal={true} autoHide autoHeight autoHeightMax="calc(100vh - 250px)">
+          {result.map((item, idx) => {
+            if (item?.count && item.count <= 30) {
+              return (
+                <ListItemLink
+                  href={`#${item.title}`}
+                  key={item.title + idx}
+                  style={{ padding: '0px' }}
+                  className={clsx(
+                    classes.btnStyle,
+                    activeId === item.title && classes.currentHeading
+                  )}>
+                  <ListItemText
+                    primary={`${item.title}`}
+                    style={{
+                      marginLeft: `${item.count}px`,
+                      overflow: 'hidden',
+                      color: '#909090',
+                    }}
+                    className={classes.tocFont}
+                  />
+                </ListItemLink>
+              );
+            }
+          })}
+        </Scrollbars>
       </List>
     </div>
   );
