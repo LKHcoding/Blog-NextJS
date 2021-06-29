@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import List from '@material-ui/core/List';
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
+import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
+import clsx from 'clsx';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     tocFont: {
       '& > span': {
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
         fontSize: '0.8rem',
       },
     },
@@ -27,6 +32,16 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
+    currentHeading: {
+      '&': {
+        backgroundColor: 'rgba(102, 128, 153, 0.07)',
+      },
+      '& div span': {
+        color: 'black',
+        fontSize: '0.83rem',
+        transition: '0.2s',
+      },
+    },
   })
 );
 
@@ -35,6 +50,9 @@ interface Props {
 }
 
 export const Toc = ({ content }: Props) => {
+  const [activeId, setActiveId] = useState('');
+  useIntersectionObserver(setActiveId);
+
   const classes = useStyles();
 
   const titles = content.split(`\n`).filter((t) => t[0] === '#');
@@ -72,7 +90,10 @@ export const Toc = ({ content }: Props) => {
                 href={`#${item.title}`}
                 key={item.title + idx}
                 style={{ padding: '0px' }}
-                className={classes.btnStyle}>
+                className={clsx(
+                  classes.btnStyle,
+                  activeId === item.title && classes.currentHeading
+                )}>
                 <ListItemText
                   primary={`${item.title}`}
                   style={{
