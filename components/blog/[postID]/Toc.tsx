@@ -69,7 +69,7 @@ export const Toc = ({ content }: Props) => {
   // console.log(result);
 
   return (
-    <div style={{ minWidth: '170px', maxWidth: '200px' }} className={classes.root}>
+    <div style={{ width: '200px' }} className={classes.root}>
       {/* <Divider /> */}
       <List component="nav" aria-label="secondary mailbox folders">
         <Typography

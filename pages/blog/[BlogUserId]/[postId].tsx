@@ -1,13 +1,26 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { Avatar, createStyles, Grow, makeStyles, Paper, Theme } from '@material-ui/core';
+import {
+  Avatar,
+  Badge,
+  createStyles,
+  Fab,
+  Grow,
+  IconButton,
+  makeStyles,
+  Paper,
+  Theme,
+} from '@material-ui/core';
 import { QueryClient, useQuery } from 'react-query';
 import { getOneUserDataApi, getPostInfoDataApi } from '../../../utils/queryAPI';
 import Link from 'next/link';
 import { dehydrate } from 'react-query/hydration';
 import { MarkDownContents } from '../../../components/blog/[postID]/MarkDownContents';
 import { Toc } from '../../../components/blog/[postID]/Toc';
+import ActionButton from '../../../components/common/ActionButton';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,6 +51,11 @@ const useStyles = makeStyles((theme: Theme) =>
       textDecoration: 'none',
       fontSize: ' 1.5625rem',
       lineHeight: '1.4em',
+    },
+    btnList: {
+      '& > button': {
+        marginBottom: '15px',
+      },
     },
   })
 );
@@ -117,8 +135,6 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
             style={{
               position: 'sticky',
               top: '150px',
-              // maxHeight: 'calc(100vh - 200px)',
-              // overflow: 'auto',
             }}>
             <Grow in timeout={1000}>
               {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
@@ -154,11 +170,65 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
                 height: '100%',
                 maxWidth: '760px',
                 justifyContent: 'center',
+                position: 'relative',
               }}>
               <div>{postData && postData.title}</div>
               <div style={{ width: '100%', height: '100%' }}>
                 <MarkDownContents contents={postData ? postData.content : ''} />
               </div>
+
+              {/* 좌측 Like 영역 시작 */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '-150px',
+                  top: '0px',
+                  height: '100%',
+                  width: '50px',
+                }}>
+                <div
+                  style={{
+                    position: 'sticky',
+                    top: '150px',
+                  }}>
+                  <Grow in timeout={1000}>
+                    {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
+                    <div className={classes.btnList}>
+                      <Fab aria-label="like">
+                        {/* <IconButton color="default"> */}
+                        <Badge
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+                          badgeContent={32}
+                          color="error">
+                          <ThumbUpIcon color="action" style={{ height: '27px', width: '27px' }} />
+                        </Badge>
+                        {/* </IconButton> */}
+                      </Fab>
+
+                      <Fab aria-label="dislike">
+                        {/* <IconButton color="default"> */}
+                        <Badge
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
+                          badgeContent={5}
+                          color="primary">
+                          <ThumbDownIcon color="action" style={{ height: '27px', width: '27px' }} />
+                        </Badge>
+                        {/* </IconButton> */}
+                      </Fab>
+
+                      <ActionButton />
+                      {/* <Toc content={postData ? postData.content : ''} /> */}
+                    </div>
+                  </Grow>
+                </div>
+              </div>
+              {/* 좌측 Like 영역 끝 */}
             </div>
           </div>
         </div>
