@@ -77,8 +77,6 @@ export default function SpeedDials() {
           ariaLabel="SpeedDial example"
           className={classes.speedDial}
           icon={<SpeedDialIcon />}
-          // onClose={handleClose}
-          // onOpen={handleOpen}
           onClick={toggleBtn}
           open={open}
           direction={'down'}>
@@ -87,7 +85,7 @@ export default function SpeedDials() {
               key={action.name}
               icon={action.icon}
               tooltipTitle={action.name}
-              onClick={handleClose}
+              onClick={() => handleClose}
               tooltipPlacement={'right'}
             />
           ))}

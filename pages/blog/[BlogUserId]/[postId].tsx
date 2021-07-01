@@ -21,6 +21,7 @@ import { Toc } from '../../../components/blog/[postID]/Toc';
 import ActionButton from '../../../components/common/ActionButton';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,6 +76,29 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
 
   // const router = useRouter();
   // console.log(router.query);
+
+  const handleLike = async (action: string) => {
+    const result = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/blog/post-like/${params.postId}/${action}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => res.data)
+      .catch((err) => console.log(err));
+    postRefetch();
+    console.log(result);
+  };
+
+  const isLiked = (action: string) => {
+    return postData?.LikeDisLike.filter(
+      (item) => item.UserId === userData?.id && item.actionType === action
+    ).length !== 0
+      ? 'action'
+      : 'disabled';
+  };
 
   return (
     <div className={classes.root}>
@@ -194,30 +218,46 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
                   <Grow in timeout={1000}>
                     {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
                     <div className={classes.btnList}>
-                      <Fab aria-label="like">
+                      <Fab aria-label="like" onClick={() => handleLike('Like')}>
                         {/* <IconButton color="default"> */}
                         <Badge
                           anchorOrigin={{
                             vertical: 'top',
                             horizontal: 'left',
                           }}
-                          badgeContent={32}
+                          badgeContent={
+                            postData
+                              ? postData.LikeDisLike.filter((item) => item.actionType === 'Like')
+                                  .length
+                              : 0
+                          }
                           color="error">
-                          <ThumbUpIcon color="action" style={{ height: '27px', width: '27px' }} />
+                          <ThumbUpIcon
+                            color={isLiked('Like')}
+                            style={{ height: '27px', width: '27px' }}
+                          />
                         </Badge>
                         {/* </IconButton> */}
                       </Fab>
 
-                      <Fab aria-label="dislike">
+                      <Fab aria-label="dislike" onClick={() => handleLike('DisLike')}>
                         {/* <IconButton color="default"> */}
                         <Badge
                           anchorOrigin={{
                             vertical: 'top',
                             horizontal: 'left',
                           }}
-                          badgeContent={5}
+                          badgeContent={
+                            postData
+                              ? postData.LikeDisLike.filter((item) => item.actionType === 'DisLike')
+                                  .length
+                              : 0
+                          }
                           color="primary">
-                          <ThumbDownIcon color="action" style={{ height: '27px', width: '27px' }} />
+                          <ThumbDownIcon
+                            color={isLiked('DisLike')}
+                            style={{ height: '27px', width: '27px' }}
+                          />
                         </Badge>
                         {/* </IconButton> */}
                       </Fab>

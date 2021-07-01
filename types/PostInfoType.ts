@@ -8,4 +8,5 @@ export interface IPostInfoType {
   updatedAt: Date;
   deletedAt: Date | null;
   Tags: [{ tagName: string }];
+  LikeDisLike: [{ actionType: string; UserId: number }];
 }
