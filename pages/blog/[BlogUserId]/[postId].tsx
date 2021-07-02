@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next';
 import {
   Avatar,
   Badge,
+  Chip,
   createStyles,
   Fab,
   Grow,
@@ -11,17 +12,19 @@ import {
   makeStyles,
   Paper,
   Theme,
+  Typography,
 } from '@material-ui/core';
 import { QueryClient, useQuery } from 'react-query';
 import { getOneUserDataApi, getPostInfoDataApi } from '../../../utils/queryAPI';
 import Link from 'next/link';
 import { dehydrate } from 'react-query/hydration';
-import { MarkDownContents } from '../../../components/blog/[postID]/MarkDownContents';
-import { Toc } from '../../../components/blog/[postID]/Toc';
+import MarkDownContents from '../../../components/blog/[postID]/MarkDownContents';
+import Toc from '../../../components/blog/[postID]/Toc';
 import ActionButton from '../../../components/common/ActionButton';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,6 +61,16 @@ const useStyles = makeStyles((theme: Theme) =>
         marginBottom: '15px',
       },
     },
+    tagList: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      flexWrap: 'wrap',
+      '& > *': {
+        marginRight: theme.spacing(0.5),
+        marginTop: theme.spacing(0.5),
+        marginBottom: theme.spacing(0.5),
+      },
+    },
   })
 );
 
@@ -80,7 +93,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
   const handleLike = async (action: string) => {
     const result = await axios
       .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/blog/post-like/${params.postId}/${action}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/blog/post-like/${params.postId}/${action}`,
         {},
         {
           withCredentials: true,
@@ -89,7 +102,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
       .then((res) => res.data)
       .catch((err) => console.log(err));
     postRefetch();
-    console.log(result);
+    // console.log(result);
   };
 
   const isLiked = (action: string) => {
@@ -113,12 +126,12 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Link
+          {/* <Link
             href={{
               pathname: '/blog/[BlogUserId]',
               query: { BlogUserId: `${userData?.loginID}` },
-            }}
-            key="blog">
+            }} */}
+          <Link href={`/blog/[BlogUserId]`} as={`/blog/${userData?.loginID}`} key="blog">
             <a>
               <Avatar
                 color="default"
@@ -176,6 +189,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
             display: 'flex',
             padding: '0px 20px',
             width: '100%',
+            height: '100%',
             justifyContent: 'center',
           }}>
           <div
@@ -183,6 +197,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
               display: 'flex',
               marginTop: '30px',
               width: '100%',
+              height: '100%',
               maxWidth: '1200px',
               justifyContent: 'center',
             }}>
@@ -196,8 +211,38 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
                 justifyContent: 'center',
                 position: 'relative',
               }}>
-              <div>{postData && postData.title}</div>
-              <div style={{ width: '100%', height: '100%' }}>
+              {/* <div>{postData && postData.title}</div> */}
+              <Typography variant="h3">{postData && postData.title}</Typography>
+              <Typography variant="subtitle2" gutterBottom style={{ marginLeft: '3px' }}>
+                {dayjs(postData?.updatedAt).format('YYYY-MM-DD A h:mm:ss')}
+              </Typography>
+              <div
+                className={classes.tagList}
+                style={{
+                  display: 'flex',
+                }}>
+                {postData &&
+                  postData.Tags.map((item, idx) => (
+                    <div key={item.tagName + idx}>
+                      <Chip
+                        size="small"
+                        label={item.tagName}
+                        clickable
+                        color="primary"
+                        //  onDelete={handleDelete}
+                        //  deleteIcon={<DoneIcon />}
+                        variant="outlined"
+                      />
+                    </div>
+                  ))}
+              </div>
+
+              <div style={{ width: '100%', height: '100%', marginTop: '25px' }}>
+                <img
+                  style={{ marginBottom: '25px', width: '100%' }}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/${postData?.thumbnail}`}
+                  alt={`${postData?.title}`}
+                />
                 <MarkDownContents contents={postData ? postData.content : ''} />
               </div>
 

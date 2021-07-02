@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const TagList = ({ params }: { params: { BlogUserId: string } }) => {
+const TagList = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
 
   const { data, refetch } = useQuery(`${getOneUserTagInfoDataApi.key}-${params.BlogUserId}`, () =>
@@ -53,3 +53,5 @@ export const TagList = ({ params }: { params: { BlogUserId: string } }) => {
     </div>
   );
 };
+
+export default TagList;

@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const PostList = ({ params }: { params: { BlogUserId: string } }) => {
+const PostList = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
 
   const { data, refetch } = useQuery(`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`, () =>
@@ -72,11 +72,15 @@ export const PostList = ({ params }: { params: { BlogUserId: string } }) => {
       }}>
       {data &&
         data.map((item) => (
+          // <Link
+          //   href={{
+          //     pathname: '/blog/[BlogUserId]/[postID]',
+          //     query: { BlogUserId: `${params.BlogUserId}`, postID: `${item.id}` },
+          //   }}
+          //   key={item.id}>
           <Link
-            href={{
-              pathname: '/blog/[BlogUserId]/[postID]',
-              query: { BlogUserId: `${params.BlogUserId}`, postID: `${item.id}` },
-            }}
+            // href={`/blog/[BlogUserId]/[postID]`}
+            href={`/blog/${params.BlogUserId}/${item.id}`}
             key={item.id}>
             <a style={{ width: '100%' }}>
               <Card className={classes.root}>
@@ -127,3 +131,5 @@ export const PostList = ({ params }: { params: { BlogUserId: string } }) => {
     </div>
   );
 };
+
+export default PostList;

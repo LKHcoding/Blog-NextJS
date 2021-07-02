@@ -15,7 +15,7 @@ export const getMyUserDataApi = {
     // console.log(Authentication);
     return await api
       .get(
-        `/api/users`,
+        `/v1/users`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,
@@ -44,7 +44,7 @@ export const getOneUserDataApi = {
     // console.log(Authentication);
     return await api
       .get(
-        `/api/users/${loginID}`,
+        `/v1/users/${loginID}`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,
@@ -73,7 +73,7 @@ export const getOneUserTagInfoDataApi = {
     // console.log(Authentication);
     return await api
       .get(
-        `/api/blog/tags-info/${userID}`,
+        `/v1/blog/tags-info/${userID}`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,
@@ -102,7 +102,7 @@ export const getOneUserPostInfoDataApi = {
     // console.log(Authentication);
     return await api
       .get(
-        `/api/blog/posts-info/${BlogUserId}`,
+        `/v1/blog/posts-info/${BlogUserId}`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,
@@ -131,7 +131,7 @@ export const getPostInfoDataApi = {
     // console.log(Authentication);
     return await api
       .get(
-        `/api/blog/post-info/${postId}`,
+        `/v1/blog/post-info/${postId}`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,

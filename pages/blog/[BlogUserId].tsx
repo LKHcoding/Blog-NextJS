@@ -19,9 +19,9 @@ import MailIcon from '@material-ui/icons/Mail';
 import LanguageIcon from '@material-ui/icons/Language';
 import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
-import { BlogProfile } from '../../components/blog/BlogProfile';
-import { TagList } from '../../components/blog/TagList';
-import { PostList } from '../../components/blog/PostList';
+import BlogProfile from '../../components/blog/BlogProfile';
+import TagList from '../../components/blog/TagList';
+import PostList from '../../components/blog/PostList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -239,7 +239,7 @@ const header = () => {
               })}>
               <MenuIcon />
             </IconButton>
-            <Link href="/">
+            <Link href={`/`} as={`/`}>
               <a>
                 <Typography variant="h6" noWrap className={clsx(classes.titleStyle)}>
                   Develogger
@@ -328,7 +328,7 @@ const header = () => {
                           onKeyDown={handleListKeyDown}>
                           {/* 로그인 안한 상태 */}
                           {!data && [
-                            <Link href="/login" key="logIn">
+                            <Link href={`/login`} as={`/login`} key="logIn">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
@@ -340,7 +340,7 @@ const header = () => {
                                 </MenuItem>
                               </a>
                             </Link>,
-                            <Link href="/signup" key="signUp">
+                            <Link href={`/signup`} key="signUp">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
@@ -356,12 +356,12 @@ const header = () => {
 
                           {/* 로그인 한 상태 */}
                           {data && [
-                            <Link
-                              href={{
-                                pathname: '/profile/[loginID]',
-                                query: { loginID: `${data.loginID}` },
-                              }}
-                              key="profile">
+                            // <Link
+                            //   href={{
+                            //     pathname: '/profile/[loginID]',
+                            //     query: { loginID: `${data.loginID}` },
+                            //   }}
+                            <Link href={`/profile/${data.loginID}`} key="profile">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
@@ -373,12 +373,12 @@ const header = () => {
                                 </MenuItem>
                               </a>
                             </Link>,
-                            <Link
-                              href={{
-                                pathname: '/blog/[BlogUserId]',
-                                query: { BlogUserId: `${data.loginID}` },
-                              }}
-                              key="blog">
+                            // <Link
+                            //   href={{
+                            //     pathname: '/blog/[BlogUserId]',
+                            //     query: { BlogUserId: `${data.loginID}` },
+                            //   }}
+                            <Link href={`/blog/${data.loginID}`} key="blog">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>

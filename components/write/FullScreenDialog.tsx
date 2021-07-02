@@ -173,7 +173,7 @@ https://example.com
       formData.append('image', file[0]);
 
       const imagePath = await axios
-        .post(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/image`, formData, {
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/v1/blog/image`, formData, {
           withCredentials: true,
         })
         .then((res) => res.data);
@@ -182,7 +182,7 @@ https://example.com
       if (imagePath) {
         const result = await axios
           .post(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/blog`,
+            `${process.env.NEXT_PUBLIC_API_URL}/v1/blog`,
             {
               title: inputTitle,
               tags: selectedTagList.current,

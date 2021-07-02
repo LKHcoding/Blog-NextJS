@@ -50,7 +50,7 @@ interface Props {
   content: string;
 }
 
-export const Toc = ({ content }: Props) => {
+const Toc = ({ content }: Props) => {
   const [activeId, setActiveId] = useState('');
   useIntersectionObserver(setActiveId);
 
@@ -114,6 +114,8 @@ export const Toc = ({ content }: Props) => {
     </div>
   );
 };
+
+export default Toc;
 
 function ListItemLink(props: ListItemProps<'a', { button?: true }>) {
   return <ListItem button component="a" {...props} />;

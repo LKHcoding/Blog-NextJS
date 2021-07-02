@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
+const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
 
   const { data, refetch } = useQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>
@@ -101,3 +101,5 @@ export const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
     </>
   );
 };
+
+export default BlogProfile;

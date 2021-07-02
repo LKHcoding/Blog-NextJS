@@ -10,7 +10,7 @@ interface Props {
   contents: string;
 }
 
-export const MarkDownContents = ({ contents }: Props) => {
+const MarkDownContents = ({ contents }: Props) => {
   return (
     <>
       <ReactMarkdown
@@ -23,6 +23,8 @@ export const MarkDownContents = ({ contents }: Props) => {
     </>
   );
 };
+
+export default MarkDownContents;
 
 const components: Partial<NormalComponents & SpecialComponents> = {
   h1({ children }) {

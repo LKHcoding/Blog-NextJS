@@ -56,7 +56,7 @@ const actions = [
 
 export default function SpeedDials() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
     setOpen(false);
