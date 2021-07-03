@@ -109,12 +109,12 @@ const SideBar: FC = ({ children }) => {
           </div>
           <Divider />
           <List>
-            {/* <Link href="/sup"> */}
-            <ListItem button key={'Sup'} onClick={handleSup}>
-              <ListItemIcon>{<InboxIcon />}</ListItemIcon>
-              <ListItemText primary={'Sup'} />
-            </ListItem>
-            {/* </Link> */}
+            <Link href="/sup" as="/sup">
+              <ListItem button key={'Sup'}>
+                <ListItemIcon>{<InboxIcon />}</ListItemIcon>
+                <ListItemText primary={'Sup'} />
+              </ListItem>
+            </Link>
             {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>

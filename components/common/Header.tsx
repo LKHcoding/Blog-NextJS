@@ -340,7 +340,7 @@ const header = () => {
                                 </MenuItem>
                               </a>
                             </Link>,
-                            <Link href={`/signup`} key="signUp">
+                            <Link href={`/signup`} as={`/signup`} key="signUp">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
@@ -361,7 +361,10 @@ const header = () => {
                             //     pathname: '/profile/[loginID]',
                             //     query: { loginID: `${data.loginID}` },
                             //   }}
-                            <Link href={`/profile/${data.loginID}`} key="profile">
+                            <Link
+                              href={`/profile/${data.loginID}`}
+                              as={`/profile/${data.loginID}`}
+                              key="profile">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
@@ -378,7 +381,10 @@ const header = () => {
                             //     pathname: '/blog/[BlogUserId]',
                             //     query: { BlogUserId: `${data.loginID}` },
                             //   }}
-                            <Link href={`/blog/${data.loginID}`} key="blog">
+                            <Link
+                              href={`/blog/${data.loginID}`}
+                              as={`/blog/${data.loginID}`}
+                              key="blog">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>

@@ -81,6 +81,7 @@ const PostList = ({ params }: { params: { BlogUserId: string } }) => {
           <Link
             // href={`/blog/[BlogUserId]/[postID]`}
             href={`/blog/${params.BlogUserId}/${item.id}`}
+            as={`/blog/${params.BlogUserId}/${item.id}`}
             key={item.id}>
             <a style={{ width: '100%' }}>
               <Card className={classes.root}>

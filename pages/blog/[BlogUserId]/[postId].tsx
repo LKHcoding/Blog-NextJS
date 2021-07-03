@@ -131,7 +131,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
               pathname: '/blog/[BlogUserId]',
               query: { BlogUserId: `${userData?.loginID}` },
             }} */}
-          <Link href={`/blog/[BlogUserId]`} as={`/blog/${userData?.loginID}`} key="blog">
+          <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`} key="blog">
             <a>
               <Avatar
                 color="default"
