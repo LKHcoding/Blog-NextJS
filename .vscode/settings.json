@@ -1,0 +1,9 @@
+{
+  "search.useGlobalIgnoreFiles": true
+
+  //노드 모듈까지 모두 검색할려고 추가한 설정
+  // "search.useIgnoreFiles": false,
+  //   "search.exclude": {
+  //       "**/node_modules": false,
+  //   },
+}

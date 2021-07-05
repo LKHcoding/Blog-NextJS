@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development next dev -p 3031",
     "build": "cross-env NODE_ENV=production next build",
-    "start": "cross-env NODE_ENV=production next start -p 3031",
+    "clean": "npx rimraf .next",
+    "start": "npm run clean && npm run build && cross-env NODE_ENV=production next start -p 3031",
     "dev-backup": "cross-env NODE_ENV=development nodemon",
     "build-backup": "next build",
     "start-backup": "next start"
@@ -27,7 +28,6 @@
     "material-ui-dropzone": "^3.5.0",
     "morgan": "^1.10.0",
     "next": "10.2.2",
-    "next-remove-imports": "^1.0.5",
     "react": "17.0.2",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "17.0.2",
