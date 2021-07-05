@@ -1,191 +1,25 @@
-import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import gfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
-import rehypeRaw from 'rehype-raw';
-import useInput from '../hooks/useInput';
-import useTextArea from '../hooks/useTextArea';
-import Button from '@material-ui/core/Button';
-
-const source = `# A demo of \`react-markdown\`
-
-\`react-markdown\` is a markdown component for React.
-
-👉 Changes are re-rendered as you type.
-
-👈 Try writing some markdown on the left.
-
-## Overview
-
-* Follows [CommonMark](https://commonmark.org)
-* Optionally follows [GitHub Flavored Markdown](https://github.github.com/gfm/)
-* Renders actual React elements instead of using \`dangerouslySetInnerHTML\`
-* Lets you define your own components (to render \`MyHeading\` instead of \`h1\`)
-* Has a lot of plugins
-
-## Table of contents
-
-Here is an example of a plugin in action
-([\`remark-toc\`](https://github.com/remarkjs/remark-toc)).
-This section is replaced by an actual table of contents.
-
-## Syntax highlighting
-
-Here is an example of a plugin to highlight code:
-[\`rehype-highlight\`](https://github.com/rehypejs/rehype-highlight).
-
-\`\`\`js
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Markdown from 'react-markdown'
-import rehypeHighlight from 'rehype-highlight'
-
-ReactDOM.render(
-  <Markdown rehypePlugins={[rehypeHighlight]}>{'# Your markdown here'}</Markdown>,
-  document.querySelector('#content')
-)
-\`\`\`
-
-Pretty neat, eh?
-
-## GitHub flavored markdown (GFM)
-
-For GFM, you can *also* use a plugin:
-[\`remark-gfm\`](https://github.com/remarkjs/react-markdown#use).
-It adds support for GitHub-specific extensions to the language:
-tables, strikethrough, tasklists, and literal URLs.
-
-These features **do not work by default**.
-👆 Use the toggle above to add the plugin.
-
-| Feature    | Support              |
-| ---------: | :------------------- |
-| CommonMark | 100%                 |
-| GFM        | 100% w/ \`remark-gfm\` |
-
-~~strikethrough~~
-
-* [ ] task list
-* [x] checked item
-
-https://example.com
-
-## HTML in markdown
-
-⚠️ HTML in markdown is quite unsafe, but if you want to support it, you can
-use [\`rehype-raw\`](https://github.com/rehypejs/rehype-raw).
-You should probably combine it with
-[\`rehype-sanitize\`](https://github.com/rehypejs/rehype-sanitize).
-
-<blockquote>
-  👆 Use the toggle above to add the plugin.
-</blockquote>
-
-## Components
-
-You can pass components to change things:
-
-\`\`\`js
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Markdown from 'react-markdown'
-import MyFancyRule from './components/my-fancy-rule.js'
-
-ReactDOM.render(
-  <Markdown
-    components={{
-      // Use h2s instead of h1s
-      h1: 'h2',
-      // Use a component instead of hrs
-      hr: ({node, ...props}) => <MyFancyRule {...props} />
-    }}
-  >
-    # Your markdown here
-  </Markdown>,
-  document.querySelector('#content')
-)
-\`\`\`
-
-## More info?
-
-Much more info is available in the
-[readme on GitHub](https://github.com/remarkjs/react-markdown)!
-
-***
-
-A component by [Espen Hovlandsdal](https://espen.codes/)`;
-
-const components: Partial<NormalComponents & SpecialComponents> = {
-  h1({ children }) {
-    return <h1 id={`${children}`}>{children}</h1>;
-  },
-  h2({ children }) {
-    return <h2 id={`${children}`}>{children}</h2>;
-  },
-  h3({ children }) {
-    return <h3 id={`${children}`}>{children}</h3>;
-  },
-  code({ node, inline, className, children, ...props }) {
-    const match = /language-(\w+)/.exec(className || '');
-    return !inline && match ? (
-      <SyntaxHighlighter
-        style={prism}
-        language={match[1]}
-        PreTag="div"
-        // children={String(children).replace(/\n$/, '')}
-        {...props}>
-        {String(children).replace(/\n$/, '')}{' '}
-      </SyntaxHighlighter>
-    ) : (
-      <code className={className} {...props}>
-        {children}
-      </code>
-    );
-  },
-};
-
+import AllPostCardList from './../components/index/AllPostCardList';
+import { useEffect, useRef } from 'react';
 const Home = () => {
-  const [value, handler, setValue] = useTextArea('');
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const { current } = ref;
+
+    if (current !== null) {
+      // console.log(ref.current?.parentNode);
+      // 기본적으로 메인 페이지 영역에 marginTop이 적용되어있다.
+      // (AppBar그림자 효과때문에 컨텐츠가 가려짐)
+      // 현재 index페이지에는 backgroundColor가 적용되어있는데 이때문에 비는영역이있어
+      // index페이지는 직접 부모를 선택해서 margin-top 0px을 적용함
+      current.parentElement?.setAttribute('style', 'margin-top : 0px');
+    }
+  }, []);
 
   return (
     <>
-      index 페이지입니다.
-      {/* zIndex 주는 이유는 화면이 움직이다가 다른 엘리먼트에 가려지면 클릭이 안되는 경우가생김 */}
-      <div style={{ position: 'fixed', left: '300px', bottom: '10px', zIndex: 1 }}>
-        <div>
-          <a href="#Table of contents">
-            <Button color="primary" variant="contained">
-              Table of contents
-            </Button>
-          </a>
-        </div>
-        <div>
-          <a href="#Hi, Develogger!">
-            <Button color="primary" variant="contained">
-              Hi, Develogger!
-            </Button>
-          </a>
-        </div>
-        <div>
-          <a href="#HTML in markdown">
-            <Button color="primary" variant="contained">
-              HTML in markdown
-            </Button>
-          </a>
-        </div>
-      </div>
-      <div>{process.env.NEXT_PUBLIC_API_URL}</div>
-      <textarea value={value} onChange={handler} />
-      <div style={{ width: '100%', height: '100%' }}>
-        <ReactMarkdown
-          className="markdown-body"
-          components={components}
-          remarkPlugins={[gfm]}
-          rehypePlugins={[rehypeRaw]}>
-          {value}
-        </ReactMarkdown>
+      <div ref={ref}>
+        <AllPostCardList />
       </div>
     </>
   );

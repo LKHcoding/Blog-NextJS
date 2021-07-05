@@ -9,7 +9,7 @@ const Footer = () => {
           textAlign: 'center',
           borderTop: '1px solid rgba(0, 0, 0, 0.12)',
           paddingTop: '10px',
-          marginTop: '10px',
+          // marginTop: '10px',
         }}>
         푸터 입니다.
       </div>

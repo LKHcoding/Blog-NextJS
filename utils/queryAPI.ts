@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { IAllPostInfoType } from '../types/AllPostInfoType';
 import { IPostInfoType } from '../types/PostInfoType';
 import { ITagInfoType } from '../types/TagInfoType';
 import { IUser } from '../types/UserType';
@@ -128,10 +129,37 @@ export const getOneUserPostInfoDataApi = {
 export const getPostInfoDataApi = {
   key: 'getPostInfoData',
   apiCall: async (postId: string, Authentication?: any): Promise<IPostInfoType> => {
-    // console.log(Authentication);
     return await api
       .get(
         `/v1/blog/post-info/${postId}`,
+        typeof Authentication === 'string'
+          ? {
+              withCredentials: true,
+              headers: {
+                Cookie: `Authentication=${Authentication || ''}`,
+              },
+            }
+          : {
+              withCredentials: true,
+            }
+      )
+      .then((response) => response.data)
+      .catch((err) => {
+        console.log(err.message);
+        return false;
+      });
+  },
+};
+
+/**
+ * 모든 Posts info 가져오기
+ */
+export const getAllPostInfoApi = {
+  key: 'getAllPostInfoApi',
+  apiCall: async (Authentication?: any): Promise<IAllPostInfoType[]> => {
+    return await api
+      .get(
+        `v1/blog/all-posts-info`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,
