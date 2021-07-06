@@ -55,13 +55,14 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ThemeProvider theme={theme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
-
             <Header />
             <SideBar>
               <Component {...pageProps} />
             </SideBar>
           </ThemeProvider>
         </Hydrate>
+
+        {/* Devtools를 키면 mobile 정도 크기 화면에서 Warning이 뜨지만 문제없음 */}
         {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />}
       </QueryClientProvider>
     </>

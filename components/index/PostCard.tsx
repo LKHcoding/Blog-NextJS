@@ -23,9 +23,7 @@ import removeMD from 'remove-markdown';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      // maxWidth: '520px',
       width: '100%',
-      // minWidth: 300,
       height: '100%',
     },
     media: {
@@ -47,14 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     cardHeaderTitle: {
       '& > .MuiCardHeader-content': {
-        // width: '100%',
-        // textOverflow: 'ellipsis',
         overflow: 'hidden',
-        // whiteSpace: 'nowrap',
       },
       '& > .MuiCardHeader-content > .MuiCardHeader-title': {
-        // width: '100%',
-
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
@@ -69,9 +62,6 @@ const useStyles = makeStyles((theme: Theme) =>
         WebkitLineClamp: 4,
         WebkitBoxOrient: 'vertical',
       },
-      // textOverflow: 'ellipsis',
-      //   overflow: 'hidden',
-      //   whiteSpace: 'nowrap',
     },
   })
 );
@@ -104,13 +94,6 @@ const PostCardList = ({ postInfo }: Props) => {
             </a>
           </Link>
         }
-        // action={
-        //   <div>
-        //     {/* <IconButton aria-label="settings">
-        //      <MoreVertIcon />
-        //    </IconButton> */}
-        //   </div>
-        // }
         title={`${postInfo.title}`}
         subheader={`${postInfo.User.loginID}`}
         // subheader={`${dayjs(postInfo.updatedAt).format('YYYY년 M월 D일')}`}

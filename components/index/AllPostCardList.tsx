@@ -11,8 +11,6 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       padding: '15px 35px',
       backgroundColor: '#f6f6f6',
-      // backgroundColor: '#f5f5f5',
-      // top: '-10px',
     },
     cardItem: {
       margin: '5px 0px',
@@ -37,7 +35,7 @@ const AllPostCardList = () => {
               sm={6}
               md={4}
               lg={3}
-              // xl={3}
+              xl={3}
               key={item.id}>
               <PostCard postInfo={item} />
             </Grid>
