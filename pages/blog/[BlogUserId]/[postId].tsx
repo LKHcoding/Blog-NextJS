@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { QueryClient, useQuery } from 'react-query';
-import { getOneUserDataApi, getPostInfoDataApi } from '../../../utils/queryAPI';
+import { getMyUserDataApi, getOneUserDataApi, getPostInfoDataApi } from '../../../utils/queryAPI';
 import Link from 'next/link';
 import { dehydrate } from 'react-query/hydration';
 import MarkDownContents from '../../../components/blog/[postID]/MarkDownContents';
@@ -77,6 +77,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) => {
   const classes = useStyles();
 
+  const { data: myUserData, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
+
   const { data: userData, refetch: userRefetch } = useQuery(
     `${getOneUserDataApi.key}-${params.BlogUserId}`,
     () => getOneUserDataApi.apiCall(params.BlogUserId)
@@ -107,7 +109,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
 
   const isLiked = (action: string) => {
     return postData?.LikeDisLike.filter(
-      (item) => item.UserId === userData?.id && item.actionType === action
+      (item) => item.UserId === myUserData?.id && item.actionType === action
     ).length !== 0
       ? 'action'
       : 'disabled';

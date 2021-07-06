@@ -14,11 +14,17 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { IAllPostInfoType } from '../../types/AllPostInfoType';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import removeMD from 'remove-markdown';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import { useQuery } from 'react-query';
+import { getMyUserDataApi } from '../../utils/queryAPI';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +50,10 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: red[500],
     },
     cardHeaderTitle: {
+      padding: '4px 16px 4px 4px',
+      '& > .MuiCardHeader-avatar': {
+        marginRight: '4px',
+      },
       '& > .MuiCardHeader-content': {
         overflow: 'hidden',
       },
@@ -51,6 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
+        fontSize: '1rem',
+      },
+      '& > .MuiCardHeader-content > .MuiCardHeader-subheader': {
+        fontSize: '0.75rem',
       },
     },
     postContent: {
@@ -61,6 +75,16 @@ const useStyles = makeStyles((theme: Theme) =>
         display: '-webkit-box',
         WebkitLineClamp: 4,
         WebkitBoxOrient: 'vertical',
+        color: `rgba(0, 0, 0, 0.8)`,
+      },
+      paddingBottom: '0px',
+      '& > .MuiTypography-caption': {
+        color: `rgba(0, 0, 0, 0.50)`,
+      },
+    },
+    actionIcons: {
+      '& > .actionIcon': {
+        padding: '8px',
       },
     },
   })
@@ -70,6 +94,8 @@ interface Props {
 }
 
 const PostCardList = ({ postInfo }: Props) => {
+  const router = useRouter();
+  const { data: myUserData, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 
@@ -77,44 +103,88 @@ const PostCardList = ({ postInfo }: Props) => {
     setExpanded(!expanded);
   };
 
+  const goToUserBlog: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    if (router) {
+      router.push(`blog/${postInfo.User.loginID}`);
+    }
+  };
   return (
     <Card className={classes.root}>
-      <CardHeader
-        className={classes.cardHeaderTitle}
-        avatar={
-          <Link href={`blog/${postInfo.User.loginID}`} as={`blog/${postInfo.User.loginID}`}>
-            <a>
-              <Avatar
-                src={`${postInfo.User.avatarUrl || ''}`}
-                alt={`${postInfo.User.loginID || ''}`}
-                title={`${postInfo.User.loginID || ''}`}
-                aria-label="profile-image"
-                className={classes.avatar}
-              />
-            </a>
-          </Link>
-        }
-        title={`${postInfo.title}`}
-        subheader={`${postInfo.User.loginID}`}
-        // subheader={`${dayjs(postInfo.updatedAt).format('YYYY년 M월 D일')}`}
-      />
-      <CardMedia
-        className={classes.media}
-        image={`${process.env.NEXT_PUBLIC_API_URL}/${postInfo.thumbnail}`}
-        title={`${postInfo.title}`}
-      />
-      <CardContent className={classes.postContent}>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {removeMD(postInfo.content.slice(0, 300)).replaceAll('\n', ' ')}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+      <Link
+        href={`/blog/${postInfo.User.loginID}/${postInfo.id}`}
+        as={`/blog/${postInfo.User.loginID}/${postInfo.id}`}
+        key={`postcard-${postInfo.id}`}>
+        <a>
+          <CardHeader
+            className={classes.cardHeaderTitle}
+            avatar={
+              // <Link href={`blog/${postInfo.User.loginID}`} as={`blog/${postInfo.User.loginID}`}>
+              //   <a>
+              <IconButton onClick={goToUserBlog}>
+                <Avatar
+                  src={`${postInfo.User.avatarUrl || ''}`}
+                  alt={`${postInfo.User.loginID || ''}`}
+                  title={`${postInfo.User.loginID || ''}`}
+                  aria-label="profile-image"
+                  className={classes.avatar}
+                />
+              </IconButton>
+              //   </a>
+              // </Link>
+            }
+            title={`${postInfo.title}`}
+            subheader={`${postInfo.User.loginID}`}
+          />
+          <CardActionArea title={`${postInfo.title}`}>
+            {/* <Link
+          href={`/blog/${postInfo.User.loginID}/${postInfo.id}`}
+          as={`/blog/${postInfo.User.loginID}/${postInfo.id}`}
+          key={`postcard-${postInfo.id}`}>
+          <a> */}
+            <CardMedia
+              className={classes.media}
+              image={`${process.env.NEXT_PUBLIC_API_URL}/${postInfo.thumbnail}`}
+              title={`${postInfo.title}`}
+            />
+            <CardContent className={classes.postContent}>
+              <Typography variant="body2" color="textSecondary" component="p" gutterBottom>
+                {removeMD(postInfo.content.slice(0, 300)).replaceAll('\n', ' ')}
+              </Typography>
+              <Typography variant="caption">
+                {`${dayjs(postInfo.updatedAt).format('YYYY년 M월 D일')} • 댓글 0개`}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </a>
+      </Link>
+      <CardActions disableSpacing className={classes.actionIcons}>
+        <IconButton aria-label="Like count" className="actionIcon">
+          <ThumbUpIcon
+            color={
+              postInfo.LikeDisLike.filter((like) => like.actionType === 'Like').filter(
+                (like) => like.UserId === myUserData?.id
+              ).length !== 0
+                ? 'action'
+                : 'disabled'
+            }
+          />
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
+        <span>{postInfo.LikeDisLike.filter((like) => like.actionType === 'Like').length}</span>
+        <IconButton aria-label="DisLike count" className="actionIcon">
+          <ThumbDownIcon
+            color={
+              postInfo.LikeDisLike.filter((dislike) => dislike.actionType === 'DisLike').filter(
+                (dislike) => dislike.UserId === myUserData?.id
+              ).length !== 0
+                ? 'action'
+                : 'disabled'
+            }
+          />
         </IconButton>
+        <span>
+          {postInfo.LikeDisLike.filter((dislike) => dislike.actionType === 'DisLike').length}
+        </span>
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
