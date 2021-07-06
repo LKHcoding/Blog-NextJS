@@ -37,7 +37,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import { useRouter } from 'next/router';
 import FullScreenDialog from '../write/FullScreenDialog';
 
-const drawerWidth = 240;
+const drawerWidth = 160;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -49,7 +49,10 @@ const useStyles = makeStyles((theme: Theme) =>
         '0px 2px 10px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 7%), 0px 1px 3px 0px rgb(0 0 0 / 6%)',
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
+        // 들어갈때
+        duration: 400,
+        // duration: theme.transitions.duration.shortest,
+        // duration: theme.transitions.duration.leavingScreen,
       }),
     },
     appBarShift: {
@@ -57,14 +60,26 @@ const useStyles = makeStyles((theme: Theme) =>
       width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
+        // 튀어나올때
+        duration: 650,
+        // duration: theme.transitions.duration.shortest,
+        // duration: theme.transitions.duration.enteringScreen,
       }),
     },
     menuButton: {
       marginRight: 36,
     },
     hide: {
-      display: 'none',
+      // display: 'none',
+      // overflow: 'hidden',
+      // padding: 0,
+      // width: 0,
+      // margin: 0,
+      // transition: theme.transitions.create(['width', 'margin', 'padding'], {
+      //   easing: theme.transitions.easing.sharp,
+      //   duration: theme.transitions.duration.shortest,
+      //   // duration: theme.transitions.duration.enteringScreen,
+      // }),
     },
 
     search: {
@@ -268,16 +283,6 @@ const header = () => {
             <div className={classes.sectionDesktop}>
               {data && (
                 <>
-                  {/* {router.pathname !== '/blog/write' && (
-                    <Button
-                      variant="outlined"
-                      color="default"
-                      className={classes.button}
-                      startIcon={<CreateIcon />}
-                      onClick={handleWriteBtn}>
-                      New Log
-                    </Button>
-                  )} */}
                   <FullScreenDialog />
 
                   <IconButton
@@ -356,11 +361,6 @@ const header = () => {
 
                           {/* 로그인 한 상태 */}
                           {data && [
-                            // <Link
-                            //   href={{
-                            //     pathname: '/profile/[loginID]',
-                            //     query: { loginID: `${data.loginID}` },
-                            //   }}
                             <Link
                               href={`/profile/${data.loginID}`}
                               as={`/profile/${data.loginID}`}
@@ -376,11 +376,6 @@ const header = () => {
                                 </MenuItem>
                               </a>
                             </Link>,
-                            // <Link
-                            //   href={{
-                            //     pathname: '/blog/[BlogUserId]',
-                            //     query: { BlogUserId: `${data.loginID}` },
-                            //   }}
                             <Link
                               href={`/blog/${data.loginID}`}
                               as={`/blog/${data.loginID}`}

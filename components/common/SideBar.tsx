@@ -138,7 +138,7 @@ const SideBar: FC = ({ children }) => {
           <div className={classes.toolbar} />
           <div style={{ marginTop: '10px' }}>{children}</div>
 
-          <Footer />
+          {/* <Footer /> */}
 
           {/* 경로에 따라 Footer를 안보여주려면 이렇게 */}
           {/* {router.pathname !== '/blog/write' && <Footer />} */}

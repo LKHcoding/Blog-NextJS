@@ -12,6 +12,9 @@ import Header from '../components/common/Header';
 import SideBar from '../components/common/SideBar';
 
 import dayjs from 'dayjs';
+import NewSideBar from '../components/common/NewSideBar';
+import Footer from '../components/common/Footer';
+import MainSection from '../components/common/MainSection';
 dayjs.locale('kr');
 
 // const queryClient = new QueryClient();
@@ -56,9 +59,10 @@ function MyApp({ Component, pageProps }: AppProps) {
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
             <Header />
-            <SideBar>
+            <NewSideBar />
+            <MainSection>
               <Component {...pageProps} />
-            </SideBar>
+            </MainSection>
           </ThemeProvider>
         </Hydrate>
 
@@ -76,25 +80,3 @@ function MyApp({ Component, pageProps }: AppProps) {
  * 글로벌 css를 이곳에 선언합니다.
  */
 export default MyApp;
-
-// 서버사이드에서 데이터 가져오는 구조로 세팅하는 부분
-// MyApp.getInitialProps = async ({ ctx, Component }: { ctx: any; Component: any }) => {
-//   let pageProps = {};
-//   if (Component.getInitialProps) {
-//     // 하위 컴포넌트에 getInitialProps가 있다면 추가 (각 개별 컴포넌트에서 사용할 값 추가)
-//     pageProps = await Component.getInitialProps(ctx);
-//   }
-//   return { pageProps };
-// };
-
-// Only uncomment this method if you have blocking data requirements for
-// every single page in your application. This disables the ability to
-// perform automatic static optimization, causing every page in your app to
-// be server-side rendered.
-//
-// MyApp.getInitialProps = async (appContext: AppContext) => {
-//   // calls page's `getInitialProps` and fills `appProps.pageProps`
-//   const appProps = await App.getInitialProps(appContext);
-
-//   return { ...appProps }
-// }
