@@ -25,7 +25,7 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { useQuery } from 'react-query';
 import { getMyUserDataApi } from '../../utils/queryAPI';
 import { useRouter } from 'next/router';
-import { Chip } from '@material-ui/core';
+import { Chip, Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -133,13 +133,15 @@ const PostCardList = ({ postInfo }: Props) => {
               // <Link href={`blog/${postInfo.User.loginID}`} as={`blog/${postInfo.User.loginID}`}>
               //   <a>
               <IconButton onClick={goToUserBlog}>
-                <Avatar
-                  src={`${postInfo.User.avatarUrl || ''}`}
-                  alt={`${postInfo.User.loginID || ''}`}
-                  title={`${postInfo.User.loginID || ''}`}
-                  aria-label="profile-image"
-                  className={classes.avatar}
-                />
+                <Tooltip title={`${postInfo.User.loginID || ''}'s blog`} arrow placement="top">
+                  <Avatar
+                    src={`${postInfo.User.avatarUrl || ''}`}
+                    alt={`${postInfo.User.loginID || ''}`}
+                    // title={`${postInfo.User.loginID || ''}`}
+                    aria-label="profile-image"
+                    className={classes.avatar}
+                  />
+                </Tooltip>
               </IconButton>
               //   </a>
               // </Link>

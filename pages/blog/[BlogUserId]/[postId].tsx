@@ -213,8 +213,9 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
                 justifyContent: 'center',
                 position: 'relative',
               }}>
-              {/* <div>{postData && postData.title}</div> */}
-              <Typography variant="h3">{postData && postData.title}</Typography>
+              <Typography style={{ overflowWrap: 'anywhere' }} variant="h3">
+                {postData && postData.title}
+              </Typography>
               <Typography variant="subtitle2" gutterBottom style={{ marginLeft: '3px' }}>
                 {dayjs(postData?.updatedAt).format('YYYY-MM-DD A h:mm:ss')}
               </Typography>

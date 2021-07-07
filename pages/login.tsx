@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: '120px',
+    height: '80vh',
   },
   avatar: {
     margin: theme.spacing(1),
@@ -35,10 +38,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(0, 0, 2),
+    margin: theme.spacing(2, 0, 2),
   },
   github: {
-    margin: theme.spacing(2, 0, 2),
+    margin: theme.spacing(0, 0, 2),
   },
 }));
 
@@ -153,14 +156,6 @@ const LogIn = () => {
             label="Remember me"
           />
           <Button
-            fullWidth
-            variant="outlined"
-            className={classes.github}
-            onClick={handleGithubLogin}>
-            <GitHubIcon fontSize="small" />
-            <div style={{ marginLeft: '5px' }}>github login</div>
-          </Button>
-          <Button
             type="submit"
             fullWidth
             variant="contained"
@@ -168,6 +163,15 @@ const LogIn = () => {
             className={classes.submit}>
             LogIn
           </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            className={classes.github}
+            onClick={handleGithubLogin}>
+            <GitHubIcon fontSize="small" />
+            <div style={{ marginLeft: '5px' }}>github login</div>
+          </Button>
+
           <Grid container>
             <Grid item xs>
               {/* <Link href="/"> */}
