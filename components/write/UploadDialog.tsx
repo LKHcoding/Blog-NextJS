@@ -11,6 +11,7 @@ import { DropzoneArea } from 'material-ui-dropzone';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { useQuery, useQueryClient } from 'react-query';
 import {
+  getAllPostInfoApi,
   getMyUserDataApi,
   getOneUserPostInfoDataApi,
   getOneUserTagInfoDataApi,
@@ -71,12 +72,7 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
         if (result === 'success') {
           await queryClient.invalidateQueries(`${getOneUserTagInfoDataApi.key}-${data?.loginID}`);
           await queryClient.invalidateQueries(`${getOneUserPostInfoDataApi.key}-${data?.loginID}`);
-          // await queryClient.refetchQueries(`${getOneUserTagInfoDataApi.key}-${data?.loginID}`, {
-          //   active: true,
-          // });
-          // await queryClient.refetchQueries(`${getOneUserPostInfoDataApi.key}-${data?.loginID}`, {
-          //   active: true,
-          // });
+          await queryClient.invalidateQueries(`${getAllPostInfoApi.key}`);
 
           setOpen(false);
         }

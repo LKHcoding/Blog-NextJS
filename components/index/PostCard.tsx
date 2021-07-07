@@ -25,6 +25,7 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { useQuery } from 'react-query';
 import { getMyUserDataApi } from '../../utils/queryAPI';
 import { useRouter } from 'next/router';
+import { Chip } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,6 +86,16 @@ const useStyles = makeStyles((theme: Theme) =>
     actionIcons: {
       '& > .actionIcon': {
         padding: '8px',
+      },
+    },
+    tagList: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      flexWrap: 'wrap',
+      '& > *': {
+        marginRight: theme.spacing(0.5),
+        marginTop: theme.spacing(0.5),
+        marginBottom: theme.spacing(0.5),
       },
     },
   })
@@ -197,7 +208,23 @@ const PostCardList = ({ postInfo }: Props) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>간단 설명</Typography>
+          {/* <Typography paragraph>간단 설명</Typography> */}
+          <div className={classes.tagList}>
+            {postInfo &&
+              postInfo.Tags.map((item, idx) => (
+                <div key={item.tagName + idx}>
+                  <Chip
+                    size="small"
+                    label={item.tagName}
+                    clickable
+                    color="primary"
+                    //  onDelete={handleDelete}
+                    //  deleteIcon={<DoneIcon />}
+                    variant="outlined"
+                  />
+                </div>
+              ))}
+          </div>
         </CardContent>
       </Collapse>
     </Card>
