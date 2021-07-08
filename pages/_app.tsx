@@ -11,11 +11,13 @@ import theme from '../theme/theme';
 import Header from '../components/common/Header';
 import SideBar from '../components/common/SideBar';
 
-import dayjs from 'dayjs';
 import NewSideBar from '../components/common/NewSideBar';
 import Footer from '../components/common/Footer';
 import MainSection from '../components/common/MainSection';
-dayjs.locale('kr');
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+
+dayjs.locale('ko');
 
 // const queryClient = new QueryClient();
 

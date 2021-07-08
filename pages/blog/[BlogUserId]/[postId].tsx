@@ -25,54 +25,10 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
+// import 'dayjs/locale/ko';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-
-      '& > *': {
-        margin: theme.spacing(1),
-        boxShadow:
-          '0 16px 24px 2px rgb(0 0 0 / 14%), 0 6px 30px 5px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%)',
-        width: '100%',
-        height: '100%',
-        minHeight: '800px',
-        maxWidth: '1400px',
-      },
-    },
-    blogTitleStyle: {
-      color: '#3C4858',
-      margin: '1.75rem 0 0.875rem',
-      display: 'inline-block',
-      position: 'relative',
-      marginTop: '18px',
-      minHeight: '32px',
-      fontFamily: 'Roboto Slab,Times New Roman, serif',
-      fontWeight: 700,
-      textDecoration: 'none',
-      fontSize: ' 1.5625rem',
-      lineHeight: '1.4em',
-    },
-    btnList: {
-      '& > button': {
-        marginBottom: '15px',
-      },
-    },
-    tagList: {
-      display: 'flex',
-      justifyContent: 'flex-start',
-      flexWrap: 'wrap',
-      '& > *': {
-        marginRight: theme.spacing(0.5),
-        marginTop: theme.spacing(0.5),
-        marginBottom: theme.spacing(0.5),
-      },
-    },
-  })
-);
+// dayjs.locale('ko');
 
 const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) => {
   const classes = useStyles();
@@ -118,7 +74,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
   return (
     <div className={classes.root}>
       <Paper
-        style={{ borderRadius: '10px', margin: '100px 30px 0 30px', position: 'relative' }}
+        // style={{ borderRadius: '10px', margin: '100px 30px 0 30px', position: 'relative' }}
         elevation={3}>
         {/* 블로그 상단 회원정보 소개 영역 */}
         <div
@@ -162,14 +118,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
         {/* 블로그 상단 회원정보 소개 영역 끝 */}
 
         {/* 우측 toc 영역 시작 */}
-        <div
-          style={{
-            position: 'absolute',
-            right: '5%',
-            top: '200px',
-            height: 'calc(100% - 260px)',
-            width: '200px',
-          }}>
+        <div className={classes.tocSection}>
           <div
             style={{
               position: 'sticky',
@@ -250,14 +199,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
               </div>
 
               {/* 좌측 Like 영역 시작 */}
-              <div
-                style={{
-                  position: 'absolute',
-                  left: '-150px',
-                  top: '0px',
-                  height: '100%',
-                  width: '50px',
-                }}>
+              <div className={classes.leftBtnsSection}>
                 <div
                   style={{
                     position: 'sticky',

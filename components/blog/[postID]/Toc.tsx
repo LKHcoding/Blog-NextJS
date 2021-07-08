@@ -12,7 +12,8 @@ import { Scrollbars } from 'react-custom-scrollbars';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      ['@media (max-width:1365px)']: {
+      [theme.breakpoints.down(1290)]: {
+        // ['@media (max-width:1365px)']: {
         display: 'none',
       },
     },

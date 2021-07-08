@@ -9,11 +9,11 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       width: '100%',
-      padding: '15px 35px',
+      padding: '25px 35px',
       backgroundColor: '#f6f6f6',
 
       [theme.breakpoints.down(1280)]: {
-        padding: '15px 15px',
+        padding: '25px 15px',
       },
     },
     cardItem: {
@@ -31,19 +31,20 @@ const AllPostCardList = () => {
     <>
       <div className={classes.root}>
         <Grid container spacing={3} direction="row" justify="flex-start" alignItems="center">
-          {data?.map((item) => (
-            <Grid
-              className={classes.cardItem}
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              xl={3}
-              key={item.id}>
-              <PostCard postInfo={item} />
-            </Grid>
-          ))}
+          {data &&
+            data.map((item) => (
+              <Grid
+                className={classes.cardItem}
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                xl={3}
+                key={item.id}>
+                <PostCard postInfo={item} />
+              </Grid>
+            ))}
         </Grid>
       </div>
     </>
