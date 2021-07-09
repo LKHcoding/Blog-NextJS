@@ -3,6 +3,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { getAllPostInfoApi } from '../../utils/queryAPI';
 import PostCard from './PostCard';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,6 +27,29 @@ const AllPostCardList = () => {
   const classes = useStyles();
 
   const { data, isLoading, refetch } = useQuery(getAllPostInfoApi.key, getAllPostInfoApi.apiCall);
+
+  if (!data) {
+    return (
+      <>
+        <div
+          style={{
+            width: '100%',
+            height: '81vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <CircularProgress />
+          {/* <div>
+            <SelectModal selectedValue={selectedValue} open={modalOpen} onClose={handleClose} />
+          </div>
+          <Backdrop className={classes.backdrop} open={backDropOpen}>
+            <CircularProgress color="inherit" />
+          </Backdrop> */}
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
