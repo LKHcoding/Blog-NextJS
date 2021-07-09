@@ -220,7 +220,12 @@ https://example.com
         onClick={handleClickOpen}>
         New Log
       </Button>
-      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog
+        disableEscapeKeyDown={true}
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}>
         <AppBar color="primary" className={classes.appBar}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
