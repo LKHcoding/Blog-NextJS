@@ -76,8 +76,19 @@ const githubLogin = () => {
         )
         .then((res) => res.data)
         .catch((err) => console.log(err.message));
+
       refetch();
-      console.log('깃허브 로그인 성공');
+
+      toast.info(`${result.user.loginID}님 반갑습니다!`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+      });
       router.push('/');
     } else {
       console.log('토큰이 없습니다.');
@@ -119,6 +130,8 @@ const githubLogin = () => {
         .then((res) => res.data)
         .catch((err) => console.log(err.message));
 
+      refetch();
+
       toast.info(`${result.githubUserData.loginID}님 반갑습니다!`, {
         position: 'top-center',
         autoClose: 3000,
@@ -129,7 +142,6 @@ const githubLogin = () => {
         progress: undefined,
         transition: Flip,
       });
-      refetch();
       // console.log('깃허브 로그인 성공');
       router.push('/');
     } else {

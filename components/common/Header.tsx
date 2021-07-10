@@ -199,7 +199,6 @@ const header = () => {
   };
 
   const handleLogout = async (event: React.MouseEvent<EventTarget>) => {
-    // event.preventDefault();
     if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
       return;
     }

@@ -16,6 +16,7 @@ import {
   getOneUserPostInfoDataApi,
   getOneUserTagInfoDataApi,
 } from '../../utils/queryAPI';
+import { Flip, toast } from 'react-toastify';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,6 +74,17 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
           await queryClient.invalidateQueries(`${getOneUserTagInfoDataApi.key}-${data?.loginID}`);
           await queryClient.invalidateQueries(`${getOneUserPostInfoDataApi.key}-${data?.loginID}`);
           await queryClient.invalidateQueries(`${getAllPostInfoApi.key}`);
+
+          toast.info(`글 작성 완료`, {
+            position: 'top-center',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            transition: Flip,
+          });
 
           setOpen(false);
         }
