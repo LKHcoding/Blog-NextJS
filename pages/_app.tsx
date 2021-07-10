@@ -14,6 +14,9 @@ import SideBar from '../components/common/SideBar';
 import NewSideBar from '../components/common/NewSideBar';
 import Footer from '../components/common/Footer';
 import MainSection from '../components/common/MainSection';
+import { Flip, toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
@@ -65,6 +68,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <MainSection>
               <Component {...pageProps} />
             </MainSection>
+            <ToastContainer />
           </ThemeProvider>
         </Hydrate>
 

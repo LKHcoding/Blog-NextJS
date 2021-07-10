@@ -6,6 +6,7 @@ import axios from 'axios';
 type Data = {
   data?: string;
   error?: string;
+  loginID?: string;
 };
 
 const Login = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
@@ -51,7 +52,7 @@ const Login = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         // 좀더 자세히는 https://web.dev/samesite-cookies-explained/
       })
     );
-    res.status(200).json({ data: '로그인 성공' });
+    res.status(200).json({ data: '로그인 성공', loginID });
   } else {
     res.status(401).json({ data: result });
   }

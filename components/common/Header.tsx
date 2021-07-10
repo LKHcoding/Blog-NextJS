@@ -36,6 +36,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CreateIcon from '@material-ui/icons/Create';
 import { useRouter } from 'next/router';
 import FullScreenDialog from '../write/FullScreenDialog';
+import { Flip, toast } from 'react-toastify';
 
 const drawerWidth = 160;
 const useStyles = makeStyles((theme: Theme) =>
@@ -198,6 +199,7 @@ const header = () => {
   };
 
   const handleLogout = async (event: React.MouseEvent<EventTarget>) => {
+    // event.preventDefault();
     if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
       return;
     }
@@ -205,11 +207,25 @@ const header = () => {
 
     const logoutResult = await axios
       .get('/api/logout')
-      .then((res) => res.data)
+      .then((res) => res)
       .catch((err) => err);
+    // console.log(logoutResult.status);
 
-    console.log(logoutResult);
-    refetch();
+    if (logoutResult.status === 200) {
+      toast.error(`로그아웃 완료`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+      });
+      refetch();
+    }
+
+    // console.log(logoutResult);
   };
 
   function handleListKeyDown(event: React.KeyboardEvent) {

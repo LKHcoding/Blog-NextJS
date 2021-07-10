@@ -6,6 +6,7 @@ import { getMyUserDataApi } from '../../utils/queryAPI';
 import { useQuery } from 'react-query';
 import SelectModal from '../../components/github-login/selectModal';
 import { Backdrop, Button, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
+import { Flip, toast } from 'react-toastify';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -97,7 +98,7 @@ const githubLogin = () => {
       .then((res) => res.data)
       .catch((err) => console.log(err.message));
 
-    console.log(result.githubUserData);
+    // console.log(result.githubUserData);
 
     if (result?.isSignUpUser === false) {
       githubUserData.current = result.githubUserData;
@@ -117,8 +118,19 @@ const githubLogin = () => {
         )
         .then((res) => res.data)
         .catch((err) => console.log(err.message));
+
+      toast.info(`${result.githubUserData.loginID}님 반갑습니다!`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+      });
       refetch();
-      console.log('깃허브 로그인 성공');
+      // console.log('깃허브 로그인 성공');
       router.push('/');
     } else {
       console.log('토큰이 없습니다.');
@@ -130,7 +142,7 @@ const githubLogin = () => {
     // const { code } = router.query;
 
     if (code) {
-      console.log(code);
+      // console.log(code);
       gitApi(code);
     }
   }, [code]);

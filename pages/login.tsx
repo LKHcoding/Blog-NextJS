@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import { getMyUserDataApi } from '../utils/queryAPI';
 import GitHubIcon from '@material-ui/icons/GitHub';
+import { Flip, toast } from 'react-toastify';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -69,8 +70,17 @@ const LogIn = () => {
             withCredentials: true,
           }
         )
-        .then(() => {
-          // console.log('response : ', response.data.data);
+        .then((res) => {
+          toast.info(`${res.data.loginID}님 반갑습니다!`, {
+            position: 'top-center',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            transition: Flip,
+          });
           refetch();
           // if (response.data.data === '로그인 성공') {
           //   router.push('/');
@@ -78,6 +88,16 @@ const LogIn = () => {
         })
         .catch((error) => {
           console.log(error);
+          toast.error(`로그인 실패 - ${error}`, {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            transition: Flip,
+          });
           // setLogInError(error.response?.data?.statusCode === 401);
         });
     },
