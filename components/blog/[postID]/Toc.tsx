@@ -87,7 +87,8 @@ const Toc = ({ content }: Props) => {
         <Divider />
         <Scrollbars universal={true} autoHide autoHeight autoHeightMax="calc(100vh - 250px)">
           {result.map((item, idx) => {
-            if (item?.count && item.count <= 30) {
+            // count는 샾개수
+            if (item?.count && item.count <= 30 && item?.title) {
               return (
                 <ListItemLink
                   href={`#${item.title}`}

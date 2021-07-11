@@ -75,7 +75,7 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
           await queryClient.invalidateQueries(`${getOneUserPostInfoDataApi.key}-${data?.loginID}`);
           await queryClient.invalidateQueries(`${getAllPostInfoApi.key}`);
 
-          toast.info(`글 작성 완료`, {
+          toast.info(`새 글 작성이 완료되었습니다.`, {
             position: 'top-center',
             autoClose: 3000,
             hideProgressBar: false,

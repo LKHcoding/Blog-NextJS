@@ -29,7 +29,7 @@ export default MarkDownContents;
 const components: Partial<NormalComponents & SpecialComponents> = {
   h1({ children }) {
     let str = '';
-    children.map((item) => {
+    children?.map((item) => {
       if (typeof item === 'string') {
         str += item;
       } else {
@@ -38,11 +38,11 @@ const components: Partial<NormalComponents & SpecialComponents> = {
         }
       }
     });
-    return <h1 id={`${str}`}>{children}</h1>;
+    return <h1 id={`${str !== '' ? str : children}`}>{children}</h1>;
   },
   h2({ children }) {
     let str = '';
-    children.map((item) => {
+    children?.map((item) => {
       if (typeof item === 'string') {
         str += item;
       } else {
@@ -51,11 +51,11 @@ const components: Partial<NormalComponents & SpecialComponents> = {
         }
       }
     });
-    return <h2 id={`${str}`}>{children}</h2>;
+    return <h2 id={`${str !== '' ? str : children}`}>{children}</h2>;
   },
   h3({ children }) {
     let str = '';
-    children.map((item) => {
+    children?.map((item) => {
       if (typeof item === 'string') {
         str += item;
       } else {
@@ -64,7 +64,7 @@ const components: Partial<NormalComponents & SpecialComponents> = {
         }
       }
     });
-    return <h3 id={`${str}`}>{children}</h3>;
+    return <h3 id={`${str !== '' ? str : children}`}>{children}</h3>;
   },
   code({ node, inline, className, children, ...props }) {
     const match = /language-(\w+)/.exec(className || '');

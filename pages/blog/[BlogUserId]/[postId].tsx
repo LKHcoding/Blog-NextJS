@@ -84,11 +84,6 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          {/* <Link
-            href={{
-              pathname: '/blog/[BlogUserId]',
-              query: { BlogUserId: `${userData?.loginID}` },
-            }} */}
           <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`} key="blog">
             <a>
               <Avatar
