@@ -22,25 +22,7 @@ import { dehydrate } from 'react-query/hydration';
 import BlogProfile from '../../components/blog/BlogProfile';
 import TagList from '../../components/blog/TagList';
 import PostList from '../../components/blog/PostList';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      '& > *': {
-        margin: theme.spacing(1),
-        boxShadow:
-          '0 16px 24px 2px rgb(0 0 0 / 14%), 0 6px 30px 5px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%)',
-        width: '100%',
-        height: '100%',
-        minHeight: '800px',
-        maxWidth: '1400px',
-      },
-    },
-  })
-);
+import { useStyles } from '../../styles/muiStyles/blog/[BlogUserId]Style';
 
 const BlogPage = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
@@ -55,21 +37,8 @@ const BlogPage = ({ params }: { params: { BlogUserId: string } }) => {
         <Paper style={{ borderRadius: '10px', margin: '100px 30px 0 30px' }} elevation={3}>
           <BlogProfile params={params} />
 
-          <div
-            style={{
-              display: 'flex',
-              padding: '0px 20px',
-              width: '100%',
-              justifyContent: 'center',
-            }}>
-            <div
-              style={{
-                display: 'flex',
-                marginTop: '30px',
-                width: '100%',
-                maxWidth: '1200px',
-                justifyContent: 'center',
-              }}>
+          <div className={classes.container}>
+            <div className={classes.contents}>
               <TagList params={params} />
               <PostList params={params} />
             </div>

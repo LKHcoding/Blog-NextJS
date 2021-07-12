@@ -1,5 +1,4 @@
 import React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -10,17 +9,7 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import { Badge, ListSubheader, Typography } from '@material-ui/core';
 import { useQuery } from 'react-query';
 import { getOneUserTagInfoDataApi } from '../../utils/queryAPI';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      // width: '100%',
-      minWidth: '250px',
-      // maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  })
-);
+import { useStyles } from '../../styles/muiStyles/components/blog/TagListStyle';
 
 const TagList = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
@@ -32,7 +21,7 @@ const TagList = ({ params }: { params: { BlogUserId: string } }) => {
   return (
     <div className={classes.root}>
       <List component="nav" aria-label="main mailbox folders">
-        <Typography variant="h6" component="h2" style={{ marginLeft: '15px', marginBottom: '8px' }}>
+        <Typography variant="h6" component="h2" className={classes.title}>
           태그 목록
         </Typography>
         <Divider />
