@@ -116,7 +116,7 @@ const SideBar: FC = ({ children }) => {
                 <ListItemText primary={'Sup'} />
               </ListItem>
             </Link>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            {['검색'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText primary={text} />
@@ -125,7 +125,7 @@ const SideBar: FC = ({ children }) => {
           </List>
           <Divider />
           <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            {['Front-End', 'Back-End', 'Full-Stack'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText primary={text} />
