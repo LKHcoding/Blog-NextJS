@@ -41,17 +41,7 @@ const PostList = ({ params }: { params: { BlogUserId: string } }) => {
   // }
 
   return (
-    <div
-      style={{
-        // marginLeft: '100px',
-        padding: '0px 15px',
-        marginBottom: '30px',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+    <div className={classes.root}>
       {data &&
         data.map((item) => (
           <Link
@@ -59,8 +49,8 @@ const PostList = ({ params }: { params: { BlogUserId: string } }) => {
             href={`/blog/${params.BlogUserId}/${item.id}`}
             as={`/blog/${params.BlogUserId}/${item.id}`}
             key={item.id}>
-            <a style={{ width: '100%' }}>
-              <Card className={classes.root}>
+            <a className={classes.linkContainer}>
+              <Card className={classes.cardRoot}>
                 <CardActionArea>
                   <CardMedia
                     className={classes.media}
@@ -71,8 +61,8 @@ const PostList = ({ params }: { params: { BlogUserId: string } }) => {
                     title={`${item.title}`}
                   />
                   <CardContent>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                      <Typography variant="h5" component="h2" style={{ maxWidth: '80%' }}>
+                    <div className={classes.cardTitle}>
+                      <Typography variant="h5" component="h2">
                         {item.title}
                       </Typography>
                       <div>
@@ -108,15 +98,6 @@ const PostList = ({ params }: { params: { BlogUserId: string } }) => {
                               .length
                           }
                         </span>
-                        {/* <IconButton
-                          className={clsx(classes.expand, {
-                            [classes.expandOpen]: expanded,
-                          })}
-                          onClick={handleExpandClick}
-                          aria-expanded={expanded}
-                          aria-label="show more">
-                          <ExpandMoreIcon />
-                        </IconButton> */}
                       </div>
                     </div>
                     <Typography variant="body2" color="textSecondary" component="p">

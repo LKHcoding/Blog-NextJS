@@ -26,11 +26,11 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
-// import 'dayjs/locale/ko';
-
-// dayjs.locale('ko');
+import { Flip, toast } from 'react-toastify';
 
 const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) => {
+  const router = useRouter();
+
   const classes = useStyles();
 
   const { data: myUserData, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
@@ -49,6 +49,23 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
   // console.log(router.query);
 
   const handleLike = async (action: string) => {
+    if (!myUserData) {
+      toast.error(`로그인이 필요합니다.`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+        onClick: () => {
+          router.push('/login');
+        },
+      });
+      return;
+    }
+
     const result = await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/v1/blog/post-like/${params.postId}/${action}`,

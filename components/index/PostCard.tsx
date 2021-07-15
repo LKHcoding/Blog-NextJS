@@ -130,8 +130,6 @@ const PostCardList = ({ postInfo }: Props) => {
           <CardHeader
             className={classes.cardHeaderTitle}
             avatar={
-              // <Link href={`blog/${postInfo.User.loginID}`} as={`blog/${postInfo.User.loginID}`}>
-              //   <a>
               <IconButton onClick={goToUserBlog}>
                 <Tooltip title={`${postInfo.User.loginID || ''}'s blog`} arrow placement="top">
                   <Avatar
@@ -143,18 +141,11 @@ const PostCardList = ({ postInfo }: Props) => {
                   />
                 </Tooltip>
               </IconButton>
-              //   </a>
-              // </Link>
             }
             title={`${postInfo.title}`}
             subheader={`${postInfo.User.loginID}`}
           />
           <CardActionArea title={`${postInfo.title}`}>
-            {/* <Link
-          href={`/blog/${postInfo.User.loginID}/${postInfo.id}`}
-          as={`/blog/${postInfo.User.loginID}/${postInfo.id}`}
-          key={`postcard-${postInfo.id}`}>
-          <a> */}
             <CardMedia
               className={classes.media}
               image={`${process.env.NEXT_PUBLIC_API_URL}/${postInfo.thumbnail}`}
@@ -210,7 +201,6 @@ const PostCardList = ({ postInfo }: Props) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          {/* <Typography paragraph>간단 설명</Typography> */}
           <div className={classes.tagList}>
             {postInfo &&
               postInfo.Tags.map((item, idx) => (
@@ -220,8 +210,6 @@ const PostCardList = ({ postInfo }: Props) => {
                     label={item.tagName}
                     clickable
                     color="primary"
-                    //  onDelete={handleDelete}
-                    //  deleteIcon={<DoneIcon />}
                     variant="outlined"
                   />
                 </div>
