@@ -144,7 +144,8 @@ const PostList: FC<Props> = ({ params, tag }) => {
                           color="primary"
                           //  onDelete={handleDelete}
                           //  deleteIcon={<DoneIcon />}
-                          variant="outlined"
+                          variant={tag === item.tagName ? `default` : `outlined`}
+                          // variant="outlined"
                         />
                       </div>
                     ))}
