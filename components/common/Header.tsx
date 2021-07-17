@@ -360,7 +360,8 @@ const header = () => {
                                 </MenuItem>
                               </a>
                             </Link>,
-                            <Link href={`/signup`} as={`/signup`} key="signUp">
+                            // <Link href={`/signup`} as={`/signup`} key="signUp">
+                            <Link href={`/login`} as={`/login`} key="logIn">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>

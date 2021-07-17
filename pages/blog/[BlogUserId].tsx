@@ -34,7 +34,7 @@ const BlogPage = ({ params }: { params: { BlogUserId: string } }) => {
   return (
     <div>
       <div className={classes.root}>
-        <Paper style={{ borderRadius: '10px', margin: '100px 30px 0 30px' }} elevation={3}>
+        <Paper style={{ borderRadius: '10px', margin: '100px 30px 15px 30px' }} elevation={3}>
           <BlogProfile params={params} />
 
           <div className={classes.container}>

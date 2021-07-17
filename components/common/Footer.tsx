@@ -8,19 +8,21 @@ const Footer = () => {
         style={{
           textAlign: 'center',
           borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-          paddingTop: '10px',
+          paddingTop: '25px',
+          paddingBottom: '25px',
+          // marginBottom: '15px',
           // marginTop: '10px',
         }}>
-        푸터 입니다.
+        {/* 푸터 입니다. */}
+        <Typography variant="body2" color="textSecondary" align="center">
+          {'Copyright © '}
+          <Link color="inherit" href="https://github.com/LKHcoding/">
+            LKHcoding
+          </Link>{' '}
+          {new Date().getFullYear()}
+          {'.'}
+        </Typography>
       </div>
-      <Typography variant="body2" color="textSecondary" align="center">
-        {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
     </>
   );
 };

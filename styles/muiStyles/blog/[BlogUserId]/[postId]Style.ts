@@ -18,7 +18,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         maxWidth: '1400px',
 
         borderRadius: '10px',
-        margin: '100px 30px 10px 30px',
+        margin: '100px 30px 15px 30px',
         position: 'relative',
         [theme.breakpoints.down(800)]: {
           margin: '100px 15px 10px 15px',
