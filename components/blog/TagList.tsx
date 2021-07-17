@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -10,8 +10,16 @@ import { Badge, ListSubheader, Typography } from '@material-ui/core';
 import { useQuery } from 'react-query';
 import { getOneUserTagInfoDataApi } from '../../utils/queryAPI';
 import { useStyles } from '../../styles/muiStyles/components/blog/TagListStyle';
+import Link from 'next/link';
 
-const TagList = ({ params }: { params: { BlogUserId: string } }) => {
+interface Props {
+  params: {
+    BlogUserId: string;
+  };
+  tag: string | null;
+}
+
+const TagList: FC<Props> = ({ params, tag }) => {
   const classes = useStyles();
 
   const { data, refetch } = useQuery(`${getOneUserTagInfoDataApi.key}-${params.BlogUserId}`, () =>
@@ -26,17 +34,32 @@ const TagList = ({ params }: { params: { BlogUserId: string } }) => {
         </Typography>
         <Divider />
         {data && (
-          <ListItem button alignItems="center">
-            <ListItemText primary={`전체 작성 글`} />
-            <Badge badgeContent={data.allPostCount} color="secondary"></Badge>
-          </ListItem>
+          <Link
+            scroll={false}
+            href={`/blog/${params.BlogUserId}?tag=${'all'}`}
+            as={`/blog/${params.BlogUserId}?tag=${'all'}`}>
+            <a>
+              <ListItem selected={tag === 'all'} button alignItems="center">
+                <ListItemText primary={`전체 작성 글`} />
+                <Badge badgeContent={data.allPostCount} color="secondary"></Badge>
+              </ListItem>
+            </a>
+          </Link>
         )}
         {data &&
           data.tagInfoResult.map((item) => (
-            <ListItem button key={item.tagName} alignItems="center">
-              <ListItemText primary={`${item.tagName}`} />
-              <Badge badgeContent={item.BlogPosts.length} color="primary"></Badge>
-            </ListItem>
+            <Link
+              scroll={false}
+              key={item.tagName}
+              href={`/blog/${params.BlogUserId}?tag=${item.tagName}`}
+              as={`/blog/${params.BlogUserId}?tag=${item.tagName}`}>
+              <a>
+                <ListItem selected={tag === item.tagName} button alignItems="center">
+                  <ListItemText primary={`${item.tagName}`} />
+                  <Badge badgeContent={item.BlogPosts.length} color="primary"></Badge>
+                </ListItem>
+              </a>
+            </Link>
           ))}
       </List>
     </div>

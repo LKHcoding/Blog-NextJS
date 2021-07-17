@@ -99,11 +99,15 @@ export const getOneUserTagInfoDataApi = {
  */
 export const getOneUserPostInfoDataApi = {
   key: 'getOneUserPostInfoData',
-  apiCall: async (BlogUserId: string, Authentication?: any): Promise<IPostInfoType[]> => {
+  apiCall: async (
+    BlogUserId: string,
+    tag: string,
+    Authentication?: any
+  ): Promise<IPostInfoType[]> => {
     // console.log(Authentication);
     return await api
       .get(
-        `/v1/blog/posts-info/${BlogUserId}`,
+        `/v1/blog/posts-info/${BlogUserId}/${tag}`,
         typeof Authentication === 'string'
           ? {
               withCredentials: true,

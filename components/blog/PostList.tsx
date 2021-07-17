@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -18,11 +18,20 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-const PostList = ({ params }: { params: { BlogUserId: string } }) => {
+interface Props {
+  params: {
+    BlogUserId: string;
+  };
+  tag: string | null;
+}
+
+const PostList: FC<Props> = ({ params, tag }) => {
   const classes = PostListStyle();
 
+  // console.log(tag);
+
   const { data, refetch } = useQuery(`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`, () =>
-    getOneUserPostInfoDataApi.apiCall(params.BlogUserId)
+    getOneUserPostInfoDataApi.apiCall(params.BlogUserId, tag ? tag : 'all')
   );
 
   const { data: myUserData } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
@@ -35,6 +44,14 @@ const PostList = ({ params }: { params: { BlogUserId: string } }) => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  useEffect(() => {
+    if (tag) {
+      // console.log(tag);
+
+      refetch();
+    }
+  }, [tag]);
 
   // if (!data) {
   //   return null;

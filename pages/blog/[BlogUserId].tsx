@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { FC } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import { QueryClient, useQuery } from 'react-query';
 import { getOneUserDataApi } from '../../utils/queryAPI';
@@ -24,8 +24,17 @@ import TagList from '../../components/blog/TagList';
 import PostList from '../../components/blog/PostList';
 import { useStyles } from '../../styles/muiStyles/blog/[BlogUserId]Style';
 
-const BlogPage = ({ params }: { params: { BlogUserId: string } }) => {
+interface Props {
+  params: {
+    BlogUserId: string;
+  };
+}
+
+const BlogPage: FC<Props> = ({ params }) => {
   const classes = useStyles();
+  const router = useRouter();
+
+  // console.log(router.query.tag);
 
   // const { data, refetch } = useQuery(`${getOneUserDataApi.key}-${params.loginID}`, () =>
   //   getOneUserDataApi.apiCall(params.loginID)
@@ -39,8 +48,14 @@ const BlogPage = ({ params }: { params: { BlogUserId: string } }) => {
 
           <div className={classes.container}>
             <div className={classes.contents}>
-              <TagList params={params} />
-              <PostList params={params} />
+              <TagList
+                params={params}
+                tag={typeof router.query.tag === 'string' ? router.query.tag : null}
+              />
+              <PostList
+                params={params}
+                tag={typeof router.query.tag === 'string' ? router.query.tag : null}
+              />
             </div>
           </div>
         </Paper>
@@ -62,10 +77,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   //   )
   // );
 
+  // console.log(query);
+
   return {
     props: {
       // dehydratedState: dehydrate(queryClient),
-      params: params,
+      params,
     },
   };
 };
