@@ -54,8 +54,8 @@ const LogIn = () => {
     getMyUserDataApi.apiCall
   );
 
-  const [loginID, onChangeLoginID] = useInput('test4');
-  const [password, onChangePassword] = useInput('test4');
+  const [loginID, onChangeLoginID] = useInput('');
+  const [password, onChangePassword] = useInput('');
 
   const classes = useStyles();
 

@@ -10,12 +10,12 @@ export const PostListStyle = makeStyles((theme: Theme) =>
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      // justifyContent: 'center',
       alignItems: 'center',
     },
     linkContainer: {
       width: '95%',
-      height: '100%',
+      // height: '100%',
       marginBottom: '20px',
     },
     cardRoot: {
