@@ -1,27 +1,10 @@
-import {
-  Button,
-  Container,
-  createStyles,
-  Grid,
-  makeStyles,
-  Theme,
-  Tooltip,
-} from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import { QueryClient, useQuery } from 'react-query';
-import { getOneUserDataApi } from '../../utils/queryAPI';
-import Paper from '@material-ui/core/Paper';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import IconButton from '@material-ui/core/IconButton';
-import MailIcon from '@material-ui/icons/Mail';
-import LanguageIcon from '@material-ui/icons/Language';
-import { GetServerSideProps } from 'next';
-import { dehydrate } from 'react-query/hydration';
 import BlogProfile from '../../components/blog/BlogProfile';
-import TagList from '../../components/blog/TagList';
 import PostList from '../../components/blog/PostList';
+import TagList from '../../components/blog/TagList';
 import { useStyles } from '../../styles/muiStyles/blog/[BlogUserId]Style';
 
 interface Props {

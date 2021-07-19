@@ -1,22 +1,20 @@
 import React, { FC, useEffect, useState } from 'react';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useQuery } from 'react-query';
 import { getMyUserDataApi, getOneUserPostInfoDataApi } from '../../utils/queryAPI';
 import removeMD from 'remove-markdown';
 import Link from 'next/link';
-import { Chip, createStyles, Theme } from '@material-ui/core';
+import { Chip } from '@material-ui/core';
 import { PostListStyle } from '../../styles/muiStyles/components/blog/PostListStyle';
 import dayjs from 'dayjs';
 import { IconButton } from '@material-ui/core';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import useLoadingStore from '../../stores/useLoadingStore';
 
 interface Props {
   params: {
@@ -28,10 +26,14 @@ interface Props {
 const PostList: FC<Props> = ({ params, tag }) => {
   const classes = PostListStyle();
 
+  // const isLoading = useLoadingStore((state) => state.isLoading);
+  const setLoading = useLoadingStore((state) => state.setLoading);
+
   // console.log(tag);
 
-  const { data, refetch } = useQuery(`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`, () =>
-    getOneUserPostInfoDataApi.apiCall(params.BlogUserId, tag ? tag : 'all')
+  const { data, refetch, isFetching } = useQuery(
+    `${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`,
+    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, tag ? tag : 'all')
   );
 
   const { data: myUserData } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
@@ -45,17 +47,17 @@ const PostList: FC<Props> = ({ params, tag }) => {
     setExpanded(!expanded);
   };
 
+  // console.log(isFetching);
+
   useEffect(() => {
     if (tag) {
-      // console.log(tag);
-
       refetch();
     }
   }, [tag]);
 
-  // if (!data) {
-  //   return null;
-  // }
+  useEffect(() => {
+    setLoading(isFetching);
+  }, [isFetching]);
 
   return (
     <div className={classes.root}>

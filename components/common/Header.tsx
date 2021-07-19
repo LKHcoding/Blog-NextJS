@@ -37,6 +37,10 @@ import CreateIcon from '@material-ui/icons/Create';
 import { useRouter } from 'next/router';
 import FullScreenDialog from '../write/FullScreenDialog';
 import { Flip, toast } from 'react-toastify';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+// import { useIsFetching } from 'react-query';
+import useLoadingStore from '../../stores/useLoadingStore';
 
 const drawerWidth = 160;
 const useStyles = makeStyles((theme: Theme) =>
@@ -169,12 +173,20 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const header = () => {
+  // How many queries are fetching?
+  // const isFetching = useIsFetching();
+  // console.log('isFetching : ', isFetching);
+
+  // How many queries matching the posts prefix are fetching?
+  //  const isFetchingPosts = useIsFetching(['posts'])
+
   const router = useRouter();
 
   const { data, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
 
   const classes = useStyles();
 
+  const isLoading = useLoadingStore((state) => state.isLoading);
   const open = useMenuStore((state) => state.open);
   const openMenu = useMenuStore((state) => state.openMenu);
 
@@ -426,6 +438,7 @@ const header = () => {
 
             {/* 네비바 우측 아이콘 모음 끝 */}
           </Toolbar>
+          {isLoading && <LinearProgress />}
         </AppBar>
       </div>
     </>
