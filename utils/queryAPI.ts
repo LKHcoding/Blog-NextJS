@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { IAllPostInfoType } from '../types/AllPostInfoType';
+import { IAllTagInfoType } from '../types/AllTagInfoType';
 import { IPostInfoType } from '../types/PostInfoType';
 import { ITagInfoType } from '../types/TagInfoType';
 import { IUser } from '../types/UserType';
@@ -176,6 +177,34 @@ export const getAllPostInfoApi = {
             }
       )
       .then((response) => response.data)
+      .catch((err) => {
+        console.log(err.message);
+        return false;
+      });
+  },
+};
+
+/**
+ * 포지션별 모든 Tags info 가져오기
+ */
+export const getAllTagInfoApi = {
+  key: 'getAllTagInfoApi',
+  apiCall: async (Authentication?: any): Promise<IAllTagInfoType[]> => {
+    return await api
+      .get(
+        `v1/blog/tags-info`,
+        typeof Authentication === 'string'
+          ? {
+              withCredentials: true,
+              headers: {
+                Cookie: `Authentication=${Authentication || ''}`,
+              },
+            }
+          : {
+              withCredentials: true,
+            }
+      )
+      .then((response) => response.data.tagInfoResult)
       .catch((err) => {
         console.log(err.message);
         return false;

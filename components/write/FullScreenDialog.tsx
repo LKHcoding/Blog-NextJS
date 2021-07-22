@@ -34,6 +34,9 @@ import ReactMarkdown from 'react-markdown';
 import removeMD from 'remove-markdown';
 import axios from 'axios';
 import { UploadDialog } from './UploadDialog';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { useQuery } from 'react-query';
+import { getAllTagInfoApi } from '../../utils/queryAPI';
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
@@ -66,9 +69,7 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const FullScreenDialog = () => {
-  //글 내용
-  const [initialData, setInitialData] = useState<string>(`
+const initialEditorInput = `
 # Hi, Develogger!
 
 여러가지 예제를 참고하여 작성해보세요
@@ -99,6 +100,7 @@ const FullScreenDialog = () => {
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
+import { CircularProgress } from '@material-ui/core/CircularProgress';
 
 ReactDOM.render(
   <App>{'# Your markdown here'}</App>,
@@ -128,29 +130,45 @@ https://example.com
 
 
 
-  `);
+`;
+
+// 로딩
+
+// function sleep(delay = 0) {
+//   return new Promise((resolve) => {
+//     setTimeout(resolve, delay);
+//   });
+// }
+
+const FullScreenDialog = () => {
+  const { data, refetch, isFetching } = useQuery(getAllTagInfoApi.key, getAllTagInfoApi.apiCall);
+
+  //글 내용
+  const [contentInput, setContentInput] = useState<string>(initialEditorInput);
 
   //글 제목
-  const [inputTitle, onChangeInputTitle] = useInput('');
+  const [inputTitle, onChangeInputTitle, setInputTitle] = useInput('');
 
   //글 태그 전체 리스트
-  const [tagValues, setTagValues] = useState([
-    'Nest.js',
-    'Next.js',
-    'react.js',
-    'mysql',
-    'react-query',
-    'ssr',
-    'Nest.js2',
-    'Next.js2',
-    'react.js2',
-    'mysql2',
-    'react-query2',
-    'ssr2',
-  ]);
+  const [tagValues, setTagValues] = useState<string[]>([]);
+  // const [tagValues, setTagValues] = useState([
+  //   'Nest.js',
+  //   'Next.js',
+  //   'react.js',
+  //   'mysql',
+  //   'react-query',
+  //   'ssr',
+  // ]);
 
   //선택된 태그 값
   const selectedTagList = useRef<string[]>();
+
+  //태그 관련
+  const [tagListOpen, setTagListOpen] = useState(false);
+  // const [options, setOptions] = React.useState([]);
+  // const loading = true;
+  // const loading = tagListOpen && tagValues.length === 0;
+  const loading = isFetching;
 
   //선택된 태그가 있는지 없는지 여부
   const [selectedTagInfo, setSelectedTagInfo] = useState(false);
@@ -186,7 +204,7 @@ https://example.com
             {
               title: inputTitle,
               tags: selectedTagList.current,
-              content: initialData,
+              content: contentInput,
               thumbnail: imagePath,
             },
             { withCredentials: true }
@@ -195,20 +213,26 @@ https://example.com
           .catch((err) => err);
 
         if (result.status === 201) {
+          setInputTitle('');
+          setContentInput(initialEditorInput);
+          refetch();
           setOpen(false);
           return 'success';
         }
         // console.log(result);
       }
     },
-    [inputTitle, selectedTagList.current, initialData]
+    [inputTitle, selectedTagList.current, contentInput]
   );
 
-  // const tagChanged = (changedTagList: string[]) => {
-  //   const list = [...changedTagList];
-  //   console.log(list);
-  //   setSelectedTagList(list);
-  // };
+  useEffect(() => {
+    if (data) {
+      setTagValues(data.map((item) => item.tagName));
+    }
+    return () => {
+      setTagValues([]);
+    };
+  }, [data]);
 
   return (
     <div>
@@ -235,15 +259,15 @@ https://example.com
               Editor
             </Typography>
             <div style={{ marginRight: '5px' }}>
-              {initialData.length > 65535
-                ? `글자수 초과(현재:${initialData.length}, 최대:65535) `
+              {contentInput.length > 65535
+                ? `글자수 초과(현재:${contentInput.length}, 최대:65535) `
                 : ''}
             </div>
             <UploadDialog
               handleSave={handleSave}
               conditionSave={
-                initialData.length > 65535 ||
-                initialData.length === 0 ||
+                contentInput.length > 65535 ||
+                contentInput.length === 0 ||
                 inputTitle.length === 0 ||
                 !selectedTagInfo
               }
@@ -269,7 +293,8 @@ https://example.com
               marginRight: '10px',
             }}
           />
-          <Autocomplete
+
+          {/* <Autocomplete
             style={{
               width: '50%',
               marginTop: '13px',
@@ -295,14 +320,67 @@ https://example.com
             getOptionLabel={(option) => option}
             // defaultValue={[tagValues[0]]}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Tag" placeholder="Tag" />
+              <TextField {...params} variant="standard" label="Tags" placeholder="Tag + Enter" />
+            )}
+          /> */}
+
+          <Autocomplete
+            style={{
+              width: '50%',
+              marginTop: '13px',
+              marginLeft: '10px',
+              marginRight: '10px',
+            }}
+            id="size-small-standard-multi"
+            open={tagListOpen}
+            onOpen={() => {
+              setTagListOpen(true);
+            }}
+            onClose={() => {
+              setTagListOpen(false);
+            }}
+            // getOptionSelected={(option, value) => option.name === value.name}
+            getOptionLabel={(option) => option}
+            options={tagValues}
+            loading={loading}
+            multiple
+            size="small"
+            onChange={(event, value) => {
+              console.log(value);
+              selectedTagList.current = value;
+              if (value.length > 0) {
+                setSelectedTagInfo(true);
+              } else {
+                setSelectedTagInfo(false);
+              }
+            }}
+            autoComplete={true}
+            autoHighlight={true}
+            freeSolo={true}
+            filterSelectedOptions={true}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Tags"
+                placeholder="Tag + Enter"
+                variant="standard"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <React.Fragment>
+                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                      {params.InputProps.endAdornment}
+                    </React.Fragment>
+                  ),
+                }}
+              />
             )}
           />
         </div>
 
         <MdEditor
           style={{ height: '100%', zIndex: 1101 }}
-          value={initialData}
+          value={contentInput}
           renderHTML={(text) => (
             <ReactMarkdown
               className="markdown-body"
@@ -314,7 +392,7 @@ https://example.com
           )}
           onChange={({ html, text }) => {
             // console.log(removeMD(text).replaceAll('\n', ' '));
-            setInitialData(text);
+            setContentInput(text);
           }}
         />
       </Dialog>

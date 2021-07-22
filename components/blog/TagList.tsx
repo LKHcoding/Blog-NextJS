@@ -26,6 +26,8 @@ const TagList: FC<Props> = ({ params, tag }) => {
     getOneUserTagInfoDataApi.apiCall(params.BlogUserId)
   );
 
+  data?.tagInfoResult.sort((a, b) => b.BlogPosts.length - a.BlogPosts.length);
+
   return (
     <div className={classes.root}>
       <List component="nav" aria-label="main mailbox folders">
