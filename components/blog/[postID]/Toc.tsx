@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
+import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
-import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
 import clsx from 'clsx';
+import React, { useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,17 +56,16 @@ const Toc = ({ content }: Props) => {
 
   const classes = useStyles();
 
-  const titles = content.split(`\n`).filter((t) => t[0] === '#');
+  // const titles = content.split(`\n`).filter((t) => t[0] === '#');
+  const titles = content.split(`\n`).filter((t) => t.includes('#'));
 
   const result = titles.map((item) => {
     let count = item.match(/#/g)?.length;
     if (count) {
       count = count * 10;
     }
-    return { title: item.split('# ')[1].replace(/`/g, ''), count };
+    return { title: item.split('# ')[1].replace(/`/g, '').trim(), count };
   });
-
-  // console.log(result);
 
   return (
     <div style={{ width: '200px' }} className={classes.root}>
