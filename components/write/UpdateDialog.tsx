@@ -86,19 +86,16 @@ const UpdateDialog: FC<Props> = ({
   setUpdateDialogOpen: setOpen,
   postData,
 }) => {
-  // console.log(postData);
   // Tag data 가져오기
   const { data, refetch, isFetching } = useQuery(getAllTagInfoApi.key, getAllTagInfoApi.apiCall);
 
   //글 내용
-  const [contentInput, setContentInput] = useState<string>(
-    postData ? postData.content : initialEditorInput
-  );
+  const [contentInput, setContentInput] = useState<string>('');
 
   //글 제목
-  const [inputTitle, onChangeInputTitle, setInputTitle] = useInput(postData ? postData.title : '');
+  const [inputTitle, onChangeInputTitle, setInputTitle] = useInput('');
 
-  //글 태그 전체 리스트
+  //모든 태그 리스트
   const [tagValues, setTagValues] = useState<string[]>([]);
 
   //선택된 태그 값
@@ -175,6 +172,35 @@ const UpdateDialog: FC<Props> = ({
       setInputTitle('');
     };
   }, [data]);
+
+  useEffect(() => {
+    /**
+     * 글 수정하는곳은 닫았다가 열때마다 다시 원래 데이터를 채워넣어준다.
+     */
+    if (postData) {
+      setInputTitle(postData.title);
+      setContentInput(postData.content);
+      selectedTagList.current = postData.Tags.map((item) => item.tagName);
+    }
+    return () => {
+      setInputTitle('');
+      setContentInput(initialEditorInput);
+      selectedTagList.current = [];
+    };
+  }, [open, postData]);
+
+  useEffect(() => {
+    // console.log(selectedTagList.current);
+    // 글 수정시에는 바로 데이터가 들어오므로 useEffect에서 save버튼 활성화를 컨트롤해준다.
+    if (selectedTagList.current && selectedTagList.current.length > 0) {
+      setSelectedTagInfo(true);
+    } else {
+      setSelectedTagInfo(false);
+    }
+    return () => {
+      setSelectedTagInfo(false);
+    };
+  }, [selectedTagList.current]);
 
   return (
     <div>
@@ -291,11 +317,11 @@ const UpdateDialog: FC<Props> = ({
             onChange={(event, value) => {
               console.log(value);
               selectedTagList.current = value;
-              if (value.length > 0) {
-                setSelectedTagInfo(true);
-              } else {
-                setSelectedTagInfo(false);
-              }
+              // if (value.length > 0) {
+              //   setSelectedTagInfo(true);
+              // } else {
+              //   setSelectedTagInfo(false);
+              // }
             }}
             autoComplete={true}
             autoHighlight={true}
