@@ -27,6 +27,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
 import { Flip, toast } from 'react-toastify';
+import UpdateDialog from './../../../components/write/UpdateDialog';
 
 const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) => {
   const router = useRouter();
@@ -45,8 +46,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
     () => getPostInfoDataApi.apiCall(params.postId)
   );
 
-  // const router = useRouter();
-  // console.log(router.query);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
 
   const handleLike = async (action: string) => {
     if (!myUserData) {
@@ -264,7 +264,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
                         {/* </IconButton> */}
                       </Fab>
 
-                      <ActionButton />
+                      <ActionButton setUpdateDialogOpen={setUpdateDialogOpen} />
                       {/* <Toc content={postData ? postData.content : ''} /> */}
                     </div>
                   </Grow>
@@ -276,6 +276,11 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
         </div>
         {/* 메인 컨텐츠 영역 끝 */}
       </Paper>
+      <UpdateDialog
+        updateDialogOpen={updateDialogOpen}
+        setUpdateDialogOpen={setUpdateDialogOpen}
+        postData={postData}
+      />
     </div>
   );
 };

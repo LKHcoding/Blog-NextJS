@@ -5,7 +5,8 @@ import ShareIcon from '@material-ui/icons/Share';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import React from 'react';
+import React, { useState } from 'react';
+import UpdateDialog from '../write/UpdateDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,16 +39,21 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+interface Props {
+  setUpdateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const actions = [
-  { icon: <EditIcon />, name: '수정' },
-  { icon: <DeleteForeverIcon />, name: '삭제' },
-  { icon: <ShareIcon />, name: '공유' },
-];
-
-export default function SpeedDials() {
+export default function SpeedDials({ setUpdateDialogOpen }: Props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleDialogOpen = () => {
+    setUpdateDialogOpen(true);
+    /**
+     * toggle 영역이 아래 버튼들까지 겹쳐있어서 false를 주면 닫히지않음
+     */
+    setOpen(false);
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -71,16 +77,28 @@ export default function SpeedDials() {
           onClick={toggleBtn}
           open={open}
           direction={'down'}>
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={handleClose}
-              // onClick={() => handleClose}
-              tooltipPlacement={'right'}
-            />
-          ))}
+          <SpeedDialAction
+            key={'수정'}
+            icon={<EditIcon />}
+            tooltipTitle={'수정'}
+            onClick={handleDialogOpen}
+            // onClick={() => handleClose}
+            tooltipPlacement={'right'}
+          />
+          <SpeedDialAction
+            key={'삭제'}
+            icon={<DeleteForeverIcon />}
+            tooltipTitle={'삭제'}
+            onClick={handleClose}
+            tooltipPlacement={'right'}
+          />
+          <SpeedDialAction
+            key={'공유'}
+            icon={<ShareIcon />}
+            tooltipTitle={'공유'}
+            onClick={handleClose}
+            tooltipPlacement={'right'}
+          />
         </SpeedDial>
       </div>
     </div>
