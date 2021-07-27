@@ -57,15 +57,21 @@ const Toc = ({ content }: Props) => {
   const classes = useStyles();
 
   // const titles = content.split(`\n`).filter((t) => t[0] === '#');
-  const titles = content.split(`\n`).filter((t) => t.includes('#'));
+  const titles = content.split(`\n`).filter((t) => t.includes('# '));
 
-  const result = titles.map((item) => {
-    let count = item.match(/#/g)?.length;
-    if (count) {
-      count = count * 10;
-    }
-    return { title: item.split('# ')[1].replace(/`/g, '').trim(), count };
-  });
+  const result = titles
+    .filter((str) => str[0] === '#')
+    .map((item) => {
+      let count = item.match(/#/g)?.length;
+      if (count) {
+        count = count * 10;
+      }
+      // console.log(item);
+
+      return { title: item.split('# ')[1].replace(/`/g, '').trim(), count };
+    });
+
+  // console.log(activeId);
 
   return (
     <div style={{ width: '200px' }} className={classes.root}>
