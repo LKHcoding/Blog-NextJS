@@ -12,6 +12,9 @@ export const PostListStyle = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       // justifyContent: 'center',
       alignItems: 'center',
+      [theme.breakpoints.down(720)]: {
+        padding: '0px 0px',
+      },
     },
     linkContainer: {
       width: '95%',
@@ -45,6 +48,10 @@ export const PostListStyle = makeStyles((theme: Theme) =>
         display: '-webkit-box',
         WebkitLineClamp: 1,
         WebkitBoxOrient: 'vertical',
+        // [theme.breakpoints.down(720)]: {
+        //   // display: 'none',
+        //   maxWidth: '60%',
+        // },
       },
     },
     tagList: {

@@ -32,10 +32,10 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import rehypeRaw from 'rehype-raw';
 import gfm from 'remark-gfm';
-import { IPostInfoType } from '../../types/PostInfoType';
-import { getAllTagInfoApi } from '../../utils/queryAPI';
-import useInput from './../../hooks/useInput';
-import { UploadDialog } from './UploadDialog';
+import { IPostInfoType } from '../../../types/PostInfoType';
+import { getAllTagInfoApi } from '../../../utils/queryAPI';
+import useInput from '../../../hooks/useInput';
+import UpdateUploadDialog from './UpdateUploadDialog';
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
@@ -122,9 +122,9 @@ const UpdateDialog: FC<Props> = ({
     setOpen(false);
   };
 
+  //썸네일 변경하면서 글 수정하기
   const handleSave = useCallback(
     async (file: File[]) => {
-      //file: file[0],
       const formData = new FormData();
       formData.append('image', file[0]);
 
@@ -134,16 +134,17 @@ const UpdateDialog: FC<Props> = ({
         })
         .then((res) => res.data);
 
-      // console.log(imagePath);
-      if (imagePath) {
+      if (imagePath && postData) {
         const result = await axios
           .post(
-            `${process.env.NEXT_PUBLIC_API_URL}/v1/blog`,
+            `${process.env.NEXT_PUBLIC_API_URL}/v1/blog/update-post`,
             {
+              id: postData.id,
               title: inputTitle,
               tags: selectedTagList.current,
               content: contentInput,
               thumbnail: imagePath,
+              prevThumbnail: postData.thumbnail,
             },
             { withCredentials: true }
           )
@@ -157,11 +158,39 @@ const UpdateDialog: FC<Props> = ({
           setOpen(false);
           return 'success';
         }
-        // console.log(result);
       }
     },
     [inputTitle, selectedTagList.current, contentInput]
   );
+
+  // 썸네일 변경 없이 글 수정하기
+  const handleSaveWithOutThumbnail = async () => {
+    if (postData) {
+      const result = await axios
+        .post(
+          `${process.env.NEXT_PUBLIC_API_URL}/v1/blog/update-post`,
+          {
+            id: postData.id,
+            title: inputTitle,
+            tags: selectedTagList.current,
+            content: contentInput,
+            thumbnail: postData.thumbnail,
+            prevThumbnail: '',
+          },
+          { withCredentials: true }
+        )
+        .then((res) => res)
+        .catch((err) => err);
+
+      if (result.status === 201) {
+        setInputTitle('');
+        setContentInput(initialEditorInput);
+        refetch();
+        setOpen(false);
+        return 'success';
+      }
+    }
+  };
 
   useEffect(() => {
     if (data) {
@@ -204,14 +233,6 @@ const UpdateDialog: FC<Props> = ({
 
   return (
     <div>
-      {/* <Button
-        variant="outlined"
-        color="default"
-        className={classes.button}
-        startIcon={<CreateIcon />}
-        onClick={handleClickOpen}>
-        New Log
-      </Button> */}
       <Dialog
         disableEscapeKeyDown={true}
         fullScreen
@@ -231,14 +252,18 @@ const UpdateDialog: FC<Props> = ({
                 ? `글자수 초과(현재:${contentInput.length}, 최대:65535) `
                 : ''}
             </div>
-            <UploadDialog
+            <UpdateUploadDialog
+              isUpdate={true}
               handleSave={handleSave}
+              handleSaveWithOutThumbnail={handleSaveWithOutThumbnail}
+              postId={postData?.id || null}
               conditionSave={
                 contentInput.length > 65535 ||
                 contentInput.length === 0 ||
                 inputTitle.length === 0 ||
                 !selectedTagInfo
               }
+              // conditionSave={true}
             />
             {/* <Button autoFocus color="inherit" onClick={handleSave}>
               save
@@ -261,36 +286,6 @@ const UpdateDialog: FC<Props> = ({
               marginRight: '10px',
             }}
           />
-
-          {/* <Autocomplete
-            style={{
-              width: '50%',
-              marginTop: '13px',
-              marginLeft: '10px',
-              marginRight: '10px',
-            }}
-            multiple
-            id="size-small-standard-multi"
-            size="small"
-            onChange={(event, value) => {
-              selectedTagList.current = value;
-              if (value.length > 0) {
-                setSelectedTagInfo(true);
-              } else {
-                setSelectedTagInfo(false);
-              }
-            }}
-            autoComplete={true}
-            autoHighlight={true}
-            freeSolo={true}
-            filterSelectedOptions={true}
-            options={tagValues}
-            getOptionLabel={(option) => option}
-            // defaultValue={[tagValues[0]]}
-            renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Tags" placeholder="Tag + Enter" />
-            )}
-          /> */}
 
           <Autocomplete
             style={{
@@ -317,11 +312,11 @@ const UpdateDialog: FC<Props> = ({
             onChange={(event, value) => {
               console.log(value);
               selectedTagList.current = value;
-              // if (value.length > 0) {
-              //   setSelectedTagInfo(true);
-              // } else {
-              //   setSelectedTagInfo(false);
-              // }
+              if (value.length > 0) {
+                setSelectedTagInfo(true);
+              } else {
+                setSelectedTagInfo(false);
+              }
             }}
             autoComplete={true}
             autoHighlight={true}

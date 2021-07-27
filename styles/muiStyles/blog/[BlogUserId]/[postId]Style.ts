@@ -20,11 +20,11 @@ export const useStyles = makeStyles((theme: Theme) =>
         borderRadius: '10px',
         margin: '100px 30px 15px 30px',
         position: 'relative',
-        [theme.breakpoints.down(800)]: {
-          margin: '100px 15px 10px 15px',
-        },
-        [theme.breakpoints.down(400)]: {
+        [theme.breakpoints.down(720)]: {
           margin: '100px 10px 10px 10px',
+        },
+        [theme.breakpoints.down(470)]: {
+          margin: '100px 0px 10px 0px',
         },
       },
     },

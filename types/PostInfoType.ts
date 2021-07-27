@@ -3,7 +3,7 @@ export interface IPostInfoType {
   title: string;
   content: string;
   thumbnail: string;
-  userId: number;
+  UserId: number;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;

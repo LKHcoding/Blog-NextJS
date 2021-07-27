@@ -8,7 +8,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       marginRight: '70px',
       // marginLeft: '30px',
-      [theme.breakpoints.down(1000)]: {
+      [theme.breakpoints.down(1094)]: {
         display: 'none',
       },
     },

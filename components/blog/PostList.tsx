@@ -84,7 +84,7 @@ const PostList: FC<Props> = ({ params, tag }) => {
                       <Typography variant="h5" component="h2">
                         {item.title}
                       </Typography>
-                      <div>
+                      <div style={{ width: '112px', whiteSpace: 'nowrap' }}>
                         {/* 좋아요 싫어요 영역 */}
                         <IconButton aria-label="Like count" className="actionIcon">
                           <ThumbUpIcon

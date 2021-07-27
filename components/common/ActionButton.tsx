@@ -6,7 +6,7 @@ import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import React, { useState } from 'react';
-import UpdateDialog from '../write/UpdateDialog';
+import UpdateDialog from '../write/update/UpdateDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,9 +41,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface Props {
   setUpdateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isMyPost: boolean;
 }
 
-export default function SpeedDials({ setUpdateDialogOpen }: Props) {
+export default function SpeedDials({ setUpdateDialogOpen, isMyPost }: Props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -77,21 +78,24 @@ export default function SpeedDials({ setUpdateDialogOpen }: Props) {
           onClick={toggleBtn}
           open={open}
           direction={'down'}>
-          <SpeedDialAction
-            key={'수정'}
-            icon={<EditIcon />}
-            tooltipTitle={'수정'}
-            onClick={handleDialogOpen}
-            // onClick={() => handleClose}
-            tooltipPlacement={'right'}
-          />
-          <SpeedDialAction
-            key={'삭제'}
-            icon={<DeleteForeverIcon />}
-            tooltipTitle={'삭제'}
-            onClick={handleClose}
-            tooltipPlacement={'right'}
-          />
+          {isMyPost && [
+            <SpeedDialAction
+              key={'수정'}
+              icon={<EditIcon />}
+              tooltipTitle={'수정'}
+              onClick={handleDialogOpen}
+              // onClick={() => handleClose}
+              tooltipPlacement={'right'}
+            />,
+            <SpeedDialAction
+              key={'삭제'}
+              icon={<DeleteForeverIcon />}
+              tooltipTitle={'삭제'}
+              onClick={handleClose}
+              tooltipPlacement={'right'}
+            />,
+          ]}
+
           <SpeedDialAction
             key={'공유'}
             icon={<ShareIcon />}

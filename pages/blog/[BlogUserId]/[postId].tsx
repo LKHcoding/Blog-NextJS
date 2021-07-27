@@ -27,7 +27,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
 import { Flip, toast } from 'react-toastify';
-import UpdateDialog from './../../../components/write/UpdateDialog';
+import UpdateDialog from '../../../components/write/update/UpdateDialog';
 
 const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) => {
   const router = useRouter();
@@ -210,7 +210,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
                 <MarkDownContents contents={postData ? postData.content : ''} />
               </div>
 
-              {/* 좌측 Like 영역 시작 */}
+              {/* 좌측 ActionButton (Like 등) 영역 시작 */}
               <div className={classes.leftBtnsSection}>
                 <div
                   style={{
@@ -264,13 +264,16 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
                         {/* </IconButton> */}
                       </Fab>
 
-                      <ActionButton setUpdateDialogOpen={setUpdateDialogOpen} />
+                      <ActionButton
+                        isMyPost={myUserData?.id === postData?.UserId}
+                        setUpdateDialogOpen={setUpdateDialogOpen}
+                      />
                       {/* <Toc content={postData ? postData.content : ''} /> */}
                     </div>
                   </Grow>
                 </div>
               </div>
-              {/* 좌측 Like 영역 끝 */}
+              {/* 좌측 ActionButton (Like 등) 영역 끝 */}
             </div>
           </div>
         </div>
@@ -291,6 +294,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, req, params } = context;
 
   const queryClient = new QueryClient();
+
   if (params) {
     //유저 정보 프리패치
     await queryClient.prefetchQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>

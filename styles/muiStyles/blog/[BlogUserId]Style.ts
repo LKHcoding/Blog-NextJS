@@ -15,12 +15,23 @@ export const useStyles = makeStyles((theme: Theme) =>
         minHeight: '800px',
         maxWidth: '1400px',
       },
+      '& > .MuiPaper-root': {
+        [theme.breakpoints.down(1094)]: {
+          margin: '100px 5px 15px 5px !important',
+        },
+        [theme.breakpoints.down(640)]: {
+          margin: '100px 0px 15px 0px !important',
+        },
+      },
     },
     container: {
       display: 'flex',
       padding: '0px 20px',
       width: '100%',
       justifyContent: 'center',
+      [theme.breakpoints.down(720)]: {
+        padding: '0px 5px',
+      },
     },
     contents: {
       display: 'flex',
