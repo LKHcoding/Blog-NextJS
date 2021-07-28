@@ -42,14 +42,23 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
   setUpdateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isMyPost: boolean;
+  setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SpeedDials({ setUpdateDialogOpen, isMyPost }: Props) {
+export default function SpeedDials({ setUpdateDialogOpen, isMyPost, setDeleteDialogOpen }: Props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   const handleDialogOpen = () => {
     setUpdateDialogOpen(true);
+    /**
+     * toggle 영역이 아래 버튼들까지 겹쳐있어서 false를 주면 닫히지않음
+     */
+    setOpen(false);
+  };
+
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
     /**
      * toggle 영역이 아래 버튼들까지 겹쳐있어서 false를 주면 닫히지않음
      */
@@ -87,11 +96,12 @@ export default function SpeedDials({ setUpdateDialogOpen, isMyPost }: Props) {
               // onClick={() => handleClose}
               tooltipPlacement={'right'}
             />,
+
             <SpeedDialAction
               key={'삭제'}
               icon={<DeleteForeverIcon />}
               tooltipTitle={'삭제'}
-              onClick={handleClose}
+              onClick={handleDeleteDialogOpen}
               tooltipPlacement={'right'}
             />,
           ]}

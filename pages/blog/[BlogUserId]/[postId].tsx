@@ -5,6 +5,7 @@ import {
   Avatar,
   Badge,
   Chip,
+  CircularProgress,
   createStyles,
   Fab,
   Grow,
@@ -14,8 +15,14 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import { QueryClient, useQuery } from 'react-query';
-import { getMyUserDataApi, getOneUserDataApi, getPostInfoDataApi } from '../../../utils/queryAPI';
+import { QueryClient, useQuery, useQueryClient } from 'react-query';
+import {
+  getAllPostInfoApi,
+  getMyUserDataApi,
+  getOneUserDataApi,
+  getOneUserPostInfoDataApi,
+  getPostInfoDataApi,
+} from '../../../utils/queryAPI';
 import Link from 'next/link';
 import { dehydrate } from 'react-query/hydration';
 import MarkDownContents from '../../../components/blog/[postID]/MarkDownContents';
@@ -28,8 +35,11 @@ import dayjs from 'dayjs';
 import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
 import { Flip, toast } from 'react-toastify';
 import UpdateDialog from '../../../components/write/update/UpdateDialog';
+import ConfirmDialog from './../../../components/common/ConfirmDialog';
 
-const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) => {
+const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: string } }) => {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
   const classes = useStyles();
@@ -46,8 +56,18 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
     () => getPostInfoDataApi.apiCall(params.postId)
   );
 
+  const { data: userPostData, refetch: userPostDataRefetch } = useQuery(
+    `${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`,
+    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all')
+  );
+
+  // 수정 Dialog state
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
 
+  //삭제 모달 state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  // 좋아요 싫어요 실행 및 로그인 여부 확인
   const handleLike = async (action: string) => {
     if (!myUserData) {
       toast.error(`로그인이 필요합니다.`, {
@@ -76,17 +96,103 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
       )
       .then((res) => res.data)
       .catch((err) => console.log(err));
+
     postRefetch();
     // console.log(result);
   };
 
   const isLiked = (action: string) => {
+    // console.log(postData);
+
     return postData?.LikeDisLike.filter(
       (item) => item.UserId === myUserData?.id && item.actionType === action
     ).length !== 0
       ? 'action'
       : 'disabled';
   };
+
+  const handleDelete = async () => {
+    const deleteResult = await axios
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/v1/blog/delete-post/${params.postId}`, {
+        withCredentials: true,
+      })
+      .then((res) => res)
+      .catch((err) => err);
+
+    console.log(deleteResult);
+
+    if (deleteResult.status === 200) {
+      toast.error(`게시글이 삭제 되었습니다.`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+        // onClick: () => {
+        //   router.push('/');
+        // },
+      });
+
+      // 데이터 refetch를 위한 영역
+
+      // 한명의 유저 게시물 데이터
+      // await queryClient.invalidateQueries(`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`);
+      userPostDataRefetch();
+
+      // 모든 게시물 데이터
+      await queryClient.invalidateQueries(`${getAllPostInfoApi.key}`);
+
+      // 특정 게시물 데이터
+      await queryClient.invalidateQueries(`${getPostInfoDataApi.key}-${params.postId}`);
+
+      router.push('/');
+
+      // router.back();
+
+      return true;
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    if (!postData) {
+      toast.error(`존재하지 않는 게시물 입니다.`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+      });
+
+      router.push('/');
+      // router.back();
+    }
+  }, []);
+
+  //글 삭제 후 오류 방지
+  if (!postData) {
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '81vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <CircularProgress />
+        {/* <Backdrop className={classes.backdrop} open={backDropOpen}>
+          <CircularProgress color="inherit" />
+        </Backdrop> */}
+      </div>
+    );
+  }
 
   return (
     <div className={classes.root}>
@@ -267,6 +373,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
                       <ActionButton
                         isMyPost={myUserData?.id === postData?.UserId}
                         setUpdateDialogOpen={setUpdateDialogOpen}
+                        setDeleteDialogOpen={setDeleteDialogOpen}
                       />
                       {/* <Toc content={postData ? postData.content : ''} /> */}
                     </div>
@@ -283,6 +390,14 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string } }) =>
         updateDialogOpen={updateDialogOpen}
         setUpdateDialogOpen={setUpdateDialogOpen}
         postData={postData}
+      />
+      <ConfirmDialog
+        dialogTitle="글을 삭제 하시겠습니까?"
+        dialogBody="삭제 후에는 게시글 복원이 불가 합니다. 정말 삭제하시겠습니까?"
+        confirmBtnTitle="삭제"
+        callbackConfirm={handleDelete}
+        deleteDialogOpen={deleteDialogOpen}
+        setDeleteDialogOpen={setDeleteDialogOpen}
       />
     </div>
   );
