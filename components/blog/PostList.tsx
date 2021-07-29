@@ -57,6 +57,11 @@ const PostList: FC<Props> = ({ params, tag }) => {
 
   useEffect(() => {
     setLoading(isFetching);
+    return () => {
+      // 여기서 로딩중일때 다른페이지로 넘어가버려서 로딩바가 계속
+      // 유지되는 경우 방지
+      setLoading(false);
+    };
   }, [isFetching]);
 
   return (

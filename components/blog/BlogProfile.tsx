@@ -77,20 +77,43 @@ const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
             <h3 className={classes.blogTitleStyle}>{`${data?.loginID}'s Blog`}</h3>
             <h6 className={classes.blogSubTitleStyle}>{data?.positionType}</h6>
             <div>
-              <Tooltip title={`${data?.githubPageUrl}`} arrow placement="top">
-                <IconButton aria-label="github-icon">
-                  <GitHubIcon />
-                </IconButton>
+              <Tooltip
+                title={`${
+                  data?.githubPageUrl !== '' ? data?.githubPageUrl : '등록된 정보가 없습니다.'
+                }`}
+                arrow
+                placement="top">
+                <a
+                  href={`${data?.githubPageUrl !== '' ? data?.githubPageUrl : '#'}`}
+                  target={`${data?.githubPageUrl !== '' ? '_blank' : ''}`}
+                  rel="noopener noreferrer">
+                  <IconButton aria-label="github-icon">
+                    <GitHubIcon />
+                  </IconButton>
+                </a>
               </Tooltip>
-              <Tooltip title={`${data?.email}`} arrow placement="top">
-                <IconButton aria-label="mail-icon">
-                  <MailIcon />
-                </IconButton>
+              <Tooltip
+                title={`${data?.email !== '' ? data?.email : '등록된 정보가 없습니다.'}`}
+                arrow
+                placement="top">
+                <a href={data?.email !== '' ? `mailto:${data?.email}` : '#'}>
+                  <IconButton aria-label="mail-icon">
+                    <MailIcon />
+                  </IconButton>
+                </a>
               </Tooltip>
-              <Tooltip title={`${data?.blog}`} arrow placement="top">
-                <IconButton aria-label="web-icon">
-                  <LanguageIcon />
-                </IconButton>
+              <Tooltip
+                title={`${data?.blog !== '' ? data?.blog : '등록된 정보가 없습니다.'}`}
+                arrow
+                placement="top">
+                <a
+                  href={`${data?.blog !== '' ? data?.blog : '#'}`}
+                  target={`${data?.blog !== '' ? '_blank' : ''}`}
+                  rel="noopener noreferrer">
+                  <IconButton aria-label="web-icon">
+                    <LanguageIcon />
+                  </IconButton>
+                </a>
               </Tooltip>
             </div>
             <p className={classes.blogBioStyle}>{data?.bio}</p>

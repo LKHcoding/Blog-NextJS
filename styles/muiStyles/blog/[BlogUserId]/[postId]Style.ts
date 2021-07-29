@@ -30,10 +30,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     blogTitleStyle: {
       color: '#3C4858',
-      margin: '1.75rem 0 0.875rem',
       display: 'inline-block',
       position: 'relative',
-      marginTop: '18px',
       minHeight: '32px',
       fontFamily: 'Roboto Slab,Times New Roman, serif',
       fontWeight: 700,

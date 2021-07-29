@@ -229,7 +229,15 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <h3 className={classes.blogTitleStyle}>{`${userData?.loginID}'s Blog`}</h3>
+              <Link
+                href={`/blog/${userData?.loginID}`}
+                as={`/blog/${userData?.loginID}`}
+                key="blog">
+                {/* <a> */}
+                <a style={{ margin: '18px 0 0.875rem' }}>
+                  <h3 className={classes.blogTitleStyle}>{`${userData?.loginID}'s Blog`}</h3>
+                </a>
+              </Link>
             </div>
           </div>
         </div>
