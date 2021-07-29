@@ -379,7 +379,9 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
                       </Fab>
 
                       <ActionButton
-                        isMyPost={myUserData?.id === postData?.UserId}
+                        isMyPost={
+                          myUserData?.id === postData?.UserId || myUserData?.role === 'admin'
+                        }
                         setUpdateDialogOpen={setUpdateDialogOpen}
                         setDeleteDialogOpen={setDeleteDialogOpen}
                       />
