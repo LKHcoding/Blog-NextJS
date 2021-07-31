@@ -142,16 +142,16 @@ const PostList: FC<Props> = ({ params, tag }) => {
                       marginRight: '12px',
                       marginBottom: '12px',
                     }}>
-                    {item.Tags.map((item, idx) => (
-                      <div key={item.tagName + idx}>
+                    {item.Tags.map((tagItem, idx) => (
+                      <div key={item.id + tagItem.tagName + idx}>
                         <Chip
                           size="small"
-                          label={item.tagName}
+                          label={tagItem.tagName}
                           clickable
                           color="primary"
                           //  onDelete={handleDelete}
                           //  deleteIcon={<DoneIcon />}
-                          variant={tag === item.tagName ? `default` : `outlined`}
+                          variant={tag === tagItem.tagName ? `default` : `outlined`}
                           // variant="outlined"
                         />
                       </div>

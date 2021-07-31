@@ -32,6 +32,10 @@ const ConfirmDialog: FC<Props> = ({
   };
 
   const handleClose = async () => {
+    setOpen(false);
+  };
+
+  const handleConfirm = async () => {
     const result = await callbackConfirm();
     if (result === true) {
       setOpen(false);
@@ -53,7 +57,7 @@ const ConfirmDialog: FC<Props> = ({
           <Button onClick={handleClose} color="primary">
             {`${cancelBtnTitle}`}
           </Button>
-          <Button onClick={handleClose} color="primary" variant="outlined" autoFocus>
+          <Button onClick={handleConfirm} color="primary" variant="outlined" autoFocus>
             {`${confirmBtnTitle}`}
           </Button>
         </DialogActions>

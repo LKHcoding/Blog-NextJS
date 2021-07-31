@@ -66,12 +66,12 @@ const Toc = ({ content }: Props) => {
       if (count) {
         count = count * 10;
       }
-      // console.log(item);
+      // console.log('item :', item.split('# ')[1].replace(/`/g, '').trim());
 
       return { title: item.split('# ')[1].replace(/`/g, '').trim(), count };
     });
 
-  // console.log(activeId);
+  // console.log('activeId :', activeId);
 
   return (
     <div style={{ width: '200px' }} className={classes.root}>
