@@ -19,6 +19,7 @@ import { useQuery } from 'react-query';
 import { getMyUserDataApi } from '../utils/queryAPI';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { Flip, toast } from 'react-toastify';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: '120px',
+    minHeight: '500px',
     height: '80vh',
   },
   avatar: {
@@ -117,7 +119,18 @@ const LogIn = () => {
   }, []);
 
   if (isLoading) {
-    return <div>로딩중...</div>;
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '81vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (isError) {
@@ -126,12 +139,21 @@ const LogIn = () => {
 
   // console.log(data);
   if (data) {
-    // return <Link href="/" />;
-    console.log(data);
     router.push('/');
     return (
       <>
-        <div>이미 로그인 한 유저입니다.</div>
+        <div
+          style={{
+            width: '100%',
+            minHeight: '500px',
+            height: '85vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '2rem',
+          }}>
+          이미 로그인 한 유저는 접근 할 수 없습니다.
+        </div>
       </>
     );
   }

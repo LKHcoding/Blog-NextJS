@@ -373,7 +373,7 @@ const header = () => {
                               </a>
                             </Link>,
                             // <Link href={`/signup`} as={`/signup`} key="signUp">
-                            <Link href={`/login`} as={`/login`} key="logIn">
+                            <Link href={`/login`} as={`/login`} key="signUp">
                               <a>
                                 <MenuItem onClick={handleClose}>
                                   <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
