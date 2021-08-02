@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import useMenuStore from '../../stores/useMenuStore';
+import Link from 'next/link';
 
 const useStyles = makeStyles({
   list: {
@@ -52,18 +53,28 @@ const NewSideBar = () => {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}>
       <List>
-        {['검색', '통계'].map((text, index) => (
+        <Link href={`/blog/LKHcoding/107`} as={`/blog/LKHcoding/107`}>
+          <a>
+            <ListItem button>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary={'소개'} />
+            </ListItem>
+          </a>
+        </Link>
+        {/* {['검색', '통계'].map((text, index) => (
           <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemIcon>{index % 2 === 0 ? <MailIcon /> : <InboxIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
-        ))}
+        ))} */}
       </List>
       <Divider />
       <List>
         {['Front-End', 'Back-End', 'Full-Stack'].map((text, index) => (
           <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemIcon>{index % 2 === 0 ? <MailIcon /> : <InboxIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}

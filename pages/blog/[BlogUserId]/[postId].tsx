@@ -119,7 +119,24 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
       .then((res) => res)
       .catch((err) => err);
 
-    console.log(deleteResult);
+    // console.dir(deleteResult);
+
+    // 에러 메세지 띄워주기
+    if (deleteResult?.response) {
+      toast.error(`${deleteResult.response.data.message}`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+        // onClick: () => {
+        //   router.push('/');
+        // },
+      });
+    }
 
     if (deleteResult.status === 200) {
       toast.error(`게시글이 삭제 되었습니다.`, {
@@ -207,7 +224,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`} key="blog">
+          <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
             <a>
               <Avatar
                 color="default"
@@ -229,10 +246,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Link
-                href={`/blog/${userData?.loginID}`}
-                as={`/blog/${userData?.loginID}`}
-                key="blog">
+              <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
                 {/* <a> */}
                 <a style={{ margin: '18px 0 0.875rem' }}>
                   <h3 className={classes.blogTitleStyle}>{`${userData?.loginID}'s Blog`}</h3>
@@ -281,7 +295,7 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
             {/* 메인 컨텐츠 영역 */}
             <div
               style={{
-                marginBottom: '30px',
+                marginBottom: '80px',
                 width: '100%',
                 height: '100%',
                 maxWidth: '760px',
