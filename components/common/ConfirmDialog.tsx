@@ -5,6 +5,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import useInput from '../../hooks/useInput';
+import { Typography } from '@material-ui/core';
 
 interface Props {
   deleteDialogOpen: boolean;
@@ -14,6 +17,7 @@ interface Props {
   cancelBtnTitle?: string;
   confirmBtnTitle?: string;
   callbackConfirm: () => Promise<boolean>;
+  postTitle: string;
 }
 
 const ConfirmDialog: FC<Props> = ({
@@ -24,6 +28,7 @@ const ConfirmDialog: FC<Props> = ({
   cancelBtnTitle = '취소',
   confirmBtnTitle = '확인',
   callbackConfirm,
+  postTitle,
 }) => {
   // const [open, setOpen] = React.useState(false);
 
@@ -42,6 +47,8 @@ const ConfirmDialog: FC<Props> = ({
     }
   };
 
+  const [inputTitle, onChangeInputTitle, setInputTitle] = useInput('');
+
   return (
     <div>
       <Dialog
@@ -52,12 +59,30 @@ const ConfirmDialog: FC<Props> = ({
         <DialogTitle id="alert-dialog-title">{`${dialogTitle}`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">{`${dialogBody}`}</DialogContentText>
+          {/* <DialogContentText id="alert-dialog-description">{`${postTitle}`}</DialogContentText> */}
+          <Typography gutterBottom variant="body1">{`Title: ${postTitle}`}</Typography>
+          <TextField
+            style={{ marginTop: '5px' }}
+            // focused
+            fullWidth
+            error={inputTitle !== '' && inputTitle !== postTitle}
+            size="small"
+            id="outlined-basic"
+            label="Title"
+            variant="outlined"
+            value={inputTitle}
+            onChange={onChangeInputTitle}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             {`${cancelBtnTitle}`}
           </Button>
-          <Button onClick={handleConfirm} color="primary" variant="outlined" autoFocus>
+          <Button
+            onClick={handleConfirm}
+            color="primary"
+            variant="outlined"
+            disabled={inputTitle !== postTitle}>
             {`${confirmBtnTitle}`}
           </Button>
         </DialogActions>

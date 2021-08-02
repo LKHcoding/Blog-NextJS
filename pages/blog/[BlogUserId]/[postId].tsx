@@ -416,12 +416,13 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
         postData={postData}
       />
       <ConfirmDialog
-        dialogTitle="글을 삭제 하시겠습니까?"
-        dialogBody="삭제 후에는 게시글 복원이 불가 합니다. 정말 삭제하시겠습니까?"
+        dialogTitle="게시글을 삭제 하시겠습니까?"
+        dialogBody="삭제를 위해 게시글 제목을 입력해주세요. 삭제 된 후에는 게시글 복원이 불가 합니다."
         confirmBtnTitle="삭제"
         callbackConfirm={handleDelete}
         deleteDialogOpen={deleteDialogOpen}
         setDeleteDialogOpen={setDeleteDialogOpen}
+        postTitle={postData.title}
       />
     </div>
   );
