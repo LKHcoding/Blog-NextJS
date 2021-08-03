@@ -31,14 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function PaperComponent(props: PaperProps) {
-  return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
-      <Paper {...props} />
-    </Draggable>
-  );
-}
-
 interface Props {
   handleSave: (file: File[]) => Promise<'success' | undefined>;
   conditionSave: boolean;
@@ -148,3 +140,11 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
     </div>
   );
 };
+
+function PaperComponent(props: PaperProps) {
+  return (
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
+  );
+}

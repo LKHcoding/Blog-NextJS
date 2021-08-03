@@ -8,6 +8,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import useInput from '../../hooks/useInput';
 import { Typography } from '@material-ui/core';
+import Draggable from 'react-draggable';
+import Paper, { PaperProps } from '@material-ui/core/Paper';
 
 interface Props {
   deleteDialogOpen: boolean;
@@ -54,9 +56,12 @@ const ConfirmDialog: FC<Props> = ({
       <Dialog
         open={open}
         onClose={handleClose}
+        PaperComponent={PaperComponent}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
-        <DialogTitle id="alert-dialog-title">{`${dialogTitle}`}</DialogTitle>
+        <DialogTitle
+          style={{ cursor: 'move' }}
+          id="draggable-dialog-title">{`${dialogTitle}`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">{`${dialogBody}`}</DialogContentText>
           {/* <DialogContentText id="alert-dialog-description">{`${postTitle}`}</DialogContentText> */}
@@ -92,3 +97,11 @@ const ConfirmDialog: FC<Props> = ({
 };
 
 export default ConfirmDialog;
+
+function PaperComponent(props: PaperProps) {
+  return (
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
+  );
+}
