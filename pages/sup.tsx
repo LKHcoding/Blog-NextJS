@@ -6,6 +6,7 @@ import { QueryClient, useQuery } from 'react-query';
 // import { getMyUserDataApi } from '../utils/rqApis';
 import { getMyUserDataApi } from '../utils/queryAPI';
 import { dehydrate } from 'react-query/hydration';
+import { Autocomplete } from '../components/common/Autocomplete/Autocomplete';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, req } = context;
@@ -23,12 +24,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const Sup = () => {
-  const { data, isLoading, isError, error } = useQuery(
-    getMyUserDataApi.key,
-    getMyUserDataApi.apiCall
-  );
+  // const { data, isLoading, isError, error } = useQuery(
+  //   getMyUserDataApi.key,
+  //   getMyUserDataApi.apiCall
+  // );
 
-  console.log(data);
+  // console.log(data);
 
   // console.log('query : ', query);
   // console.log('token : ', token);
@@ -68,12 +69,16 @@ const Sup = () => {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>{data && data.email}</title>
       </Head>
       <Button color="primary" variant="contained">
         {data && data.loginID}
-      </Button>
+      </Button> */}
+      <div className="container">
+        <Autocomplete placeholder="Search" openOnFocus={true} />
+        {/* <Autocomplete placeholder="Search" openOnFocus={true} debug={true} /> */}
+      </div>
     </>
   );
 };

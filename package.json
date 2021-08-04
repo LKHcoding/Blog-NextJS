@@ -44,6 +44,10 @@
     "zustand": "^3.5.1"
   },
   "devDependencies": {
+    "@algolia/autocomplete-core": "^1.2.2",
+    "@algolia/autocomplete-preset-algolia": "^1.2.2",
+    "@algolia/autocomplete-theme-classic": "^1.2.2",
+    "@algolia/client-search": "^4.10.3",
     "@types/cookie": "^0.4.0",
     "@types/node": "^14.14.35",
     "@types/react": "17.0.6",
@@ -53,6 +57,7 @@
     "@types/remove-markdown": "^0.3.0",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
+    "algoliasearch": "^4.10.3",
     "eslint": "^7.27.0",
     "eslint-plugin-import": "^2.23.3",
     "eslint-plugin-react": "^7.23.2",

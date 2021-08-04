@@ -16,6 +16,7 @@ import Footer from '../components/common/Footer';
 import MainSection from '../components/common/MainSection';
 import { Flip, toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '@algolia/autocomplete-theme-classic';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';

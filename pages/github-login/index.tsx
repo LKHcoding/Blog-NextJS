@@ -63,7 +63,7 @@ const githubLogin = () => {
         alert(err.response.status === 400 ? '인증 실패(데이터가 유효하지않습니다)' : err.message);
       });
 
-    console.log(result);
+    // console.log(result);
 
     if (result?.token) {
       const gitLogin = await axios

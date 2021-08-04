@@ -11,6 +11,7 @@ type State = {
 // closeMenu: () => void;
 // openMenu: () => void;
 // }
+
 const useMenuStore = create<State>(
   devtools((set) => ({
     open: false,
