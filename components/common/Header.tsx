@@ -5,7 +5,6 @@ import {
   fade,
   Grow,
   IconButton,
-  InputBase,
   ListItemIcon,
   MenuItem,
   MenuList,
@@ -14,33 +13,29 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import React, { useCallback } from 'react';
-import MenuIcon from '@material-ui/icons/Menu';
-import clsx from 'clsx';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import useMenuStore from './../../stores/useMenuStore';
-import SearchIcon from '@material-ui/icons/Search';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import Link from 'next/link';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { useQuery } from 'react-query';
-import { getMyUserDataApi } from '../../utils/queryAPI';
 import Avatar from '@material-ui/core/Avatar';
-import axios from 'axios';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import PersonIcon from '@material-ui/icons/Person';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import Button from '@material-ui/core/Button';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import CreateIcon from '@material-ui/icons/Create';
-import { useRouter } from 'next/router';
-import FullScreenDialog from '../write/FullScreenDialog';
-import { Flip, toast } from 'react-toastify';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import MenuIcon from '@material-ui/icons/Menu';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import PersonIcon from '@material-ui/icons/Person';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import axios from 'axios';
+import clsx from 'clsx';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useCallback } from 'react';
+import { useQuery } from 'react-query';
+import { Flip, toast } from 'react-toastify';
 // import { useIsFetching } from 'react-query';
 import useLoadingStore from '../../stores/useLoadingStore';
+import { getMyUserDataApi } from '../../utils/queryAPI';
+import FullScreenDialog from '../write/FullScreenDialog';
+import useMenuStore from './../../stores/useMenuStore';
+import { Autocomplete } from './Autocomplete/Autocomplete';
 
 const drawerWidth = 160;
 const useStyles = makeStyles((theme: Theme) =>
@@ -103,6 +98,32 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'flex',
         marginLeft: theme.spacing(3),
         width: 'auto',
+      },
+    },
+    algoliaSearch: {
+      position: 'relative',
+      marginRight: theme.spacing(2),
+      marginLeft: 0,
+      width: '100%',
+      display: 'none',
+      [theme.breakpoints.up(750)]: {
+        display: 'flex',
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+        '& .aa-Panel': {
+          width: '100%',
+          minWidth: '500px',
+        },
+      },
+      // maxHeight: '15px',
+      [theme.breakpoints.up(960)]: {
+        display: 'flex',
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+        '& .aa-Panel': {
+          width: '100%',
+          minWidth: '700px',
+        },
       },
     },
     searchIcon: {
@@ -290,8 +311,8 @@ const header = () => {
             </Link>
 
             {/* 서치인풋박스 시작 */}
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
+            {/* <div className={classes.search}> */}
+            {/* <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
               <InputBase
@@ -301,9 +322,13 @@ const header = () => {
                   input: classes.inputInput,
                 }}
                 inputProps={{ 'aria-label': 'search' }}
-              />
-            </div>
+              /> */}
+            {/* </div> */}
             {/* 서치인풋박스 끝 */}
+            <div className={classes.algoliaSearch}>
+              <Autocomplete placeholder="Search" openOnFocus={true} />
+              {/* <Autocomplete placeholder="Search" openOnFocus={true} debug={true} /> */}
+            </div>
 
             {/* 네비바 우측 아이콘 모음 시작 */}
             <div className={classes.grow} />
