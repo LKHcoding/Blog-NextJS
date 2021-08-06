@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
     currentHeading: {
       '&': {
         backgroundColor: 'rgba(102, 128, 153, 0.07)',
+        borderLeft: '3px solid #959ed8',
       },
       '& div span': {
         color: 'black',

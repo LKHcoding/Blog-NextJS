@@ -27,6 +27,13 @@ const MarkDownContents = ({ contents }: Props) => {
 export default MarkDownContents;
 
 const components: Partial<NormalComponents & SpecialComponents> = {
+  a({ children }) {
+    return (
+      <a href={`${children}`} target="_blank" rel="noreferrer">
+        {children}
+      </a>
+    );
+  },
   h1({ children }) {
     let str = '';
     children?.map((item) => {
