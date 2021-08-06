@@ -145,7 +145,24 @@ const githubLogin = () => {
       // console.log('깃허브 로그인 성공');
       router.push('/');
     } else {
-      console.log('토큰이 없습니다.');
+      console.log('토큰이 유효하지 않습니다. 다시 로그인을 시도해 주세요.');
+      toast.error(`토큰이 유효하지 않습니다. 다시 로그인을 시도해 주세요.`, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+      });
+
+      const logoutResult = await axios
+        .get('/api/logout')
+        .then((res) => res)
+        .catch((err) => err);
+      console.log('로그아웃을 시도하여 토큰을 제거합니다 : ', logoutResult);
+
       router.push('/login');
     }
   };
