@@ -2,12 +2,17 @@ import { useEffect, useRef } from 'react';
 
 export const useIntersectionObserver = (
   // 넘겨받은 setActiveId 를 통해 화면 상단의 제목 element를 set해준다.
-  setActiveId: React.Dispatch<React.SetStateAction<string>>
+  setActiveId: React.Dispatch<React.SetStateAction<string>>,
+  // 게시글 내용이 바뀔때를 알기 위해 content를 넘겨받는다.
+  content: string
 ) => {
   // heading element를 담아서 사용하기 위한 ref
   const headingElementsRef = useRef<any>({});
 
   useEffect(() => {
+    // 새로고침 없이 다른 게시물로 이동할 경우를 대비한 초기화
+    headingElementsRef.current = {};
+
     // callback은 intersectionObserver로 관찰할 대상 비교 로직
     const callback: IntersectionObserverCallback = (headings) => {
       // 모든 제목을 reduce로 순회해서 headingElementsRef.current에 키 밸류 형태로 할당.
@@ -21,7 +26,7 @@ export const useIntersectionObserver = (
       Object.keys(headingElementsRef.current).forEach((key) => {
         const headingElement = headingElementsRef.current[key];
 
-        // isIntersecting이라면 visibleHeadings에 push한다.
+        // isIntersecting이 true라면 visibleHeadings에 push한다.
         if (headingElement.isIntersecting) visibleHeadings.push(headingElement);
       });
 
@@ -55,5 +60,7 @@ export const useIntersectionObserver = (
 
     // 컴포넌트 언마운트시 observer의 관찰을 멈춘다.
     return () => observer.disconnect();
-  }, []);
+
+    // content 내용이 바뀔때를 대비하여 deps로 content를 넣어준다.
+  }, [content]);
 };

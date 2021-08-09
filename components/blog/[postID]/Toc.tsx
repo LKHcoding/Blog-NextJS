@@ -57,7 +57,7 @@ const Toc = ({ content }: Props) => {
 
   // intersectionObserver를 이용해 만든 커스텀 훅으로 setState를 전달 하여
   // 화면 상단에 위치한 제목 element가 뭔지 알아낸다.
-  useIntersectionObserver(setActiveId);
+  useIntersectionObserver(setActiveId, content);
 
   const classes = useStyles();
 
