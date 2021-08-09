@@ -1,12 +1,12 @@
+import { Backdrop, createStyles, makeStyles, Theme } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { getMyUserDataApi } from '../../utils/queryAPI';
 import { useQuery } from 'react-query';
-import SelectModal from '../../components/github-login/selectModal';
-import { Backdrop, Button, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import { Flip, toast } from 'react-toastify';
+import SelectModal from '../../components/github-login/selectModal';
+import { getMyUserDataApi } from '../../utils/queryAPI';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -1,16 +1,16 @@
-import React, { useRef } from 'react';
+import React, { FC, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import gfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import gfm from 'remark-gfm';
 
 interface Props {
   contents: string;
 }
 
-const MarkDownContents = ({ contents }: Props) => {
+const MarkDownContents: FC<Props> = ({ contents }) => {
   return (
     <>
       <ReactMarkdown
@@ -24,7 +24,7 @@ const MarkDownContents = ({ contents }: Props) => {
   );
 };
 
-export default MarkDownContents;
+export default memo(MarkDownContents);
 
 const components: Partial<NormalComponents & SpecialComponents> = {
   a({ children }) {

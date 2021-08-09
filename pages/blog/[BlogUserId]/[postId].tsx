@@ -1,21 +1,29 @@
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { GetServerSideProps } from 'next';
 import {
   Avatar,
   Badge,
   Chip,
   CircularProgress,
-  createStyles,
   Fab,
   Grow,
-  IconButton,
-  makeStyles,
   Paper,
-  Theme,
   Typography,
 } from '@material-ui/core';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import axios from 'axios';
+import dayjs from 'dayjs';
+import { GetServerSideProps } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { QueryClient, useQuery, useQueryClient } from 'react-query';
+import { dehydrate } from 'react-query/hydration';
+import { Flip, toast } from 'react-toastify';
+import MarkDownContents from '../../../components/blog/[postID]/MarkDownContents';
+import Toc from '../../../components/blog/[postID]/Toc';
+import ActionButton from '../../../components/common/ActionButton';
+import UpdateDialog from '../../../components/write/update/UpdateDialog';
+import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
 import {
   getAllPostInfoApi,
   getMyUserDataApi,
@@ -23,18 +31,6 @@ import {
   getOneUserPostInfoDataApi,
   getPostInfoDataApi,
 } from '../../../utils/queryAPI';
-import Link from 'next/link';
-import { dehydrate } from 'react-query/hydration';
-import MarkDownContents from '../../../components/blog/[postID]/MarkDownContents';
-import Toc from '../../../components/blog/[postID]/Toc';
-import ActionButton from '../../../components/common/ActionButton';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import axios from 'axios';
-import dayjs from 'dayjs';
-import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
-import { Flip, toast } from 'react-toastify';
-import UpdateDialog from '../../../components/write/update/UpdateDialog';
 import ConfirmDialog from './../../../components/common/ConfirmDialog';
 
 const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: string } }) => {
@@ -98,12 +94,9 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
       .catch((err) => console.log(err));
 
     postRefetch();
-    // console.log(result);
   };
 
   const isLiked = (action: string) => {
-    // console.log(postData);
-
     return postData?.LikeDisLike.filter(
       (item) => item.UserId === myUserData?.id && item.actionType === action
     ).length !== 0
@@ -118,8 +111,6 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
       })
       .then((res) => res)
       .catch((err) => err);
-
-    // console.dir(deleteResult);
 
     // 에러 메세지 띄워주기
     if (deleteResult?.response) {
