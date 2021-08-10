@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) =>
         justifyContent: 'center',
       },
     },
+    btnDisabledborderColor: {
+      border: '1px solid white !important',
+    },
   })
 );
 
@@ -87,6 +90,7 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
   return (
     <div>
       <Button
+        className={classes.btnDisabledborderColor}
         disabled={conditionSave}
         autoFocus
         variant="outlined"

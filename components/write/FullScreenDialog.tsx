@@ -231,8 +231,9 @@ const FullScreenDialog = () => {
     }
     return () => {
       setTagValues([]);
+      setSelectedTagInfo(false);
     };
-  }, [data]);
+  }, [data, open]);
 
   return (
     <div>
