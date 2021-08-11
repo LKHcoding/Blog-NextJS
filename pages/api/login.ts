@@ -28,9 +28,11 @@ const Login = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     })
     .catch((error) => {
       // console.log(error.message);
-      return error.message;
+      return error;
       // setLogInError(error.response?.data?.statusCode === 401);
     });
+
+  // console.dir(result.response?.data);
 
   if (result?.token) {
     res.setHeader(
@@ -54,7 +56,7 @@ const Login = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     );
     res.status(200).json({ data: '로그인 성공', loginID });
   } else {
-    res.status(401).json({ data: result });
+    res.status(result.response.data.statusCode).json({ ...result.response.data });
   }
 };
 

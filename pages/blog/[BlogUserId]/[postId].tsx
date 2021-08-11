@@ -90,10 +90,26 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
           withCredentials: true,
         }
       )
-      .then((res) => res.data)
-      .catch((err) => console.log(err));
+      .then((res) => res)
+      .catch((err) => err);
 
-    postRefetch();
+    if (result?.response) {
+      toast.error(`${result.response.data.statusCode}-${result.response.data.message}`, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+        // onClick: () => {
+        //   router.push('/');
+        // },
+      });
+    } else {
+      postRefetch();
+    }
   };
 
   const isLiked = (action: string) => {

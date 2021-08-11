@@ -61,50 +61,76 @@ const LogIn = () => {
 
   const classes = useStyles();
 
-  const handleLogInFormSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      await axios
-        .post(
-          `/api/login`,
-          { loginID, password },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          toast.info(`${res.data.loginID}님 반갑습니다!`, {
-            position: 'top-center',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            transition: Flip,
-          });
-          refetch();
-          // if (response.data.data === '로그인 성공') {
-          //   router.push('/');
-          // }
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error(`로그인 실패 - ${error}`, {
-            position: 'top-center',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            transition: Flip,
-          });
-          // setLogInError(error.response?.data?.statusCode === 401);
+  const handleLogInFormSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+
+    if (loginID === '' || password === '') {
+      toast.error(`아이디 또는 비밀번호를 입력 해 주세요.`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+      });
+      return;
+    }
+
+    const result = await axios
+      .post(
+        `/api/login`,
+        { loginID, password },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => res)
+      .catch((err) => err);
+
+    // console.dir(result);
+
+    if (result?.data) {
+      toast.info(`${result.data.loginID}님 반갑습니다!`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+      });
+      refetch();
+    }
+
+    // 에러 메세지 띄워주기
+    if (result?.response) {
+      let errMessage = '';
+      const isMessageArray = Array.isArray(result.response.data.message);
+      if (isMessageArray && result.response.data.message.length > 1) {
+        result.response.data.message.forEach((str: string, idx: number) => {
+          errMessage += `[${idx + 1}]` + str + '\n';
         });
-    },
-    [loginID, password]
-  );
+      } else {
+        errMessage = result.response.data.message;
+      }
+      toast.error(`${errMessage}`, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+        // onClick: () => {
+        //   router.push('/');
+        // },
+      });
+    }
+  };
 
   // 깃허브 로그인
   const handleGithubLogin = useCallback(() => {
