@@ -37,6 +37,7 @@ export const PostListStyle = makeStyles((theme: Theme) =>
       // paddingTop: '56.25%', // 16:9
       paddingTop: '56.25%', // 16:9
       height: 0,
+      borderBottom: '1px solid #e7e7e7',
     },
     cardTitle: {
       display: 'flex',

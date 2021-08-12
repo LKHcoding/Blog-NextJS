@@ -51,6 +51,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (jssStyles) {
       jssStyles?.parentElement?.removeChild(jssStyles);
     }
+    if (process.env.NODE_ENV !== 'production') {
+      toast.error(`현재 개발모드입니다. 개발 중에는 서버가 닫히거나, 새로고침이 될 수 있습니다.`, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        transition: Flip,
+      });
+    }
   }, []);
 
   return (
