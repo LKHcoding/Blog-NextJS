@@ -1,25 +1,21 @@
-import '../styles/styles.scss';
-import React, { useEffect } from 'react';
-import type { AppProps } from 'next/app';
-import Head from 'next/head';
-import { QueryClientProvider, QueryClient } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { Hydrate } from 'react-query/hydration';
-import { ThemeProvider } from '@material-ui/styles';
-import { CssBaseline } from '@material-ui/core';
-import theme from '../theme/theme';
-import Header from '../components/common/Header';
-import SideBar from '../components/common/SideBar';
-
-import NewSideBar from '../components/common/NewSideBar';
-import Footer from '../components/common/Footer';
-import MainSection from '../components/common/MainSection';
-import { Flip, toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import '@algolia/autocomplete-theme-classic';
-
+import { CssBaseline } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
+import type { AppProps } from 'next/app';
+import Head from 'next/head';
+import React, { useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { Hydrate } from 'react-query/hydration';
+import { Flip, toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Header from '../components/common/Header';
+import MainSection from '../components/common/MainSection';
+import NewSideBar from '../components/common/NewSideBar';
+import '../styles/styles.scss';
+import theme from '../theme/theme';
 
 dayjs.locale('ko');
 
@@ -70,6 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Develogger</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link rel="shortcut icon" href="/D-logo-black2.ico" type="image/x-icon" />
       </Head>
       <QueryClientProvider client={queryClientRef.current}>
         <Hydrate state={pageProps.dehydratedState}>
