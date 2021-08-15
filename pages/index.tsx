@@ -1,5 +1,6 @@
 import AllPostCardList from './../components/index/AllPostCardList';
 import { useEffect, useRef } from 'react';
+import CustomHeader from '../components/common/SEO/CustomHeader';
 const Home = () => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -18,6 +19,7 @@ const Home = () => {
 
   return (
     <>
+      <CustomHeader />
       <div ref={ref}>
         <AllPostCardList />
       </div>

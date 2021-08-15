@@ -32,6 +32,8 @@ import {
   getPostInfoDataApi,
 } from '../../../utils/queryAPI';
 import ConfirmDialog from './../../../components/common/ConfirmDialog';
+import CustomHeader from './../../../components/common/SEO/CustomHeader';
+import removeMD from 'remove-markdown';
 
 const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: string } }) => {
   const queryClient = useQueryClient();
@@ -219,219 +221,227 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
   }
 
   return (
-    <div className={classes.root}>
-      <Paper
-        // style={{ borderRadius: '10px', margin: '100px 30px 0 30px', position: 'relative' }}
-        elevation={3}>
-        {/* 블로그 상단 회원정보 소개 영역 */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
-            <a>
-              <Avatar
-                color="default"
-                alt="User Profile Icon"
-                src={`${userData?.avatarUrl || ''}`}
-                style={{ marginTop: '-82px', height: '160px', width: '160px' }}
-              />
-            </a>
-          </Link>
+    <>
+      <CustomHeader
+        title={postData.title}
+        description={removeMD(postData.content).slice(0, 200)}
+        author={postData.title}
+      />
+      <div className={classes.root}>
+        <Paper
+          // style={{ borderRadius: '10px', margin: '100px 30px 0 30px', position: 'relative' }}
+          elevation={3}>
+          {/* 블로그 상단 회원정보 소개 영역 */}
           <div
             style={{
               display: 'flex',
-              flexDirection: 'row',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
+              <a>
+                <Avatar
+                  color="default"
+                  alt="User Profile Icon"
+                  src={`${userData?.avatarUrl || ''}`}
+                  style={{ marginTop: '-82px', height: '160px', width: '160px' }}
+                />
+              </a>
+            </Link>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
+                  {/* <a> */}
+                  <a style={{ margin: '18px 0 0.875rem' }}>
+                    <h3 className={classes.blogTitleStyle}>{`${userData?.loginID}'s Blog`}</h3>
+                  </a>
+                </Link>
+              </div>
+            </div>
+          </div>
+          {/* 블로그 상단 회원정보 소개 영역 끝 */}
+
+          {/* 우측 toc 영역 시작 */}
+          <div className={classes.tocSection}>
+            <div
+              style={{
+                position: 'sticky',
+                top: '150px',
+              }}>
+              <Grow in timeout={1000}>
+                {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
+                <div>
+                  <Toc content={postData ? postData.content : ''} />
+                </div>
+              </Grow>
+            </div>
+          </div>
+          {/* 우측 toc 영역 끝 */}
+
+          {/* 메인 컨텐츠 영역 시작 */}
+          <div
+            style={{
+              display: 'flex',
+              padding: '0px 20px',
+              width: '100%',
+              height: '100%',
+              justifyContent: 'center',
             }}>
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
-                {/* <a> */}
-                <a style={{ margin: '18px 0 0.875rem' }}>
-                  <h3 className={classes.blogTitleStyle}>{`${userData?.loginID}'s Blog`}</h3>
-                </a>
-              </Link>
-            </div>
-          </div>
-        </div>
-        {/* 블로그 상단 회원정보 소개 영역 끝 */}
-
-        {/* 우측 toc 영역 시작 */}
-        <div className={classes.tocSection}>
-          <div
-            style={{
-              position: 'sticky',
-              top: '150px',
-            }}>
-            <Grow in timeout={1000}>
-              {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
-              <div>
-                <Toc content={postData ? postData.content : ''} />
-              </div>
-            </Grow>
-          </div>
-        </div>
-        {/* 우측 toc 영역 끝 */}
-
-        {/* 메인 컨텐츠 영역 시작 */}
-        <div
-          style={{
-            display: 'flex',
-            padding: '0px 20px',
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-          }}>
-          <div
-            style={{
-              display: 'flex',
-              marginTop: '30px',
-              width: '100%',
-              height: '100%',
-              maxWidth: '1200px',
-              justifyContent: 'center',
-            }}>
-            {/* 메인 컨텐츠 영역 */}
-            <div
-              style={{
-                marginBottom: '80px',
+                marginTop: '30px',
                 width: '100%',
                 height: '100%',
-                maxWidth: '760px',
+                maxWidth: '1200px',
                 justifyContent: 'center',
-                position: 'relative',
               }}>
-              <Typography style={{ overflowWrap: 'anywhere' }} variant="h3">
-                {postData && postData.title}
-              </Typography>
-              <Typography variant="subtitle2" gutterBottom style={{ marginLeft: '3px' }}>
-                {dayjs(postData?.updatedAt).format('YYYY-MM-DD A h:mm:ss')}
-              </Typography>
+              {/* 메인 컨텐츠 영역 */}
               <div
-                className={classes.tagList}
                 style={{
-                  display: 'flex',
+                  marginBottom: '80px',
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: '760px',
+                  justifyContent: 'center',
+                  position: 'relative',
                 }}>
-                {postData &&
-                  postData.Tags.map((item, idx) => (
-                    <div key={item.tagName + idx}>
-                      <Chip
-                        size="small"
-                        label={item.tagName}
-                        clickable
-                        color="primary"
-                        //  onDelete={handleDelete}
-                        //  deleteIcon={<DoneIcon />}
-                        variant="outlined"
-                      />
-                    </div>
-                  ))}
-              </div>
-
-              <div style={{ width: '100%', height: '100%', marginTop: '25px' }}>
-                <img
-                  style={{ marginBottom: '25px', width: '100%' }}
-                  src={`${process.env.NEXT_PUBLIC_API_URL}/${postData?.thumbnail}`}
-                  alt={`${postData?.title}`}
-                />
-                <MarkDownContents contents={postData ? postData.content : ''} />
-              </div>
-
-              {/* 좌측 ActionButton (Like 등) 영역 시작 */}
-              <div className={classes.leftBtnsSection}>
+                <Typography style={{ overflowWrap: 'anywhere' }} variant="h3">
+                  {postData && postData.title}
+                </Typography>
+                <Typography variant="subtitle2" gutterBottom style={{ marginLeft: '3px' }}>
+                  {dayjs(postData?.updatedAt).format('YYYY-MM-DD A h:mm:ss')}
+                </Typography>
                 <div
+                  className={classes.tagList}
                   style={{
-                    position: 'sticky',
-                    top: '150px',
+                    display: 'flex',
                   }}>
-                  <Grow in timeout={1000}>
-                    {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
-                    <div className={classes.btnList}>
-                      <Fab aria-label="like" onClick={() => handleLike('Like')}>
-                        {/* <IconButton color="default"> */}
-                        <Badge
-                          anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                          }}
-                          badgeContent={
-                            postData
-                              ? postData.LikeDisLike.filter((item) => item.actionType === 'Like')
-                                  .length
-                              : 0
-                          }
-                          color="error">
-                          <ThumbUpIcon
-                            color={isLiked('Like')}
-                            style={{ height: '27px', width: '27px' }}
-                          />
-                        </Badge>
-                        {/* </IconButton> */}
-                      </Fab>
-
-                      <Fab aria-label="dislike" onClick={() => handleLike('DisLike')}>
-                        {/* <IconButton color="default"> */}
-                        <Badge
-                          anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                          }}
-                          badgeContent={
-                            postData
-                              ? postData.LikeDisLike.filter((item) => item.actionType === 'DisLike')
-                                  .length
-                              : 0
-                          }
-                          color="primary">
-                          <ThumbDownIcon
-                            color={isLiked('DisLike')}
-                            style={{ height: '27px', width: '27px' }}
-                          />
-                        </Badge>
-                        {/* </IconButton> */}
-                      </Fab>
-
-                      <ActionButton
-                        isMyPost={
-                          myUserData?.id === postData?.UserId || myUserData?.role === 'admin'
-                        }
-                        setUpdateDialogOpen={setUpdateDialogOpen}
-                        setDeleteDialogOpen={setDeleteDialogOpen}
-                      />
-                      {/* <Toc content={postData ? postData.content : ''} /> */}
-                    </div>
-                  </Grow>
+                  {postData &&
+                    postData.Tags.map((item, idx) => (
+                      <div key={item.tagName + idx}>
+                        <Chip
+                          size="small"
+                          label={item.tagName}
+                          clickable
+                          color="primary"
+                          //  onDelete={handleDelete}
+                          //  deleteIcon={<DoneIcon />}
+                          variant="outlined"
+                        />
+                      </div>
+                    ))}
                 </div>
+
+                <div style={{ width: '100%', height: '100%', marginTop: '25px' }}>
+                  <img
+                    style={{ marginBottom: '25px', width: '100%' }}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/${postData?.thumbnail}`}
+                    alt={`${postData?.title}`}
+                  />
+                  <MarkDownContents contents={postData ? postData.content : ''} />
+                </div>
+
+                {/* 좌측 ActionButton (Like 등) 영역 시작 */}
+                <div className={classes.leftBtnsSection}>
+                  <div
+                    style={{
+                      position: 'sticky',
+                      top: '150px',
+                    }}>
+                    <Grow in timeout={1000}>
+                      {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
+                      <div className={classes.btnList}>
+                        <Fab aria-label="like" onClick={() => handleLike('Like')}>
+                          {/* <IconButton color="default"> */}
+                          <Badge
+                            anchorOrigin={{
+                              vertical: 'top',
+                              horizontal: 'left',
+                            }}
+                            badgeContent={
+                              postData
+                                ? postData.LikeDisLike.filter((item) => item.actionType === 'Like')
+                                    .length
+                                : 0
+                            }
+                            color="error">
+                            <ThumbUpIcon
+                              color={isLiked('Like')}
+                              style={{ height: '27px', width: '27px' }}
+                            />
+                          </Badge>
+                          {/* </IconButton> */}
+                        </Fab>
+
+                        <Fab aria-label="dislike" onClick={() => handleLike('DisLike')}>
+                          {/* <IconButton color="default"> */}
+                          <Badge
+                            anchorOrigin={{
+                              vertical: 'top',
+                              horizontal: 'left',
+                            }}
+                            badgeContent={
+                              postData
+                                ? postData.LikeDisLike.filter(
+                                    (item) => item.actionType === 'DisLike'
+                                  ).length
+                                : 0
+                            }
+                            color="primary">
+                            <ThumbDownIcon
+                              color={isLiked('DisLike')}
+                              style={{ height: '27px', width: '27px' }}
+                            />
+                          </Badge>
+                          {/* </IconButton> */}
+                        </Fab>
+
+                        <ActionButton
+                          isMyPost={
+                            myUserData?.id === postData?.UserId || myUserData?.role === 'admin'
+                          }
+                          setUpdateDialogOpen={setUpdateDialogOpen}
+                          setDeleteDialogOpen={setDeleteDialogOpen}
+                        />
+                        {/* <Toc content={postData ? postData.content : ''} /> */}
+                      </div>
+                    </Grow>
+                  </div>
+                </div>
+                {/* 좌측 ActionButton (Like 등) 영역 끝 */}
               </div>
-              {/* 좌측 ActionButton (Like 등) 영역 끝 */}
             </div>
           </div>
-        </div>
-        {/* 메인 컨텐츠 영역 끝 */}
-      </Paper>
-      <UpdateDialog
-        updateDialogOpen={updateDialogOpen}
-        setUpdateDialogOpen={setUpdateDialogOpen}
-        postData={postData}
-      />
-      <ConfirmDialog
-        dialogTitle="게시글을 삭제 하시겠습니까?"
-        dialogBody="삭제를 위해 게시글 제목을 입력해주세요. 삭제 된 후에는 게시글 복원이 불가 합니다."
-        confirmBtnTitle="삭제"
-        callbackConfirm={handleDelete}
-        deleteDialogOpen={deleteDialogOpen}
-        setDeleteDialogOpen={setDeleteDialogOpen}
-        postTitle={postData.title}
-      />
-    </div>
+          {/* 메인 컨텐츠 영역 끝 */}
+        </Paper>
+        <UpdateDialog
+          updateDialogOpen={updateDialogOpen}
+          setUpdateDialogOpen={setUpdateDialogOpen}
+          postData={postData}
+        />
+        <ConfirmDialog
+          dialogTitle="게시글을 삭제 하시겠습니까?"
+          dialogBody="삭제를 위해 게시글 제목을 입력해주세요. 삭제 된 후에는 게시글 복원이 불가 합니다."
+          confirmBtnTitle="삭제"
+          callbackConfirm={handleDelete}
+          deleteDialogOpen={deleteDialogOpen}
+          setDeleteDialogOpen={setDeleteDialogOpen}
+          postTitle={postData.title}
+        />
+      </div>
+    </>
   );
 };
 
