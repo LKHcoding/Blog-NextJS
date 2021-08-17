@@ -224,8 +224,14 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
     <>
       <CustomHeader
         title={postData.title}
-        description={removeMD(postData.content).slice(0, 200)}
-        author={postData.title}
+        description={`${removeMD(postData.content)
+          .slice(0, 198)
+          .replace(/\s{2,}/gi, ' ')}..`}
+        keywords={postData.Tags.map((item) => item.tagName) || ['']}
+        author="Develogger"
+        canonical={`${process.env.NEXT_PUBLIC_API_URL}${router.asPath}`}
+        ogImageURL={`${process.env.NEXT_PUBLIC_API_URL}/${postData.thumbnail}`}
+        twitterImageURL={`${process.env.NEXT_PUBLIC_API_URL}/${postData.thumbnail}`}
       />
       <div className={classes.root}>
         <Paper
