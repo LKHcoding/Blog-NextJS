@@ -226,7 +226,8 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
         title={postData.title}
         description={`${removeMD(postData.content)
           .slice(0, 198)
-          .replace(/\s{2,}/gi, ' ')}..`}
+          .replace(/\s{2,}/gi, ' ')
+          .replace(/\n/g, ' ')}..`}
         keywords={postData.Tags.map((item) => item.tagName) || ['']}
         author="Develogger"
         canonical={`${process.env.NEXT_PUBLIC_API_URL}${router.asPath}`}
