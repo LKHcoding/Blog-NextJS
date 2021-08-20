@@ -6,15 +6,16 @@
     "dev": "cross-env NODE_ENV=development next dev -p 3031",
     "build": "cross-env NODE_ENV=production next build",
     "clean": "npx rimraf .next",
-    "start": "npm run clean && npm run build && cross-env NODE_ENV=production next start -p 3031",
+    "start": "npm run build && cross-env NODE_ENV=production next start -p 3031",
+    "start-backup": "npm run clean && npm run build && cross-env NODE_ENV=production next start -p 3031",
     "dev-backup": "cross-env NODE_ENV=development nodemon",
-    "build-backup": "next build",
-    "start-backup": "next start"
+    "build-backup": "next build"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
+    "@next/bundle-analyzer": "^11.1.0",
     "axios": "^0.21.1",
     "clsx": "^1.1.1",
     "cookie": "^0.4.1",
@@ -52,6 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
     "algoliasearch": "^4.10.3",
+    "compression-webpack-plugin": "^8.0.1",
     "eslint": "^7.27.0",
     "eslint-plugin-import": "^2.23.3",
     "eslint-plugin-react": "^7.23.2",

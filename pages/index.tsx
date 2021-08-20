@@ -1,7 +1,8 @@
 import AllPostCardList from './../components/index/AllPostCardList';
 import { useEffect, useRef } from 'react';
 import CustomHeader from '../components/common/SEO/CustomHeader';
-import { GetServerSideProps } from 'next';
+// import { GetServerSideProps } from 'next';
+
 const Home = () => {
   const ref = useRef<HTMLDivElement>(null);
 
