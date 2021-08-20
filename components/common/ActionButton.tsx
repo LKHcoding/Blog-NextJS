@@ -5,7 +5,9 @@ import ShareIcon from '@material-ui/icons/Share';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { Flip, toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 import UpdateDialog from '../write/update/UpdateDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,6 +48,9 @@ interface Props {
 }
 
 export default function SpeedDials({ setUpdateDialogOpen, isMyPost, setDeleteDialogOpen }: Props) {
+  const router = useRouter();
+  const currentPathUrl = useRef('');
+
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -65,12 +70,54 @@ export default function SpeedDials({ setUpdateDialogOpen, isMyPost, setDeleteDia
     setOpen(false);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleCopyToClipboard = () => {
+    if (document.queryCommandSupported('copy')) {
+      navigator.clipboard
+        .writeText(`${process.env.NEXT_PUBLIC_API_URL}${router.asPath}`)
+        .then(() => {
+          toast.info(`클립보드에 주소가 복사 되었습니다.`, {
+            position: 'top-center',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            transition: Flip,
+          });
+        })
+        .catch((err) => {
+          toast.info(`err : ${err}`, {
+            position: 'top-center',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            transition: Flip,
+          });
+        });
 
-  const handleOpen = () => {
-    setOpen(true);
+      // document.execCommand('copy');
+    } else {
+      toast.info(
+        `클립보드 복사가
+      지원되지 않는 브라우저 입니다.`,
+        {
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          transition: Flip,
+        }
+      );
+    }
+
+    setOpen(false);
   };
 
   const toggleBtn = () => {
@@ -93,7 +140,7 @@ export default function SpeedDials({ setUpdateDialogOpen, isMyPost, setDeleteDia
               icon={<EditIcon />}
               tooltipTitle={'수정'}
               onClick={handleDialogOpen}
-              // onClick={() => handleClose}
+              // onClick={() => handleCopyToClipboard}
               tooltipPlacement={'right'}
             />,
 
@@ -107,10 +154,10 @@ export default function SpeedDials({ setUpdateDialogOpen, isMyPost, setDeleteDia
           ]}
 
           <SpeedDialAction
-            key={'공유'}
+            key={'클립보드에 주소 복사'}
             icon={<ShareIcon />}
-            tooltipTitle={'공유'}
-            onClick={handleClose}
+            tooltipTitle={'클립보드에 주소 복사'}
+            onClick={handleCopyToClipboard}
             tooltipPlacement={'right'}
           />
         </SpeedDial>
