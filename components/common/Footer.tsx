@@ -4,7 +4,7 @@ import React from 'react';
 const Footer = () => {
   return (
     <>
-      <div
+      <footer
         style={{
           textAlign: 'center',
           borderTop: '1px solid rgba(0, 0, 0, 0.12)',
@@ -22,7 +22,7 @@ const Footer = () => {
           {new Date().getFullYear()}
           {'.'}
         </Typography>
-      </div>
+      </footer>
     </>
   );
 };

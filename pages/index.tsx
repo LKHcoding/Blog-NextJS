@@ -1,6 +1,7 @@
 import AllPostCardList from './../components/index/AllPostCardList';
 import { useEffect, useRef } from 'react';
 import CustomHeader from '../components/common/SEO/CustomHeader';
+import { GetServerSideProps } from 'next';
 const Home = () => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -28,3 +29,14 @@ const Home = () => {
 };
 
 export default Home;
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const { query, req, params } = context;
+
+//   return {
+//     props: {
+//       params,
+//       query,
+//     },
+//   };
+// };

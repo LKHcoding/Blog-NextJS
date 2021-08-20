@@ -45,7 +45,7 @@ const NewSideBar = () => {
     };
 
   const list = (anchor: Anchor) => (
-    <div
+    <nav
       className={clsx(classes.list, {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
       })}
@@ -79,7 +79,7 @@ const NewSideBar = () => {
           </ListItem>
         ))}
       </List>
-    </div>
+    </nav>
   );
 
   return (

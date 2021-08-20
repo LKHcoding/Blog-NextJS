@@ -1,0 +1,8 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://develogger.kro.kr
+
+Sitemap: https://develogger.kro.kr/api/sitemap
