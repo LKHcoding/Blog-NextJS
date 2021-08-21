@@ -17,7 +17,8 @@ module.exports = withBundleAnalyzer({
     return {
       ...config,
       mode: prod ? 'production' : 'development',
-      devtool: prod ? 'hidden-source-map' : 'eval',
+      // devtool: prod ? 'hidden-source-map' : 'eval',
+      devtool: prod ? 'hidden-source-map' : 'source-map',
       plugins: [
         ...config.plugins,
         // 배포용일때만 추가
