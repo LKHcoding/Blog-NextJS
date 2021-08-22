@@ -1,10 +1,37 @@
 import React, { FC, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+
+// import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
+// import materialDark from 'react-syntax-highlighter/dist/cjs/styles/prism/nord';
+
+// import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
+
+// import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
+import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
+import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
+import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
+import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
+import html from 'react-syntax-highlighter/dist/cjs/languages/prism/markup';
+import java from 'react-syntax-highlighter/dist/cjs/languages/prism/java';
+
 import rehypeRaw from 'rehype-raw';
 import gfm from 'remark-gfm';
+
+SyntaxHighlighter.registerLanguage('javascript', js);
+SyntaxHighlighter.registerLanguage('jsx', jsx);
+SyntaxHighlighter.registerLanguage('typescript', ts);
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('bash', bash);
+SyntaxHighlighter.registerLanguage('css', css);
+SyntaxHighlighter.registerLanguage('html', html);
+SyntaxHighlighter.registerLanguage('java', java);
 
 interface Props {
   contents: string;

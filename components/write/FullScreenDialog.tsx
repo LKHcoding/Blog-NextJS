@@ -23,8 +23,20 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import useInput from './../../hooks/useInput';
 
 import gfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+// import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
+import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
+import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
+import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
+import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
+import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
+import html from 'react-syntax-highlighter/dist/cjs/languages/prism/markup';
+import java from 'react-syntax-highlighter/dist/cjs/languages/prism/java';
+
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 import rehypeRaw from 'rehype-raw';
 
@@ -37,6 +49,15 @@ import { UploadDialog } from './UploadDialog';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useQuery } from 'react-query';
 import { getAllTagInfoApi } from '../../utils/queryAPI';
+
+SyntaxHighlighter.registerLanguage('javascript', js);
+SyntaxHighlighter.registerLanguage('jsx', jsx);
+SyntaxHighlighter.registerLanguage('typescript', ts);
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('bash', bash);
+SyntaxHighlighter.registerLanguage('css', css);
+SyntaxHighlighter.registerLanguage('html', html);
+SyntaxHighlighter.registerLanguage('java', java);
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,

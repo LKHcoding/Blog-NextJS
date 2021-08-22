@@ -1,5 +1,4 @@
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,7 +9,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import CreateIcon from '@material-ui/icons/Create';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
@@ -28,14 +26,35 @@ import ReactMarkdown from 'react-markdown';
 import 'react-markdown-editor-lite/lib/index.css';
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
 import { useQuery } from 'react-query';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+// import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
+import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
+import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
+import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
+import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
+import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
+import html from 'react-syntax-highlighter/dist/cjs/languages/prism/markup';
+import java from 'react-syntax-highlighter/dist/cjs/languages/prism/java';
+
 import rehypeRaw from 'rehype-raw';
 import gfm from 'remark-gfm';
+import useInput from '../../../hooks/useInput';
 import { IPostInfoType } from '../../../types/PostInfoType';
 import { getAllTagInfoApi } from '../../../utils/queryAPI';
-import useInput from '../../../hooks/useInput';
 import UpdateUploadDialog from './UpdateUploadDialog';
+
+SyntaxHighlighter.registerLanguage('javascript', js);
+SyntaxHighlighter.registerLanguage('jsx', jsx);
+SyntaxHighlighter.registerLanguage('typescript', ts);
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('bash', bash);
+SyntaxHighlighter.registerLanguage('css', css);
+SyntaxHighlighter.registerLanguage('html', html);
+SyntaxHighlighter.registerLanguage('java', java);
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
