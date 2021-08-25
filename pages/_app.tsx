@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -15,11 +14,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/common/Header';
 import MainSection from '../components/common/MainSection';
 import NewSideBar from '../components/common/NewSideBar';
-import GoogleAnalyticsHOC from '../components/common/SEO/GoogleAnalyticsHOC';
 import '../styles/styles.scss';
 import theme from '../theme/theme';
-import * as gtag from '../utils/gtag';
-import { GA_TRACKING_ID } from '../utils/gtag';
 
 dayjs.locale('ko');
 
@@ -30,8 +26,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   // 페이지 전환시에 이 컴포넌트 프롭스가 변경된다.
   // pageProps는 dataFetching 메서드를 통해 미리 가져온 초기 객체임.
   // 이 메서드를 사용하지 않는다면 빈객체가 전달됨.
-
-  const router = useRouter();
 
   const queryClientRef = React.useRef<QueryClient>();
   if (!queryClientRef.current) {
@@ -44,10 +38,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       },
     });
   }
-
-  const handleRouteChange = (url: string) => {
-    gtag.pageview(url);
-  };
 
   useEffect(() => {
     /**
@@ -69,18 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         transition: Flip,
       });
     }
-    // console.log(router.asPath);
-    // handleRouteChange(router.asPath);
   }, []);
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-      router.events.on('routeChangeComplete', handleRouteChange);
-      return () => {
-        router.events.off('routeChangeComplete', handleRouteChange);
-      };
-    }
-  }, [router.events]);
 
   return (
     <>
@@ -98,13 +77,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Header />
             <NewSideBar />
             <MainSection>
-              {/* {process.env.NODE_ENV === 'production' ? (
-                <GoogleAnalyticsHOC>
-                  <Component {...pageProps} />
-                </GoogleAnalyticsHOC>
-              ) : (
-                <Component {...pageProps} />
-              )} */}
               <Component {...pageProps} />
             </MainSection>
             <ToastContainer />
@@ -114,24 +86,31 @@ function MyApp({ Component, pageProps }: AppProps) {
         {/* Devtools를 키면 mobile 정도 크기 화면에서 Warning이 뜨지만 문제없음 */}
         {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />}
       </QueryClientProvider>
-      <Head>
-        {/* Global Site Tag (gtag.js) - Google Analytics */}
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_TRACKING_ID}', {
-              page_location: window.location.href,
-              page_path: window.location.pathname,
-              page_title: window.document.title,
-            });
-          `,
-          }}
-        />
-      </Head>
+      {process.env.NODE_ENV === 'production' ? (
+        <Head>
+          {/* Global Site Tag (gtag.js) - Google Analytics */}
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){
+                    dataLayer.push(arguments);
+                    }
+                    gtag('js', new Date());
+                    gtag('config', '${process.env.NEXT_PUBLIC_GA_TRACKING_ID}', {
+                      // page_location: window.location.href,
+                      page_path: window.location.pathname,
+                      // page_title: window.document.title,
+                    });
+                  `,
+            }}
+          />
+        </Head>
+      ) : null}
     </>
   );
 }

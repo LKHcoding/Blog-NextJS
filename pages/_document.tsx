@@ -18,8 +18,6 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 // import theme from './theme/theme';
 
-import { GA_TRACKING_ID } from '../utils/gtag';
-
 export default class MyDocument extends Document {
   render() {
     return (
@@ -33,6 +31,12 @@ export default class MyDocument extends Document {
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,500,700&display=swap"
+          />
+
+          {/* google webmaster authentication section */}
+          <meta
+            name="google-site-verification"
+            content="bSRnubsgHL8LkgLCS4KPp6WU_gqYq6h5drW6OY7gZcI"
           />
         </Head>
         <body>
