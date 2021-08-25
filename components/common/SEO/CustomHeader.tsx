@@ -40,7 +40,7 @@ interface Props {
 
 const CustomHeader: FC<Props> = ({
   title = 'Develogger',
-  description = '개발자를 위한 Tech Trend Blog Community - Develogger',
+  description = '개발자를 위한 블로그 커뮤니티. 디벨로거는 개발 트렌드 데이터와 블로그 서비스를 제공합니다.',
   keywords = ['Develogger', '디벨로거', '디밸로거', '개발블로그', '블로그'],
   author = 'Develogger',
   canonical = 'https://develogger.kro.kr',
