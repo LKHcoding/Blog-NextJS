@@ -1,7 +1,8 @@
 import Paper from '@material-ui/core/Paper';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { FC } from 'react';
+import React, { VFC } from 'react';
 import BlogProfile from '../../components/blog/BlogProfile';
 import PostList from '../../components/blog/PostList';
 import TagList from '../../components/blog/TagList';
@@ -13,7 +14,7 @@ interface Props {
   };
 }
 
-const BlogPage: FC<Props> = ({ params }) => {
+const BlogPage = ({ params }: Props) => {
   const classes = useStyles();
   const router = useRouter();
 
@@ -23,8 +24,15 @@ const BlogPage: FC<Props> = ({ params }) => {
   //   getOneUserDataApi.apiCall(params.loginID)
   // );
 
+  if (!params.BlogUserId) {
+    return null;
+  }
+
   return (
     <div>
+      <Head>
+        <title>{`${params.BlogUserId}'s Blog - Develogger`}</title>
+      </Head>
       <div className={classes.root}>
         <Paper style={{ borderRadius: '10px', margin: '100px 30px 15px 30px' }} elevation={3}>
           <BlogProfile params={params} />

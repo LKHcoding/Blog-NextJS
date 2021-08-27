@@ -34,8 +34,13 @@ import {
 import ConfirmDialog from './../../../components/common/ConfirmDialog';
 import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
+import { VFC } from 'react';
 
-const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: string } }) => {
+interface Props {
+  params: { BlogUserId: string; postId: string; tag?: string };
+}
+const Post = ({ params }: Props) => {
+  // function Post({ params }: { params: { BlogUserId: string; postId: string; tag?: string } }) {
   const queryClient = useQueryClient();
 
   const router = useRouter();
@@ -46,7 +51,8 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
 
   const { data: userData, refetch: userRefetch } = useQuery(
     `${getOneUserDataApi.key}-${params.BlogUserId}`,
-    () => getOneUserDataApi.apiCall(params.BlogUserId)
+    () => getOneUserDataApi.apiCall(params.BlogUserId),
+    { enabled: !!params.BlogUserId }
   );
 
   const { data: postData, refetch: postRefetch } = useQuery(
@@ -56,7 +62,8 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
 
   const { data: userPostData, refetch: userPostDataRefetch } = useQuery(
     `${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`,
-    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all')
+    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all'),
+    { enabled: !!params.BlogUserId }
   );
 
   // 수정 Dialog state
@@ -218,6 +225,10 @@ const Post = ({ params }: { params: { BlogUserId: string; postId: string; tag?: 
         </Backdrop> */}
       </div>
     );
+  }
+
+  if (!params.BlogUserId) {
+    return null;
   }
 
   return (
@@ -459,11 +470,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const queryClient = new QueryClient();
 
-  if (params) {
+  if (params && 'BlogUserId' in params && 'postId' in params) {
     //유저 정보 프리패치
     await queryClient.prefetchQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>
       getOneUserDataApi.apiCall(
-        'BlogUserId' in params && typeof params.BlogUserId === 'string' ? params.BlogUserId : '',
+        typeof params.BlogUserId === 'string' ? params.BlogUserId : '',
         req.cookies?.Authentication
       )
     );
@@ -471,11 +482,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // 게시물 정보 프리패치
     await queryClient.prefetchQuery(`${getPostInfoDataApi.key}-${params.postId}`, () =>
       getPostInfoDataApi.apiCall(
-        'postId' in params && typeof params.postId === 'string' ? params.postId : '',
+        typeof params.postId === 'string' ? params.postId : '',
         req.cookies?.Authentication
       )
     );
   }
+
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

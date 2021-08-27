@@ -66,7 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Develogger</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <link rel="shortcut icon" href="/D-logo-black2.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
       </Head>
 
       <QueryClientProvider client={queryClientRef.current}>

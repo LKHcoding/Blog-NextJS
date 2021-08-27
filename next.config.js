@@ -7,23 +7,29 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = withBundleAnalyzer({
-  compress: true,
+  compress: process.env.NODE_ENV === 'production',
   future: {
     webpack5: true,
   },
   webpack(config) {
     // console.log(config);
     let prod = process.env.NODE_ENV === 'production';
+    let plugins = [...config.plugins];
+    if (prod) {
+      plugins.push(new CompressionPlugin());
+    }
+
     return {
       ...config,
       mode: prod ? 'production' : 'development',
       // devtool: prod ? 'hidden-source-map' : 'eval',
       devtool: prod ? 'hidden-source-map' : 'source-map',
-      plugins: [
-        ...config.plugins,
-        // 배포용일때만 추가
-        process.env.NODE_ENV === 'production' && new CompressionPlugin(),
-      ],
+      plugins,
+      // plugins: [
+      //   ...config.plugins,
+      //   // 배포용일때만 추가
+      //   // process.env.NODE_ENV === 'production' && new CompressionPlugin(),
+      // ],
     };
   },
 });
