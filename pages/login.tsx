@@ -20,6 +20,7 @@ import { getMyUserDataApi } from '../utils/queryAPI';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { Flip, toast } from 'react-toastify';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Head from 'next/head';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -168,6 +169,9 @@ const LogIn = () => {
     router.push('/');
     return (
       <>
+        <Head>
+          <title>{`Login - Develogger`}</title>
+        </Head>
         <div
           style={{
             width: '100%',
@@ -185,86 +189,91 @@ const LogIn = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          LogIn
-        </Typography>
-        <form className={classes.form} noValidate onSubmit={handleLogInFormSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            id="loginID"
-            label="Login ID"
-            name="loginID"
-            autoComplete="loginID"
-            autoFocus
-            value={loginID}
-            onChange={onChangeLoginID}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={onChangePassword}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}>
+    <>
+      <Head>
+        <title>{`Login - Develogger`}</title>
+      </Head>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
             LogIn
-          </Button>
-          <Button
-            fullWidth
-            variant="outlined"
-            className={classes.github}
-            onClick={handleGithubLogin}>
-            <GitHubIcon fontSize="small" />
-            <div style={{ marginLeft: '5px' }}>github login</div>
-          </Button>
+          </Typography>
+          <form className={classes.form} noValidate onSubmit={handleLogInFormSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="loginID"
+              label="Login ID"
+              name="loginID"
+              autoComplete="loginID"
+              autoFocus
+              value={loginID}
+              onChange={onChangeLoginID}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={onChangePassword}
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}>
+              LogIn
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              className={classes.github}
+              onClick={handleGithubLogin}>
+              <GitHubIcon fontSize="small" />
+              <div style={{ marginLeft: '5px' }}>github login</div>
+            </Button>
 
-          <Grid container>
-            <Grid item xs>
-              {/* <Link href="/"> */}
-              <MaterialLink
-                href="#"
-                variant="body2"
-                onClick={() => alert('현재 Github Login만 사용 가능합니다.')}>
-                비밀번호 찾기
-              </MaterialLink>
-              {/* </Link> */}
+            <Grid container>
+              <Grid item xs>
+                {/* <Link href="/"> */}
+                <MaterialLink
+                  href="#"
+                  variant="body2"
+                  onClick={() => alert('현재 Github Login만 사용 가능합니다.')}>
+                  비밀번호 찾기
+                </MaterialLink>
+                {/* </Link> */}
+              </Grid>
+              <Grid item>
+                {/* <Link href="/"> */}
+                <MaterialLink
+                  href="#"
+                  variant="body2"
+                  onClick={() => alert('현재 Github Login만 사용 가능합니다.')}>
+                  {'회원가입'}
+                </MaterialLink>
+                {/* </Link> */}
+              </Grid>
             </Grid>
-            <Grid item>
-              {/* <Link href="/"> */}
-              <MaterialLink
-                href="#"
-                variant="body2"
-                onClick={() => alert('현재 Github Login만 사용 가능합니다.')}>
-                {'회원가입'}
-              </MaterialLink>
-              {/* </Link> */}
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+          </form>
+        </div>
+      </Container>
+    </>
   );
 };
 
