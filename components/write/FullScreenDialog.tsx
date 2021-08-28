@@ -28,6 +28,7 @@ import gfm from 'remark-gfm';
 // import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
+
 import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
 import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
 import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';

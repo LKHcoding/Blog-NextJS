@@ -51,8 +51,7 @@ const Post = ({ params }: Props) => {
 
   const { data: userData, refetch: userRefetch } = useQuery(
     `${getOneUserDataApi.key}-${params.BlogUserId}`,
-    () => getOneUserDataApi.apiCall(params.BlogUserId),
-    { enabled: !!params.BlogUserId }
+    () => getOneUserDataApi.apiCall(params.BlogUserId)
   );
 
   const { data: postData, refetch: postRefetch } = useQuery(
@@ -62,8 +61,7 @@ const Post = ({ params }: Props) => {
 
   const { data: userPostData, refetch: userPostDataRefetch } = useQuery(
     `${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`,
-    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all'),
-    { enabled: !!params.BlogUserId }
+    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all')
   );
 
   // 수정 Dialog state
@@ -368,7 +366,7 @@ const Post = ({ params }: Props) => {
                     src={`${process.env.NEXT_PUBLIC_API_URL}/${postData?.thumbnail}`}
                     alt={`${postData?.title}`}
                   />
-                  <MarkDownContents contents={postData ? postData.content : ''} />
+                  <MarkDownContents contents={postData.content} />
                 </div>
 
                 {/* 좌측 ActionButton (Like 등) 영역 시작 */}
@@ -469,6 +467,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, req, params } = context;
 
   const queryClient = new QueryClient();
+  // const queryClient = useQueryClient();
 
   if (params && 'BlogUserId' in params && 'postId' in params) {
     //유저 정보 프리패치

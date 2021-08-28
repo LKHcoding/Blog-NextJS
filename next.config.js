@@ -23,7 +23,8 @@ module.exports = withBundleAnalyzer({
       ...config,
       mode: prod ? 'production' : 'development',
       // devtool: prod ? 'hidden-source-map' : 'eval',
-      devtool: prod ? 'hidden-source-map' : 'source-map',
+      // devtool: prod ? 'hidden-source-map' : 'source-map',
+      devtool: prod ? 'hidden-source-map' : 'inline-source-map',
       plugins,
       // plugins: [
       //   ...config.plugins,
