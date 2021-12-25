@@ -36,3 +36,5 @@ yarn-error.log*
 .env.production
 
 .env.development
+
+public/.well-known/acme-challenge/

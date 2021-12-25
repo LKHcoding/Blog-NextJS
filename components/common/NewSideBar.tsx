@@ -71,14 +71,14 @@ const NewSideBar = () => {
         ))} */}
       </List>
       <Divider />
-      <List>
+      {/* <List>
         {['Front-End', 'Back-End', 'Full-Stack'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <MailIcon /> : <InboxIcon />}</ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
         ))}
-      </List>
+      </List> */}
     </nav>
   );
 

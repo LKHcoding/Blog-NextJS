@@ -16,9 +16,15 @@ const Footer = () => {
         {/* 푸터 입니다. */}
         <Typography variant="body2" color="textSecondary" align="center">
           {'Copyright © '}
-          <Link color="inherit" href="https://github.com/LKHcoding/">
+          {/* <Link color="inherit" href="https://github.com/LKHcoding/"> */}
+          <a
+            href="https://github.com/LKHcoding"
+            className="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorInherit"
+            target="_blank"
+            rel="noreferrer">
+            {/* <a href="https://github.com/LKHcoding" target="_blank" rel="noreferrer"> */}
             LKHcoding
-          </Link>{' '}
+          </a>{' '}
           {new Date().getFullYear()}
           {'.'}
         </Typography>

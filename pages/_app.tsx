@@ -27,17 +27,28 @@ function MyApp({ Component, pageProps }: AppProps) {
   // pageProps는 dataFetching 메서드를 통해 미리 가져온 초기 객체임.
   // 이 메서드를 사용하지 않는다면 빈객체가 전달됨.
 
-  const queryClientRef = React.useRef<QueryClient>();
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: 1,
-          retryDelay: 1000,
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 1,
+            retryDelay: 1000,
+          },
         },
-      },
-    });
-  }
+      })
+  );
+  // const queryClientRef = React.useRef<QueryClient>();
+  // if (!queryClientRef.current) {
+  //   queryClientRef.current = new QueryClient({
+  //     defaultOptions: {
+  //       queries: {
+  //         retry: 1,
+  //         retryDelay: 1000,
+  //       },
+  //     },
+  //   });
+  // }
 
   useEffect(() => {
     /**
@@ -69,7 +80,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
       </Head>
 
-      <QueryClientProvider client={queryClientRef.current}>
+      <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
           <ThemeProvider theme={theme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
@@ -84,7 +95,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         </Hydrate>
 
         {/* Devtools를 키면 mobile 정도 크기 화면에서 Warning이 뜨지만 문제없음 */}
-        {process.env.NODE_ENV === 'production' ? null : <ReactQueryDevtools />}
+        {/* development 환경에서만 나옴 */}
+        <ReactQueryDevtools />
       </QueryClientProvider>
       {process.env.NODE_ENV === 'production' ? (
         <Head>
