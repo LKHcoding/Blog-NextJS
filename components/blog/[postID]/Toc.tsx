@@ -96,7 +96,12 @@ const Toc = ({ content }: Props) => {
         <Divider />
         {/* 목차에 item이 너무 많은경우 화면 아래로 넘어갈수 있기때문에 ScrollBars를 이용하여
         스크롤을 만들어준다. */}
-        <Scrollbars universal={true} autoHide autoHeight autoHeightMax="calc(100vh - 250px)">
+        <Scrollbars
+          universal={true}
+          autoHide
+          autoHeight
+          autoHeightMax="calc(100vh - 250px)"
+          autoHeightMin="calc(100vh - 250px)">
           {result.map((item, idx) => {
             // count는 샾개수에 따른 들여쓰기용 변수
             if (item?.count && item.count <= 30 && item?.title) {
@@ -105,7 +110,7 @@ const Toc = ({ content }: Props) => {
                   // href에 #title을 주어서 클릭시 해당 위치로 스크롤 이동하도록 구현
                   href={`#${item.title}`}
                   key={item.title + idx}
-                  style={{ padding: '0px' }}
+                  style={{ padding: '0px', height: '27.91px' }}
                   className={clsx(
                     classes.btnStyle,
                     // activeId와 같은 list item만 스타일을 다르게 주어서 사용자에게 표시해준다.
