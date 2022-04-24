@@ -87,5 +87,26 @@ export const useStyles = makeStyles((theme: Theme) =>
         right: '1.5%',
       },
     },
+
+    commentContainer: {
+      width: '100%',
+      marginTop: '60px',
+      display: 'flex',
+      // alignItems: 'flex-end',
+    },
+    commentWriterAvatar: {
+      paddingTop: '21px',
+    },
+    commentInputContainer: {
+      width: '100%',
+      '& label': {
+        fontSize: '0.9rem',
+      },
+    },
+    commentInput: {
+      width: '100%',
+      marginLeft: '10px',
+      marginBottom: '3px',
+    },
   })
 );

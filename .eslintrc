@@ -25,6 +25,7 @@
     "react/react-in-jsx-scope": "off",
     // 2: We do not need to use prop types with TypeScript
     "react/prop-types": "off",
-    "react/require-default-props": "off"
+    "react/require-default-props": "off",
+    "@typescript-eslint/no-empty-interface" : "off"
   }
 }

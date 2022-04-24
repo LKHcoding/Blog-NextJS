@@ -135,8 +135,9 @@ const LogIn = () => {
 
   // 깃허브 로그인
   const handleGithubLogin = useCallback(() => {
-    const CLIENT_ID = 'b8a44b2b988a36fd9f9e';
-    const REDIRECT_URL = `${process.env.NEXT_PUBLIC_API_URL}/github-login`;
+    const CLIENT_ID = '2ac09ec024b6ae7e47eb';
+    const REDIRECT_URL = `${process.env.NEXT_PUBLIC_LOCAL_URL}/github-login`;
+    //http://localhost:3031/github-login
 
     // OAuth app을 등록할때 작성했던 redirect url과 발급받은 CLIENT_ID를 바탕으로 URL을 생성합니다.
     const url = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}`;

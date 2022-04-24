@@ -5,7 +5,9 @@ import {
   CircularProgress,
   Fab,
   Grow,
+  InputAdornment,
   Paper,
+  TextField,
   Typography,
 } from '@material-ui/core';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
@@ -34,7 +36,10 @@ import {
 import ConfirmDialog from './../../../components/common/ConfirmDialog';
 import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
-import { VFC } from 'react';
+import Comment from '../../../components/blog/[postID]/Comment';
+import Divider from '@material-ui/core/Divider';
+import { AccountCircle } from '@material-ui/icons';
+import Grid from '@material-ui/core/Grid';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
@@ -360,6 +365,7 @@ const Post = ({ params }: Props) => {
                     ))}
                 </div>
 
+                {/* region 게시글 본문 */}
                 <div style={{ width: '100%', height: '100%', marginTop: '25px' }}>
                   <img
                     style={{ marginBottom: '25px', width: '100%' }}
@@ -368,8 +374,29 @@ const Post = ({ params }: Props) => {
                   />
                   <MarkDownContents contents={postData.content} />
                 </div>
+                {/* endregion */}
 
-                {/* 좌측 ActionButton (Like 등) 영역 시작 */}
+                {/* region 댓글영역 */}
+
+                <div className={classes.commentContainer}>
+                  <div className={classes.commentWriterAvatar}>
+                    <AccountCircle />
+                  </div>
+                  <div className={classes.commentInputContainer}>
+                    <TextField
+                      className={classes.commentInput}
+                      id="input-with-icon-grid"
+                      label="댓글을 남겨주세요"
+                      multiline
+                      maxRows={4}
+                    />
+                  </div>
+                </div>
+
+                <Comment />
+                {/* endregion */}
+
+                {/* region 좌측 ActionButton (Like 등) 영역 시작 */}
                 <div className={classes.leftBtnsSection}>
                   <div
                     style={{
@@ -436,7 +463,7 @@ const Post = ({ params }: Props) => {
                     </Grow>
                   </div>
                 </div>
-                {/* 좌측 ActionButton (Like 등) 영역 끝 */}
+                {/* endregion 좌측 ActionButton (Like 등) 영역 끝 */}
               </div>
             </div>
           </div>
