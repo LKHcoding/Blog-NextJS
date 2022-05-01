@@ -135,7 +135,7 @@ const LogIn = () => {
 
   // 깃허브 로그인
   const handleGithubLogin = useCallback(() => {
-    const CLIENT_ID = '2ac09ec024b6ae7e47eb';
+    const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const REDIRECT_URL = `${process.env.NEXT_PUBLIC_LOCAL_URL}/github-login`;
     //http://localhost:3031/github-login
 
