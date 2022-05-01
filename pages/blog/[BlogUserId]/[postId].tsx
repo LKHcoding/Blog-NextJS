@@ -6,7 +6,7 @@ import {
   Fab,
   Grow,
   Paper,
-  TextField,
+  Divider,
   Typography,
 } from '@material-ui/core';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
@@ -38,6 +38,7 @@ import removeMD from 'remove-markdown';
 import Comment from '../../../components/blog/[postID]/Comment';
 import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
 import { AccountCircle } from '@material-ui/icons';
+import Button from '@material-ui/core/Button';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
@@ -380,28 +381,12 @@ const Post = ({ params }: Props) => {
                 {/* endregion */}
 
                 {/* region 댓글영역 */}
-                <div className={classes.commentContainer}>
-                  <div className={classes.commentWriterAvatar}>
-                    <Avatar
-                      className={classes.commentAvatarImg}
-                      color="default"
-                      alt="User Profile Icon"
-                      src={`${userData?.avatarUrl || ''}`}
-                    />
-                    {/* <AccountCircle /> */}
-                  </div>
-                  <div className={classes.commentInputContainer}>
-                    <TextField
-                      className={classes.commentInput}
-                      id="input-with-icon-grid"
-                      label="댓글을 남겨주세요"
-                      multiline
-                      maxRows={4}
-                    />
-                  </div>
-                </div>
-
-                <Comment />
+                {/* https://react.semantic-ui.com/views/comment/#types-comment - 여기 template 참고 */}
+                {/* <Typography variant="h5" gutterBottom className={classes.commentHeading}> */}
+                {/*   Comments */}
+                {/* </Typography> */}
+                {/* <Divider /> */}
+                {/* <Comment /> */}
                 {/* endregion */}
 
                 {/* region 좌측 ActionButton (Like 등) 영역 시작 */}

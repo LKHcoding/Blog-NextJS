@@ -92,35 +92,14 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
     },
 
-    commentContainer: {
-      width: '100%',
-      marginTop: '60px',
-      display: 'flex',
-      // alignItems: 'flex-end',
-    },
-    commentWriterAvatar: {
-      paddingTop: '14px',
-    },
-    commentInputContainer: {
-      width: '100%',
-      '& label': {
-        fontSize: '0.9rem',
-      },
-    },
-    commentInput: {
-      width: '100%',
-      marginLeft: '10px',
-      marginBottom: '3px',
-    },
     avatarImg: {
       transition: 'all 0.2s',
       '&:hover': {
         transform: 'scale(1.1)',
       },
     },
-    commentAvatarImg: {
-      width: 35,
-      height: 35,
+    commentHeading: {
+      marginTop: 60,
     },
   })
 );

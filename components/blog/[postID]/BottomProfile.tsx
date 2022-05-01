@@ -19,8 +19,8 @@ const useStyles = makeStyles({
     padding: '10px',
   },
   avatarImg: {
-    height: '150px',
-    width: '150px',
+    height: '130px',
+    width: '130px',
     transition: 'all 0.2s',
     '&:hover': {
       transform: 'scale(1.1)',
