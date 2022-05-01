@@ -28,6 +28,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
+
     blogTitleStyle: {
       color: '#3C4858',
       display: 'inline-block',
@@ -38,6 +39,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       textDecoration: 'none',
       fontSize: ' 1.5625rem',
       lineHeight: '1.4em',
+      '&:hover': {
+        textDecoration: 'underline',
+      },
     },
     btnList: {
       '& > button': {
@@ -95,7 +99,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       // alignItems: 'flex-end',
     },
     commentWriterAvatar: {
-      paddingTop: '21px',
+      paddingTop: '14px',
     },
     commentInputContainer: {
       width: '100%',
@@ -107,6 +111,16 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       marginLeft: '10px',
       marginBottom: '3px',
+    },
+    avatarImg: {
+      transition: 'all 0.2s',
+      '&:hover': {
+        transform: 'scale(1.1)',
+      },
+    },
+    commentAvatarImg: {
+      width: 35,
+      height: 35,
     },
   })
 );

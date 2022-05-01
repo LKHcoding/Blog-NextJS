@@ -5,7 +5,6 @@ import {
   CircularProgress,
   Fab,
   Grow,
-  InputAdornment,
   Paper,
   TextField,
   Typography,
@@ -37,9 +36,8 @@ import ConfirmDialog from './../../../components/common/ConfirmDialog';
 import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
 import Comment from '../../../components/blog/[postID]/Comment';
-import Divider from '@material-ui/core/Divider';
+import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
 import { AccountCircle } from '@material-ui/icons';
-import Grid from '@material-ui/core/Grid';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
@@ -252,7 +250,7 @@ const Post = ({ params }: Props) => {
         <Paper
           // style={{ borderRadius: '10px', margin: '100px 30px 0 30px', position: 'relative' }}
           elevation={3}>
-          {/* 블로그 상단 회원정보 소개 영역 */}
+          {/* region 블로그 상단 회원정보 소개 영역 */}
           <div
             style={{
               display: 'flex',
@@ -263,6 +261,7 @@ const Post = ({ params }: Props) => {
             <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
               <a>
                 <Avatar
+                  className={classes.avatarImg}
                   color="default"
                   alt="User Profile Icon"
                   src={`${userData?.avatarUrl || ''}`}
@@ -291,7 +290,7 @@ const Post = ({ params }: Props) => {
               </div>
             </div>
           </div>
-          {/* 블로그 상단 회원정보 소개 영역 끝 */}
+          {/* endregion */}
 
           {/* 우측 toc 영역 시작 */}
           <div className={classes.tocSection}>
@@ -376,11 +375,20 @@ const Post = ({ params }: Props) => {
                 </div>
                 {/* endregion */}
 
-                {/* region 댓글영역 */}
+                {/* region 게시물 하단 프로필 */}
+                <BottomProfile params={params} />
+                {/* endregion */}
 
+                {/* region 댓글영역 */}
                 <div className={classes.commentContainer}>
                   <div className={classes.commentWriterAvatar}>
-                    <AccountCircle />
+                    <Avatar
+                      className={classes.commentAvatarImg}
+                      color="default"
+                      alt="User Profile Icon"
+                      src={`${userData?.avatarUrl || ''}`}
+                    />
+                    {/* <AccountCircle /> */}
                   </div>
                   <div className={classes.commentInputContainer}>
                     <TextField
