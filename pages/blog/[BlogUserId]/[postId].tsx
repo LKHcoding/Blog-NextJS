@@ -6,7 +6,6 @@ import {
   Fab,
   Grow,
   Paper,
-  Divider,
   Typography,
 } from '@material-ui/core';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
@@ -35,15 +34,23 @@ import {
 import ConfirmDialog from './../../../components/common/ConfirmDialog';
 import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
-import Comment from '../../../components/blog/[postID]/Comment';
 import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
-import { AccountCircle } from '@material-ui/icons';
-import Button from '@material-ui/core/Button';
+import { useOAIQuery } from '../../../hooks/useOAIQuery';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
 }
 const Post = ({ params }: Props) => {
+  const { data } = useOAIQuery({
+    queryKey: '/v1/blog/post-info/{postId}',
+    variables: {
+      postId: params?.postId,
+    },
+  });
+
+  if (data) {
+    console.log(data);
+  }
   // function Post({ params }: { params: { BlogUserId: string; postId: string; tag?: string } }) {
   const queryClient = useQueryClient();
 
@@ -387,6 +394,7 @@ const Post = ({ params }: Props) => {
                 {/* </Typography> */}
                 {/* <Divider /> */}
                 {/* <Comment /> */}
+
                 {/* endregion */}
 
                 {/* region 좌측 ActionButton (Like 등) 영역 시작 */}

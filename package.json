@@ -9,7 +9,8 @@
     "start": "npm run build && cross-env NODE_ENV=production next start -p 3031",
     "start-backup": "npm run clean && npm run build && cross-env NODE_ENV=production next start -p 3031",
     "dev-backup": "cross-env NODE_ENV=development nodemon",
-    "build-backup": "next build"
+    "build-backup": "next build",
+    "generate-api" : "npx openapi-typescript http://localhost:3030/api-json --output ./types/generatedApi.ts"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.4",
@@ -29,7 +30,7 @@
     "react-draggable": "^4.4.3",
     "react-markdown": "6.0.2",
     "react-markdown-editor-lite": "^1.2.4",
-    "react-query": "^3.16.0",
+    "react-query": "^3.39.0",
     "react-syntax-highlighter": "^15.4.3",
     "react-toastify": "^7.0.4",
     "rehype-raw": "^5.1.0",
@@ -62,6 +63,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "sitemap": "^7.0.0",
+    "ts-toolbelt": "^9.6.0",
     "typescript": "4.2.4"
   }
 }
