@@ -36,6 +36,8 @@ import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
 import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
 import { useOAIQuery } from '../../../hooks/useOAIQuery';
+import useTestStore from '../../../stores/useTestStore';
+import useLoadingStore from '../../../stores/useLoadingStore';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
@@ -60,19 +62,25 @@ const Post = ({ params }: Props) => {
 
   const { data: myUserData, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
 
-  const { data: userData, refetch: userRefetch } = useQuery(
-    `${getOneUserDataApi.key}-${params.BlogUserId}`,
-    () => getOneUserDataApi.apiCall(params.BlogUserId)
+  const {
+    data: userData,
+    refetch: userRefetch,
+  } = useQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>
+    getOneUserDataApi.apiCall(params.BlogUserId)
   );
 
-  const { data: postData, refetch: postRefetch } = useQuery(
-    `${getPostInfoDataApi.key}-${params.postId}`,
-    () => getPostInfoDataApi.apiCall(params.postId)
+  const {
+    data: postData,
+    refetch: postRefetch,
+  } = useQuery(`${getPostInfoDataApi.key}-${params.postId}`, () =>
+    getPostInfoDataApi.apiCall(params.postId)
   );
 
-  const { data: userPostData, refetch: userPostDataRefetch } = useQuery(
-    `${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`,
-    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all')
+  const {
+    data: userPostData,
+    refetch: userPostDataRefetch,
+  } = useQuery(`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`, () =>
+    getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all')
   );
 
   // 수정 Dialog state

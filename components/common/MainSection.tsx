@@ -21,7 +21,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const MainSection: FC = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const MainSection: React.FC<Props> = ({ children }) => {
   const classes = useStyles();
 
   return (
