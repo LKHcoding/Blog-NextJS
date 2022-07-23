@@ -402,7 +402,7 @@ const FullScreenDialog = () => {
         </div>
 
         <MdEditor
-          style={{ height: '100%', zIndex: 1101 }}
+          style={{ zIndex: 1101, flex: 1, overflow: 'auto' }}
           value={contentInput}
           renderHTML={(text) => (
             <ReactMarkdown
