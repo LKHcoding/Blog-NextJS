@@ -43,16 +43,16 @@ interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
 }
 const Post = ({ params }: Props) => {
-  const { data } = useOAIQuery({
-    queryKey: '/v1/blog/post-info/{postId}',
-    variables: {
-      postId: params?.postId,
-    },
-  });
-
-  if (data) {
-    console.log(data);
-  }
+  // const { data } = useOAIQuery({
+  //   queryKey: '/v1/blog/post-info/{postId}',
+  //   variables: {
+  //     postId: params?.postId,
+  //   },
+  // });
+  //
+  // if (data) {
+  //   console.log(data);
+  // }
   // function Post({ params }: { params: { BlogUserId: string; postId: string; tag?: string } }) {
   const queryClient = useQueryClient();
 

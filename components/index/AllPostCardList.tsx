@@ -56,7 +56,7 @@ const AllPostCardList = () => {
       <div className={classes.root}>
         <Grid container spacing={3} direction="row" justify="flex-start" alignItems="center">
           {data &&
-            data.map((item) => (
+            data?.filter(item => item.UserId !== 30)?.map((item) => (
               <Grid
                 className={classes.cardItem}
                 item
