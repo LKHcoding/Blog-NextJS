@@ -27,9 +27,12 @@ const MarkDownContents: FC<Props> = ({ contents }) => {
 export default memo(MarkDownContents);
 
 const components: Partial<NormalComponents & SpecialComponents> = {
-  a({ children }) {
+  a(props) {
+    const children = props?.children;
+    const href = props?.href;
+
     return (
-      <a href={`${children}`} target="_blank" rel="noreferrer">
+      <a href={`${href}`} target="_blank" rel="noreferrer">
         {children}
       </a>
     );
