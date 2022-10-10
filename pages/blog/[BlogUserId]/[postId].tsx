@@ -35,25 +35,12 @@ import ConfirmDialog from './../../../components/common/ConfirmDialog';
 import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
 import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
-import { useOAIQuery } from '../../../hooks/useOAIQuery';
-import useTestStore from '../../../stores/useTestStore';
-import useLoadingStore from '../../../stores/useLoadingStore';
+// import Comment from '../../../components/blog/[postID]/Comment';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
 }
 const Post = ({ params }: Props) => {
-  // const { data } = useOAIQuery({
-  //   queryKey: '/v1/blog/post-info/{postId}',
-  //   variables: {
-  //     postId: params?.postId,
-  //   },
-  // });
-  //
-  // if (data) {
-  //   console.log(data);
-  // }
-  // function Post({ params }: { params: { BlogUserId: string; postId: string; tag?: string } }) {
   const queryClient = useQueryClient();
 
   const router = useRouter();
@@ -396,11 +383,6 @@ const Post = ({ params }: Props) => {
                 {/* endregion */}
 
                 {/* region 댓글영역 */}
-                {/* https://react.semantic-ui.com/views/comment/#types-comment - 여기 template 참고 */}
-                {/* <Typography variant="h5" gutterBottom className={classes.commentHeading}> */}
-                {/*   Comments */}
-                {/* </Typography> */}
-                {/* <Divider /> */}
                 {/* <Comment /> */}
 
                 {/* endregion */}
@@ -418,6 +400,7 @@ const Post = ({ params }: Props) => {
                         <Fab aria-label="like" onClick={() => handleLike('Like')}>
                           {/* <IconButton color="default"> */}
                           <Badge
+                            overlap={'rectangular'}
                             anchorOrigin={{
                               vertical: 'top',
                               horizontal: 'left',
@@ -440,6 +423,7 @@ const Post = ({ params }: Props) => {
                         <Fab aria-label="dislike" onClick={() => handleLike('DisLike')}>
                           {/* <IconButton color="default"> */}
                           <Badge
+                            overlap={'rectangular'}
                             anchorOrigin={{
                               vertical: 'top',
                               horizontal: 'left',
@@ -478,6 +462,7 @@ const Post = ({ params }: Props) => {
           </div>
           {/* 메인 컨텐츠 영역 끝 */}
         </Paper>
+
         <UpdateDialog
           updateDialogOpen={updateDialogOpen}
           setUpdateDialogOpen={setUpdateDialogOpen}

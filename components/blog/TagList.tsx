@@ -43,7 +43,10 @@ const TagList: FC<Props> = ({ params, tag }) => {
             <a>
               <ListItem selected={tag === 'all'} button alignItems="center">
                 <ListItemText primary={`전체 작성 글`} />
-                <Badge badgeContent={data.allPostCount} color="secondary"></Badge>
+                <Badge
+                  badgeContent={data.allPostCount}
+                  color="secondary"
+                  overlap={'rectangular'}></Badge>
               </ListItem>
             </a>
           </Link>
@@ -58,7 +61,10 @@ const TagList: FC<Props> = ({ params, tag }) => {
               <a>
                 <ListItem selected={tag === item.tagName} button alignItems="center">
                   <ListItemText primary={`${item.tagName}`} />
-                  <Badge badgeContent={item.BlogPosts.length} color="primary"></Badge>
+                  <Badge
+                    badgeContent={item.BlogPosts.length}
+                    color="primary"
+                    overlap={'rectangular'}></Badge>
                 </ListItem>
               </a>
             </Link>

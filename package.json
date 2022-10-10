@@ -10,14 +10,15 @@
     "start-backup": "npm run clean && npm run build && cross-env NODE_ENV=production next start -p 3031",
     "dev-backup": "cross-env NODE_ENV=development nodemon",
     "build-backup": "next build",
-    "generate-api": "npx openapi-typescript http://localhost:3030/api-json --output ./types/generatedApi.ts"
+    "generate-api": "npx openapi-typescript http://localhost:3030/api-json --output ./types/generatedApi.ts",
+    "generate-orval": "cross-env npx orval --config stores/remoteStore/orval.config.ts"
   },
   "dependencies": {
     "@material-ui/core": "4.12.4",
-    "@material-ui/icons": "4.11.2",
+    "@material-ui/icons": "4.11.3",
     "@material-ui/lab": "4.0.0-alpha.58",
     "@next/bundle-analyzer": "11.1.0",
-    "axios": "0.21.1",
+    "axios": "0.27.2",
     "clsx": "1.1.1",
     "cookie": "0.4.1",
     "cross-env": "7.0.3",
@@ -25,6 +26,7 @@
     "immer": "^9.0.15",
     "material-ui-dropzone": "3.5.0",
     "next": "10.2.2",
+    "orval": "^6.10.2",
     "react": "17.0.2",
     "react-custom-scrollbars": "4.2.1",
     "react-dom": "17.0.2",
@@ -47,9 +49,9 @@
     "@algolia/client-search": "4.10.3",
     "@types/cookie": "0.4.0",
     "@types/node": "14.14.35",
-    "@types/react": "17.0.6",
+    "@types/react": "17.0.2",
     "@types/react-custom-scrollbars": "4.0.7",
-    "@types/react-dom": "17.0.3",
+    "@types/react-dom": "17.0.2",
     "@types/react-syntax-highlighter": "13.5.0",
     "@types/remove-markdown": "0.3.0",
     "@typescript-eslint/eslint-plugin": "4.25.0",
@@ -64,7 +66,6 @@
     "npm-run-all": "4.1.5",
     "prettier": "2.2.1",
     "sitemap": "7.0.0",
-    "ts-toolbelt": "9.6.0",
     "typescript": "4.2.4"
   }
 }

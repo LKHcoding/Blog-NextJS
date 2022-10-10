@@ -341,7 +341,7 @@ const header = () => {
                     className={clsx(classes.largeIcon)}
                     aria-label="show 17 new notifications"
                     color="default">
-                    <Badge badgeContent={17} color="secondary">
+                    <Badge badgeContent={17} color="secondary" overlap={'rectangular'}>
                       <NotificationsIcon style={{ height: '27px', width: '27px' }} />
                     </Badge>
                   </IconButton>
