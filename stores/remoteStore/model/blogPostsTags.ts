@@ -4,4 +4,4 @@
  * OpenAPI spec version: 1.0
  */
 
-export type GithubUserInfoDTO = { [key: string]: any };
+export type BlogPostsTags = { [key: string]: any };

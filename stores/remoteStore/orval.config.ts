@@ -29,6 +29,12 @@ export default defineConfig({
           useQuery: true,
           signal: true,
         },
+        header: (infoObject) => `/**
+ * Do not edit manually.
+ * ${infoObject.title}
+ * OpenAPI spec version: ${infoObject.version}
+*/
+`,
       },
     },
     input: {

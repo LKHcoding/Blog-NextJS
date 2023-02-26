@@ -7,10 +7,10 @@
 /**
  * user의 권한
  */
-export type UserDtoRole = typeof UserDtoRole[keyof typeof UserDtoRole];
+export type UsersRole = typeof UsersRole[keyof typeof UsersRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UserDtoRole = {
+export const UsersRole = {
   user: 'user',
   admin: 'admin',
 } as const;

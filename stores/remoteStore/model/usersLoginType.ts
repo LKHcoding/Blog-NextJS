@@ -7,10 +7,10 @@
 /**
  * 로그인 type
  */
-export type UserDtoLoginType = typeof UserDtoLoginType[keyof typeof UserDtoLoginType];
+export type UsersLoginType = typeof UsersLoginType[keyof typeof UsersLoginType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UserDtoLoginType = {
+export const UsersLoginType = {
   local: 'local',
   github: 'github',
 } as const;

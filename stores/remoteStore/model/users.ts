@@ -3,11 +3,11 @@
  * Blog nestjs API
  * OpenAPI spec version: 1.0
  */
-import type { UserDtoPositionType } from './userDtoPositionType';
-import type { UserDtoLoginType } from './userDtoLoginType';
-import type { UserDtoRole } from './userDtoRole';
+import type { UsersPositionType } from './usersPositionType';
+import type { UsersLoginType } from './usersLoginType';
+import type { UsersRole } from './usersRole';
 
-export type UserDto = {
+export type Users = {
   /** Primary key ID */
   id: number;
   /** githubID */
@@ -27,9 +27,15 @@ export type UserDto = {
   /** Github url */
   githubPageUrl: string;
   /** 개발 포지션 타입 */
-  positionType: UserDtoPositionType;
+  positionType: UsersPositionType;
   /** 로그인 type */
-  loginType: UserDtoLoginType;
+  loginType: UsersLoginType;
   /** user의 권한 */
-  role: UserDtoRole;
+  role: UsersRole;
+  /** 가입 일자 */
+  createdAt: string;
+  /** 수정 일자 */
+  updatedAt: string;
+  /** 탈퇴 일자 */
+  deletedAt: string;
 };

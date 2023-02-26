@@ -5,12 +5,12 @@
  */
 
 /**
- * 개발자 포지션 타입
+ * 개발 포지션 타입
  */
-export type GithubSignUpDtoPositionType = typeof GithubSignUpDtoPositionType[keyof typeof GithubSignUpDtoPositionType];
+export type UsersPositionType = typeof UsersPositionType[keyof typeof UsersPositionType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const GithubSignUpDtoPositionType = {
+export const UsersPositionType = {
   'Front-End': 'Front-End',
   'Back-End': 'Back-End',
   'Full-Stack': 'Full-Stack',
