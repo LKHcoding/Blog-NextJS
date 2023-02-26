@@ -35,7 +35,7 @@ import ConfirmDialog from './../../../components/common/ConfirmDialog';
 import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
 import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
-// import Comment from '../../../components/blog/[postID]/Comment';
+import CommentList from '../../../components/common/CommentList';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
@@ -383,7 +383,7 @@ const Post = ({ params }: Props) => {
                 {/* endregion */}
 
                 {/* region 댓글영역 */}
-                {/* <Comment /> */}
+                <CommentList />
 
                 {/* endregion */}
 

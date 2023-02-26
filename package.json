@@ -11,7 +11,8 @@
     "dev-backup": "cross-env NODE_ENV=development nodemon",
     "build-backup": "next build",
     "generate-api": "npx openapi-typescript http://localhost:3030/api-json --output ./types/generatedApi.ts",
-    "generate-orval": "cross-env npx orval --config stores/remoteStore/orval.config.ts"
+    "generate-orval": "cross-env npx orval --config stores/remoteStore/orval.config.ts",
+    "tsc-lint": "tsc --noEmit --pretty"
   },
   "dependencies": {
     "@material-ui/core": "4.12.4",
