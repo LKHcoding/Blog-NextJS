@@ -36,15 +36,17 @@ import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
 import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
 import CommentList from '../../../components/common/CommentList';
+import {
+  getBlogCommentPostId,
+  getGetBlogCommentPostIdQueryKey,
+} from '../../../stores/remoteStore/endpoints/blog/blog';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
 }
 const Post = ({ params }: Props) => {
   const queryClient = useQueryClient();
-
   const router = useRouter();
-
   const classes = useStyles();
 
   const { data: myUserData, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
@@ -383,7 +385,7 @@ const Post = ({ params }: Props) => {
                 {/* endregion */}
 
                 {/* region 댓글영역 */}
-                <CommentList />
+                <CommentList postId={params.postId} />
 
                 {/* endregion */}
 
@@ -488,23 +490,33 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, req, params } = context;
 
   const queryClient = new QueryClient();
-  // const queryClient = useQueryClient();
 
   if (params && 'BlogUserId' in params && 'postId' in params) {
+    const postId = params.postId;
+    const blogUserId = params.BlogUserId;
+
+    if (typeof postId !== 'string' || typeof blogUserId !== 'string') {
+      return {
+        props: {
+          dehydratedState: dehydrate(queryClient),
+          params: params,
+        },
+      };
+    }
+
     //유저 정보 프리패치
-    await queryClient.prefetchQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>
-      getOneUserDataApi.apiCall(
-        typeof params.BlogUserId === 'string' ? params.BlogUserId : '',
-        req.cookies?.Authentication
-      )
+    await queryClient.prefetchQuery(`${getOneUserDataApi.key}-${blogUserId}`, () =>
+      getOneUserDataApi.apiCall(blogUserId, req.cookies?.Authentication)
     );
 
     // 게시물 정보 프리패치
-    await queryClient.prefetchQuery(`${getPostInfoDataApi.key}-${params.postId}`, () =>
-      getPostInfoDataApi.apiCall(
-        typeof params.postId === 'string' ? params.postId : '',
-        req.cookies?.Authentication
-      )
+    await queryClient.prefetchQuery(`${getPostInfoDataApi.key}-${postId}`, () =>
+      getPostInfoDataApi.apiCall(postId, req.cookies?.Authentication)
+    );
+
+    // 댓글 정보 프리패치
+    await queryClient.prefetchQuery(getGetBlogCommentPostIdQueryKey(postId), () =>
+      getBlogCommentPostId(postId)
     );
   }
 

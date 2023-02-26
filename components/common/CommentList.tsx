@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import { useGetBlogCommentPostId } from '../../stores/remoteStore/endpoints/blog/blog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,32 +22,44 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const CommentList = () => {
+type CommentListProps = {
+  postId: string;
+};
+
+const CommentList = ({ postId }: CommentListProps) => {
   const classes = useStyles();
 
+  const { data } = useGetBlogCommentPostId(postId);
+
+  if (!data || (data?.length ?? 0) < 1) {
+    return null;
+  }
   return (
     <List className={classes.root}>
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="여기는유저아이디"
-          secondary={
-            <React.Fragment>
-              <Typography
-                component="span"
-                variant="body2"
-                className={classes.inline}
-                color="textPrimary">
-                {'여기는 댓글 내용'}
-              </Typography>
-              {/* {" — I'll be in your neighborhood doing errands this…"} */}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
+      {data.map((item) => {
+        return (
+          <Fragment key={item.id}>
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar alt={item.User.loginID} src={item.User.avatarUrl} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={item.User.loginID}
+                secondary={
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    className={classes.inline}
+                    color="textPrimary">
+                    {item.content}
+                  </Typography>
+                }
+              />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </Fragment>
+        );
+      })}
     </List>
   );
 };
