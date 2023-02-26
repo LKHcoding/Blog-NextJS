@@ -4,17 +4,17 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { useQuery } from 'react-query';
-import { getMyUserDataApi, getOneUserPostInfoDataApi } from '../../utils/queryAPI';
+import { useQuery } from '@tanstack/react-query';
+import { getOneUserPostInfoDataApi } from '../../utils/queryAPI';
 import removeMD from 'remove-markdown';
 import Link from 'next/link';
-import { Chip } from '@material-ui/core';
+import { Chip, IconButton } from '@material-ui/core';
 import { PostListStyle } from '../../styles/muiStyles/components/blog/PostListStyle';
 import dayjs from 'dayjs';
-import { IconButton } from '@material-ui/core';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import useLoadingStore from '../../stores/useLoadingStore';
+import { useGetUsers } from '../../stores/remoteStore/endpoints/user/user';
 
 interface Props {
   params: {
@@ -26,17 +26,14 @@ interface Props {
 const PostList: FC<Props> = ({ params, tag }) => {
   const classes = PostListStyle();
 
-  // const isLoading = useLoadingStore((state) => state.isLoading);
   const setLoading = useLoadingStore((state) => state.setLoading);
 
-  // console.log(tag);
-
   const { data, refetch, isFetching } = useQuery(
-    `${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`,
+    [`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`],
     () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, tag ? tag : 'all')
   );
 
-  const { data: myUserData } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
+  const { data: myUserData } = useGetUsers();
 
   //순서 최신글이 위로 올라가게 정렬해주기
   data?.sort((a, b) => b.id - a.id);
@@ -46,8 +43,6 @@ const PostList: FC<Props> = ({ params, tag }) => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
-  // console.log(isFetching);
 
   useEffect(() => {
     if (tag) {

@@ -16,8 +16,7 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { QueryClient, useQuery, useQueryClient } from 'react-query';
-import { dehydrate } from 'react-query/hydration';
+import { dehydrate, QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Flip, toast } from 'react-toastify';
 import MarkDownContents from '../../../components/blog/[postID]/MarkDownContents';
 import Toc from '../../../components/blog/[postID]/Toc';
@@ -26,7 +25,6 @@ import UpdateDialog from '../../../components/write/update/UpdateDialog';
 import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
 import {
   getAllPostInfoApi,
-  getMyUserDataApi,
   getOneUserDataApi,
   getOneUserPostInfoDataApi,
   getPostInfoDataApi,
@@ -35,11 +33,13 @@ import ConfirmDialog from './../../../components/common/ConfirmDialog';
 import CustomHeader from './../../../components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
 import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
-import CommentList from '../../../components/common/CommentList';
+import CommentList from '../../../components/blog/[postID]/CommentList';
 import {
   getBlogCommentPostId,
   getGetBlogCommentPostIdQueryKey,
 } from '../../../stores/remoteStore/endpoints/blog/blog';
+import CommentInput from '../../../components/blog/[postID]/CommentInput';
+import { useGetUsers } from '../../../stores/remoteStore/endpoints/user/user';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
@@ -49,27 +49,21 @@ const Post = ({ params }: Props) => {
   const router = useRouter();
   const classes = useStyles();
 
-  const { data: myUserData, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
+  const { data: myUserData } = useGetUsers();
 
-  const {
-    data: userData,
-    refetch: userRefetch,
-  } = useQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>
-    getOneUserDataApi.apiCall(params.BlogUserId)
+  const { data: userData, refetch: userRefetch } = useQuery(
+    [`${getOneUserDataApi.key}-${params.BlogUserId}`],
+    () => getOneUserDataApi.apiCall(params.BlogUserId)
   );
 
-  const {
-    data: postData,
-    refetch: postRefetch,
-  } = useQuery(`${getPostInfoDataApi.key}-${params.postId}`, () =>
-    getPostInfoDataApi.apiCall(params.postId)
+  const { data: postData, refetch: postRefetch } = useQuery(
+    [`${getPostInfoDataApi.key}-${params.postId}`],
+    () => getPostInfoDataApi.apiCall(params.postId)
   );
 
-  const {
-    data: userPostData,
-    refetch: userPostDataRefetch,
-  } = useQuery(`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`, () =>
-    getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all')
+  const { data: userPostData, refetch: userPostDataRefetch } = useQuery(
+    [`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`],
+    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all')
   );
 
   // 수정 Dialog state
@@ -182,10 +176,10 @@ const Post = ({ params }: Props) => {
       userPostDataRefetch();
 
       // 모든 게시물 데이터
-      await queryClient.invalidateQueries(`${getAllPostInfoApi.key}`);
+      await queryClient.invalidateQueries([`${getAllPostInfoApi.key}`]);
 
       // 특정 게시물 데이터
-      await queryClient.invalidateQueries(`${getPostInfoDataApi.key}-${params.postId}`);
+      await queryClient.invalidateQueries([`${getPostInfoDataApi.key}-${params.postId}`]);
 
       router.push('/');
 
@@ -387,6 +381,8 @@ const Post = ({ params }: Props) => {
                 {/* region 댓글영역 */}
                 <CommentList postId={params.postId} />
 
+                <CommentInput />
+
                 {/* endregion */}
 
                 {/* region 좌측 ActionButton (Like 등) 영역 시작 */}
@@ -505,12 +501,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     //유저 정보 프리패치
-    await queryClient.prefetchQuery(`${getOneUserDataApi.key}-${blogUserId}`, () =>
+    await queryClient.prefetchQuery([`${getOneUserDataApi.key}-${blogUserId}`], () =>
       getOneUserDataApi.apiCall(blogUserId, req.cookies?.Authentication)
     );
 
     // 게시물 정보 프리패치
-    await queryClient.prefetchQuery(`${getPostInfoDataApi.key}-${postId}`, () =>
+    await queryClient.prefetchQuery([`${getPostInfoDataApi.key}-${postId}`], () =>
       getPostInfoDataApi.apiCall(postId, req.cookies?.Authentication)
     );
 

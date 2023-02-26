@@ -1,6 +1,6 @@
 import { Avatar, createStyles, makeStyles, Theme, Tooltip } from '@material-ui/core';
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getOneUserDataApi } from '../../utils/queryAPI';
 import IconButton from '@material-ui/core/IconButton';
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
 
-  const { data, refetch } = useQuery(`${getOneUserDataApi.key}-${params.BlogUserId}`, () =>
+  const { data, refetch } = useQuery([`${getOneUserDataApi.key}-${params.BlogUserId}`], () =>
     getOneUserDataApi.apiCall(params.BlogUserId)
   );
 

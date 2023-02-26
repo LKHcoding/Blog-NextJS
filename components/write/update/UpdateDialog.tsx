@@ -25,10 +25,8 @@ import React, {
 import ReactMarkdown from 'react-markdown';
 import 'react-markdown-editor-lite/lib/index.css';
 import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
-// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-// import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
 import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
@@ -106,7 +104,7 @@ const UpdateDialog: FC<Props> = ({
   postData,
 }) => {
   // Tag data 가져오기
-  const { data, refetch, isFetching } = useQuery(getAllTagInfoApi.key, getAllTagInfoApi.apiCall);
+  const { data, refetch, isFetching } = useQuery([getAllTagInfoApi.key], getAllTagInfoApi.apiCall);
 
   //글 내용
   const [contentInput, setContentInput] = useState<string>('');
@@ -238,7 +236,6 @@ const UpdateDialog: FC<Props> = ({
   }, [open, postData]);
 
   useEffect(() => {
-    // console.log(selectedTagList.current);
     // 글 수정시에는 바로 데이터가 들어오므로 useEffect에서 save버튼 활성화를 컨트롤해준다.
     if (selectedTagList.current && selectedTagList.current.length > 0) {
       setSelectedTagInfo(true);
@@ -329,7 +326,6 @@ const UpdateDialog: FC<Props> = ({
             multiple
             size="small"
             onChange={(event, value) => {
-              console.log(value);
               selectedTagList.current = value;
               if (value.length > 0) {
                 setSelectedTagInfo(true);
@@ -374,7 +370,6 @@ const UpdateDialog: FC<Props> = ({
             </ReactMarkdown>
           )}
           onChange={({ html, text }) => {
-            // console.log(removeMD(text).replaceAll('\n', ' '));
             setContentInput(text);
           }}
         />

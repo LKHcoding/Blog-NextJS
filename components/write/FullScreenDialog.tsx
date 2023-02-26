@@ -24,8 +24,6 @@ import useInput from './../../hooks/useInput';
 
 import gfm from 'remark-gfm';
 
-// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-// import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
 
@@ -48,7 +46,7 @@ import removeMD from 'remove-markdown';
 import axios from 'axios';
 import { UploadDialog } from './UploadDialog';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getAllTagInfoApi } from '../../utils/queryAPI';
 
 SyntaxHighlighter.registerLanguage('javascript', js);
@@ -163,7 +161,7 @@ https://example.com
 // }
 
 const FullScreenDialog = () => {
-  const { data, refetch, isFetching } = useQuery(getAllTagInfoApi.key, getAllTagInfoApi.apiCall);
+  const { data, refetch, isFetching } = useQuery([getAllTagInfoApi.key], getAllTagInfoApi.apiCall);
 
   //글 내용
   const [contentInput, setContentInput] = useState<string>(initialEditorInput);
@@ -178,7 +176,7 @@ const FullScreenDialog = () => {
   //   'Next.js',
   //   'react.js',
   //   'mysql',
-  //   'react-query',
+  //   '@tanstack/react-query',
   //   'ssr',
   // ]);
 
@@ -218,7 +216,6 @@ const FullScreenDialog = () => {
         })
         .then((res) => res.data);
 
-      // console.log(imagePath);
       if (imagePath) {
         const result = await axios
           .post(
@@ -241,7 +238,6 @@ const FullScreenDialog = () => {
           setOpen(false);
           return 'success';
         }
-        // console.log(result);
       }
     },
     [inputTitle, selectedTagList.current, contentInput]
@@ -369,7 +365,6 @@ const FullScreenDialog = () => {
             multiple
             size="small"
             onChange={(event, value) => {
-              console.log(value);
               selectedTagList.current = value;
               if (value.length > 0) {
                 setSelectedTagInfo(true);
@@ -414,7 +409,6 @@ const FullScreenDialog = () => {
             </ReactMarkdown>
           )}
           onChange={({ html, text }) => {
-            // console.log(removeMD(text).replaceAll('\n', ' '));
             setContentInput(text);
           }}
         />

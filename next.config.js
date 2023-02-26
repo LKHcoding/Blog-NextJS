@@ -12,7 +12,6 @@ module.exports = withBundleAnalyzer({
     webpack5: true,
   },
   webpack(config) {
-    // console.log(config);
     let prod = process.env.NODE_ENV === 'production';
     let plugins = [...config.plugins];
     if (prod) {

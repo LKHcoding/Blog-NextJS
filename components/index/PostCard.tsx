@@ -1,4 +1,4 @@
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -10,10 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { MouseEventHandler, useState } from 'react';
 import { IAllPostInfoType } from '../../types/AllPostInfoType';
 import dayjs from 'dayjs';
@@ -22,10 +19,9 @@ import removeMD from 'remove-markdown';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import { useQuery } from 'react-query';
-import { getMyUserDataApi } from '../../utils/queryAPI';
 import { useRouter } from 'next/router';
 import { Chip, Tooltip } from '@material-ui/core';
+import { useGetUsers } from '../../stores/remoteStore/endpoints/user/user';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -106,7 +102,7 @@ interface Props {
 
 const PostCardList = ({ postInfo }: Props) => {
   const router = useRouter();
-  const { data: myUserData, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
+  const { data: myUserData } = useGetUsers();
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 

@@ -5,7 +5,6 @@ import React, { FC } from 'react';
 const Profile: FC = () => {
   const router = useRouter();
 
-  // console.log(router.query);
   if (!router.query.loginID) {
     return null;
   }

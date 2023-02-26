@@ -6,29 +6,23 @@ export const axiosInstance = Axios.create({
   timeout: 15 * 1000,
 });
 
-export const customAxios = <T>(config: AxiosRequestConfig): Promise<T> => {
-  const beginAt = new Date().getTime();
-  const method = config.method ?? 'GET';
-  const url = config.url;
+type CustomAxiosProps = AxiosRequestConfig & {
+  Authentication?: string;
+};
 
-  console.log(method, url);
+export const customAxios = <T>(config: CustomAxiosProps): Promise<T> => {
+  const headers = config?.Authentication
+    ? {
+        ...config?.headers,
+        Cookie: `Authentication=${config?.Authentication || ''}`,
+      }
+    : config?.headers;
 
   return axiosInstance({
     ...config,
+    headers,
     withCredentials: true,
-  }).then((response) => {
-    const endAt = new Date().getTime();
-    const diff = (endAt - beginAt) / 1000;
-
-    console.group('(', diff, ')', method, url);
-    console.log('response', response);
-    console.log('data', response.data);
-    console.log('config', response.config);
-    console.log('request', response.request);
-    console.groupEnd();
-
-    return response.data as T;
-  });
+  }).then((response) => response.data as T);
 };
 
 export class DeveloggerError<T> extends AxiosError<T> {}

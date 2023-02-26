@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import { useGetBlogCommentPostId } from '../../stores/remoteStore/endpoints/blog/blog';
+import { useGetBlogCommentPostId } from '../../../stores/remoteStore/endpoints/blog/blog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

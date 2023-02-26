@@ -3,7 +3,7 @@
  * Blog nestjs API
  * OpenAPI spec version: 1.0
  */
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import type {
   UseQueryOptions,
   UseMutationOptions,
@@ -11,7 +11,7 @@ import type {
   MutationFunction,
   UseQueryResult,
   QueryKey,
-} from 'react-query';
+} from '@tanstack/react-query';
 import type { UserDto, GetUsersAllParams, LocalSignUpRequestDto } from '../../model';
 import { customAxios } from '../../mutator/customAxios';
 import type { ErrorType } from '../../mutator/customAxios';
@@ -122,11 +122,11 @@ export const useGetUsers = <
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsers>>> = ({ signal }) =>
     getUsers(signal);
 
-  const query = useQuery<Awaited<ReturnType<typeof getUsers>>, TError, TData>(
-    queryKey,
-    queryFn,
-    queryOptions
-  ) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery<Awaited<ReturnType<typeof getUsers>>, TError, TData>(queryKey, queryFn, {
+    staleTime: 0,
+    cacheTime: 0,
+    ...queryOptions,
+  }) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   query.queryKey = queryKey;
 

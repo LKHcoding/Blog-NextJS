@@ -6,9 +6,8 @@ import 'dayjs/locale/ko';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { Hydrate } from 'react-query/hydration';
+import { QueryClient, QueryClientProvider, Hydrate } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Flip, toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/common/Header';
@@ -32,8 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: 1,
-            retryDelay: 1000,
+            retry: 0,
           },
         },
       })

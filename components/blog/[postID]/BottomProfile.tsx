@@ -5,7 +5,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getOneUserDataApi } from '../../../utils/queryAPI';
 import { Avatar } from '@material-ui/core';
 import Link from 'next/link';
@@ -49,7 +49,7 @@ export default function BottomProfile({ params }: Props) {
   const classes = useStyles();
 
   const { data: userData, refetch: userRefetch } = useQuery(
-    `${getOneUserDataApi.key}-${params.BlogUserId}`,
+    [`${getOneUserDataApi.key}-${params.BlogUserId}`],
     () => getOneUserDataApi.apiCall(params.BlogUserId)
   );
 

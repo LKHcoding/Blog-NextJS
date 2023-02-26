@@ -3,7 +3,7 @@
  * Blog nestjs API
  * OpenAPI spec version: 1.0
  */
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import type {
   UseQueryOptions,
   UseMutationOptions,
@@ -11,7 +11,7 @@ import type {
   MutationFunction,
   UseQueryResult,
   QueryKey,
-} from 'react-query';
+} from '@tanstack/react-query';
 import type {
   CreateBlogPostDto,
   UpdateBlogPostDto,

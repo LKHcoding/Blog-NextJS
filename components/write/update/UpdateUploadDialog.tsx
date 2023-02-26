@@ -9,15 +9,15 @@ import Paper, { PaperProps } from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   getAllPostInfoApi,
-  getMyUserDataApi,
   getOneUserPostInfoDataApi,
   getOneUserTagInfoDataApi,
   getPostInfoDataApi,
 } from '../../../utils/queryAPI';
 import { Flip, toast } from 'react-toastify';
+import { useGetUsers } from '../../../stores/remoteStore/endpoints/user/user';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +57,7 @@ const UpdateUploadDialog = ({
 }: Props) => {
   const queryClient = useQueryClient();
 
-  const { data, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
+  const { data } = useGetUsers();
 
   const classes = useStyles();
 
@@ -76,15 +76,16 @@ const UpdateUploadDialog = ({
   };
 
   const handleUpload = async () => {
-    // console.log(imageFile.current);
     if (imageFile.current) {
       if (imageFile.current.length > 0) {
         const result = await handleSave(imageFile.current);
         if (result === 'success') {
-          await queryClient.invalidateQueries(`${getOneUserTagInfoDataApi.key}-${data?.loginID}`);
-          await queryClient.invalidateQueries(`${getOneUserPostInfoDataApi.key}-${data?.loginID}`);
-          await queryClient.invalidateQueries(`${getAllPostInfoApi.key}`);
-          await queryClient.invalidateQueries(`${getPostInfoDataApi.key}-${postId}`);
+          await queryClient.invalidateQueries([`${getOneUserTagInfoDataApi.key}-${data?.loginID}`]);
+          await queryClient.invalidateQueries([
+            `${getOneUserPostInfoDataApi.key}-${data?.loginID}`,
+          ]);
+          await queryClient.invalidateQueries([`${getAllPostInfoApi.key}`]);
+          await queryClient.invalidateQueries([`${getPostInfoDataApi.key}-${postId}`]);
 
           toast.info(`수정이 완료되었습니다.`, {
             position: 'top-center',
@@ -104,13 +105,12 @@ const UpdateUploadDialog = ({
   };
 
   const handleUploadWithOutThumbnail = async () => {
-    // console.log(imageFile.current);
     const result = await handleSaveWithOutThumbnail();
     if (result === 'success') {
-      await queryClient.invalidateQueries(`${getOneUserTagInfoDataApi.key}-${data?.loginID}`);
-      await queryClient.invalidateQueries(`${getOneUserPostInfoDataApi.key}-${data?.loginID}`);
-      await queryClient.invalidateQueries(`${getAllPostInfoApi.key}`);
-      await queryClient.invalidateQueries(`${getPostInfoDataApi.key}-${postId}`);
+      await queryClient.invalidateQueries([`${getOneUserTagInfoDataApi.key}-${data?.loginID}`]);
+      await queryClient.invalidateQueries([`${getOneUserPostInfoDataApi.key}-${data?.loginID}`]);
+      await queryClient.invalidateQueries([`${getAllPostInfoApi.key}`]);
+      await queryClient.invalidateQueries([`${getPostInfoDataApi.key}-${postId}`]);
 
       toast.info(`수정이 완료되었습니다.`, {
         position: 'top-center',
@@ -162,7 +162,6 @@ const UpdateUploadDialog = ({
               imageFile.current = files;
               files.length === 0 ? setCanSave(false) : setCanSave(true);
             }}
-            // onChange={(files) => console.log('Files:', files)}
           />
         </DialogContent>
         <DialogActions>

@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import { Badge, ListSubheader, Typography } from '@material-ui/core';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getOneUserTagInfoDataApi } from '../../utils/queryAPI';
 import { useStyles } from '../../styles/muiStyles/components/blog/TagListStyle';
 import Link from 'next/link';
@@ -22,7 +22,7 @@ interface Props {
 const TagList: FC<Props> = ({ params, tag }) => {
   const classes = useStyles();
 
-  const { data, refetch } = useQuery(`${getOneUserTagInfoDataApi.key}-${params.BlogUserId}`, () =>
+  const { data, refetch } = useQuery([`${getOneUserTagInfoDataApi.key}-${params.BlogUserId}`], () =>
     getOneUserTagInfoDataApi.apiCall(params.BlogUserId)
   );
 

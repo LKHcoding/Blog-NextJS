@@ -18,12 +18,6 @@ const BlogPage = ({ params }: Props) => {
   const classes = useStyles();
   const router = useRouter();
 
-  // console.log(router.query.tag);
-
-  // const { data, refetch } = useQuery(`${getOneUserDataApi.key}-${params.loginID}`, () =>
-  //   getOneUserDataApi.apiCall(params.loginID)
-  // );
-
   if (!params.BlogUserId) {
     return null;
   }
@@ -67,8 +61,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   //     req.cookies?.Authentication
   //   )
   // );
-
-  // console.log(query);
 
   return {
     props: {

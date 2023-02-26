@@ -3,10 +3,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
-import { useQuery } from 'react-query';
 import { Flip, toast } from 'react-toastify';
 import SelectModal from '../../components/github-login/selectModal';
-import { getMyUserDataApi } from '../../utils/queryAPI';
+import { useGetUsers } from '../../stores/remoteStore/endpoints/user/user';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const githubLogin = () => {
   const router = useRouter();
   const { code } = router.query;
-  const { refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
+  const { refetch } = useGetUsers();
   const githubUserData = useRef(null);
 
   //backdrop 시작 ----------
@@ -62,8 +61,6 @@ const githubLogin = () => {
       .catch((err) => {
         alert(err.response.status === 400 ? '인증 실패(데이터가 유효하지않습니다)' : err.message);
       });
-
-    // console.log(result);
 
     if (result?.token) {
       const gitLogin = await axios
@@ -109,8 +106,6 @@ const githubLogin = () => {
       .then((res) => res.data)
       .catch((err) => console.log(err.message));
 
-    // console.log(result.githubUserData);
-
     if (result?.isSignUpUser === false) {
       githubUserData.current = result.githubUserData;
       setModalOpen(true);
@@ -142,7 +137,6 @@ const githubLogin = () => {
         progress: undefined,
         transition: Flip,
       });
-      // console.log('깃허브 로그인 성공');
       router.push('/');
     } else {
       console.log('토큰이 유효하지 않습니다. 다시 로그인을 시도해 주세요.');
@@ -171,7 +165,6 @@ const githubLogin = () => {
     // const { code } = router.query;
 
     if (code) {
-      // console.log(code);
       gitApi(code);
     }
   }, [code]);

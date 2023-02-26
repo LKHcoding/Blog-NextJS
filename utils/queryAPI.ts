@@ -14,7 +14,6 @@ const api = axios.create({
 export const getMyUserDataApi = {
   key: 'getMyUserData',
   apiCall: async (Authentication?: any): Promise<IUser> => {
-    // console.log(Authentication);
     return await api
       .get(
         `/v1/users`,
@@ -43,7 +42,6 @@ export const getMyUserDataApi = {
 export const getOneUserDataApi = {
   key: 'getOneUserData',
   apiCall: async (loginID: string, Authentication?: any): Promise<IUser> => {
-    // console.log(Authentication);
     return await api
       .get(
         `/v1/users/${loginID}`,

@@ -10,9 +10,7 @@ type Data = {
 };
 
 const Login = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  // console.log(req);
   const { loginID, password } = req.body;
-  // console.log(email, password);
 
   const result = await axios
     .post(
@@ -23,16 +21,11 @@ const Login = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       }
     )
     .then((response) => {
-      // console.log('response : ', response.data);
       return response.data;
     })
     .catch((error) => {
-      // console.log(error.message);
       return error;
-      // setLogInError(error.response?.data?.statusCode === 401);
     });
-
-  // console.dir(result.response?.data);
 
   if (result?.token) {
     res.setHeader(

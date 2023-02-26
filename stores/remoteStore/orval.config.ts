@@ -17,6 +17,16 @@ export default defineConfig({
           name: 'customAxios',
         },
         operations: {
+          getUsers: {
+            query: {
+              useQuery: true,
+              signal: true,
+              options: {
+                staleTime: 0,
+                cacheTime: 0,
+              },
+            },
+          },
           // getApiContentsFaqSearch: {
           //   query: {
           //     useInfinite: true,

@@ -13,14 +13,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import useInput from '../hooks/useInput';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
-import { getMyUserDataApi } from '../utils/queryAPI';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { Flip, toast } from 'react-toastify';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Head from 'next/head';
+import { useGetUsers } from '../stores/remoteStore/endpoints/user/user';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,10 +50,7 @@ const useStyles = makeStyles((theme) => ({
 const LogIn = () => {
   const router = useRouter();
 
-  const { data, isLoading, isError, error, refetch } = useQuery(
-    getMyUserDataApi.key,
-    getMyUserDataApi.apiCall
-  );
+  const { data, isLoading, isError, error, refetch } = useGetUsers();
 
   const [loginID, onChangeLoginID] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -161,11 +156,6 @@ const LogIn = () => {
     );
   }
 
-  if (isError) {
-    return <div>에러 메세지 : {error}</div>;
-  }
-
-  // console.log(data);
   if (data) {
     router.push('/');
     return (

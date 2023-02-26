@@ -1,8 +1,8 @@
 import {
+  alpha,
   AppBar,
   Badge,
   ClickAwayListener,
-  alpha,
   Grow,
   IconButton,
   ListItemIcon,
@@ -28,14 +28,13 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
-import { useQuery } from 'react-query';
 import { Flip, toast } from 'react-toastify';
-// import { useIsFetching } from 'react-query';
 import useLoadingStore from '../../stores/useLoadingStore';
-import { getMyUserDataApi } from '../../utils/queryAPI';
 import FullScreenDialog from '../write/FullScreenDialog';
 import useMenuStore from './../../stores/useMenuStore';
 import { Autocomplete } from './Autocomplete/Autocomplete';
+import { getGetUsersQueryKey, useGetUsers } from '../../stores/remoteStore/endpoints/user/user';
+import { useQueryClient } from '@tanstack/react-query';
 
 const drawerWidth = 160;
 const useStyles = makeStyles((theme: Theme) =>
@@ -194,17 +193,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const header = () => {
-  // How many queries are fetching?
-  // const isFetching = useIsFetching();
-  // console.log('isFetching : ', isFetching);
-
-  // How many queries matching the posts prefix are fetching?
-  //  const isFetchingPosts = useIsFetching(['posts'])
-
   const router = useRouter();
 
-  const { data, refetch } = useQuery(getMyUserDataApi.key, getMyUserDataApi.apiCall);
+  const { data } = useGetUsers();
 
+  const queryClient = useQueryClient();
   const classes = useStyles();
 
   const isLoading = useLoadingStore((state) => state.isLoading);
@@ -241,7 +234,6 @@ const header = () => {
       .get('/api/logout')
       .then((res) => res)
       .catch((err) => err);
-    // console.log(logoutResult.status);
 
     if (logoutResult.status === 200) {
       toast.error(`로그아웃 완료`, {
@@ -254,10 +246,11 @@ const header = () => {
         progress: undefined,
         transition: Flip,
       });
-      refetch();
+      queryClient.resetQueries({
+        queryKey: getGetUsersQueryKey(),
+        type: 'all',
+      });
     }
-
-    // console.log(logoutResult);
   };
 
   function handleListKeyDown(event: React.KeyboardEvent) {

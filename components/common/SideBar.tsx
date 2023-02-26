@@ -70,7 +70,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const SideBar: FC = ({ children }) => {
   const router = useRouter();
   const classes = useStyles();
-  // console.log('pathname : ', router.pathname);
 
   const open = useMenuStore((state) => state.open);
   const closeMenu = useMenuStore((state) => state.closeMenu);
@@ -79,9 +78,7 @@ const SideBar: FC = ({ children }) => {
 
   const handleDrawerClose = async () => {
     await closeMenu();
-    // console.log(open);
   };
-  // console.log(open);
 
   const handleSup = (e: any) => {
     e.preventDefault();
