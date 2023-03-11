@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
@@ -8,6 +8,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { useGetBlogCommentPostId } from '../../../stores/remoteStore/endpoints/blog/blog';
+import getPassedTimeString from '../../../utils/getPassedTimeString';
+import Link from 'next/link';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,8 +18,23 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       backgroundColor: theme.palette.background.paper,
     },
-    inline: {
-      display: 'inline',
+    avatarWrapper: {
+      minWidth: 0,
+    },
+    titleContainer: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    userName: {
+      '&:hover': {
+        textDecoration: 'underline',
+      },
+    },
+    updatedAt: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignSelf: 'end',
+      marginLeft: '6px',
     },
   })
 );
@@ -36,30 +53,50 @@ const CommentList = ({ postId }: CommentListProps) => {
   }
   return (
     <List className={classes.root}>
-      {data.map((item) => {
-        return (
-          <Fragment key={item.id}>
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt={item.User.loginID} src={item.User.avatarUrl} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={item.User.loginID}
-                secondary={
+      {data.map((item) => (
+        <Fragment key={item.id}>
+          <ListItem alignItems="flex-start">
+            <ListItemAvatar className={classes.avatarWrapper}>
+              <Link href={`/blog/${item.User.loginID}`} as={`/blog/${item.User.loginID}`}>
+                <a>
+                  <Avatar alt={item.User.loginID} src={item.User.avatarUrl} onClick={() => null} />
+                </a>
+              </Link>
+            </ListItemAvatar>
+
+            <ListItemText
+              style={{ marginLeft: '16px' }}
+              primary={
+                <div className={classes.titleContainer}>
+                  <Link href={`/blog/${item.User.loginID}`} as={`/blog/${item.User.loginID}`}>
+                    <a>
+                      <div className={classes.userName}>{`${item.User.loginID}`}</div>
+                    </a>
+                  </Link>
+
                   <Typography
-                    component="span"
-                    variant="body2"
-                    className={classes.inline}
-                    color="textPrimary">
-                    {item.content}
+                    variant="caption"
+                    className={classes.updatedAt}
+                    color={'textSecondary'}>
+                    {`- ${getPassedTimeString(item.updatedAt)}`}
                   </Typography>
-                }
-              />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-          </Fragment>
-        );
-      })}
+                </div>
+              }
+              secondary={
+                <Typography
+                  component={'p'}
+                  variant="body2"
+                  style={{ whiteSpace: 'pre-line' }}
+                  color="textPrimary">
+                  {item.content}
+                </Typography>
+              }
+            />
+          </ListItem>
+
+          <Divider variant="inset" component="li" />
+        </Fragment>
+      ))}
     </List>
   );
 };

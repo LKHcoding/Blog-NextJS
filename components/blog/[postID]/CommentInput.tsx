@@ -14,7 +14,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import toast from '../../../utils/toast';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((_theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
@@ -50,7 +50,7 @@ const CommentInput = () => {
   const postId = router.query.postId as string;
 
   const onClick = async () => {
-    if (!state.input) {
+    if (!state.input.trim()) {
       toast.error('댓글 내용을 입력해주세요.');
       return;
     }
@@ -58,7 +58,7 @@ const CommentInput = () => {
     const result = await mutateAsync({
       data: {
         postId: +postId,
-        content: state.input,
+        content: state.input.trim(),
       },
     });
     if (result.content) {

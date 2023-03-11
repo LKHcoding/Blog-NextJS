@@ -26,6 +26,15 @@
     // 2: We do not need to use prop types with TypeScript
     "react/prop-types": "off",
     "react/require-default-props": "off",
-    "@typescript-eslint/no-empty-interface" : "off"
+    "@typescript-eslint/no-empty-interface" : "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
   }
 }
