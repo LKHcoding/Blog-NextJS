@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const githubLogin = () => {
   const router = useRouter();
-  const { code } = router.query;
+  const { code, blogUserId, postId } = router.query;
   const { refetch } = useGetUsers();
   const githubUserData = useRef(null);
 
@@ -86,11 +86,16 @@ const githubLogin = () => {
         progress: undefined,
         transition: Flip,
       });
+      if (blogUserId && postId) {
+        router.push(`blog/${blogUserId}/${postId}`);
+        return;
+      }
       router.push('/');
-    } else {
-      console.log('토큰이 없습니다.');
-      router.push('/login');
+      return;
     }
+
+    console.log('토큰이 없습니다.');
+    router.push('/login');
   };
   // 모달 설정 끝 -------
 
@@ -137,7 +142,12 @@ const githubLogin = () => {
         progress: undefined,
         transition: Flip,
       });
-      router.push('/');
+
+      if (blogUserId && postId) {
+        router.push(`blog/${blogUserId}/${postId}`);
+      } else {
+        router.push('/');
+      }
     } else {
       console.log('토큰이 유효하지 않습니다. 다시 로그인을 시도해 주세요.');
       toast.error(`토큰이 유효하지 않습니다. 다시 로그인을 시도해 주세요.`, {

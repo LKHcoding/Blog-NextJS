@@ -1,16 +1,13 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { useGetUsers } from '../../../stores/remoteStore/endpoints/user/user';
+import githubLogin from '../../../utils/githubLogin';
+import { useRouter } from 'next/router';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      // '& .MuiTextField-root': {
-      //   margin: theme.spacing(1),
-      //   width: '25ch',
-      // },
-
       width: '100%',
       marginTop: '50px',
       marginBottom: '20px',
@@ -18,22 +15,30 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type CommentInputProps = {};
-
-const CommentInput = (props: CommentInputProps) => {
+const CommentInput = () => {
   const classes = useStyles();
+  const router = useRouter();
 
-  const { data, isStale, isFetching } = useGetUsers();
+  const { data } = useGetUsers();
 
-  if (!data) {
-    return null;
-  }
+  const isLoggedIn = !!data;
 
   return (
     <TextField
       className={classes.root}
+      disabled={!isLoggedIn}
+      onClick={() => {
+        if (!isLoggedIn) {
+          githubLogin({
+            post: {
+              blogUserId: router.query.BlogUserId as string,
+              postId: router.query.postId as string,
+            },
+          });
+        }
+      }}
       // id="outlined-multiline-static"
-      label="댓글"
+      label={isLoggedIn ? '댓글' : '댓글을 작성하려면 여기를 클릭해 로그인 해주세요.'}
       multiline
       rows={5}
       defaultValue={''}
