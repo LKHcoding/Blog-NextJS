@@ -514,7 +514,7 @@ export const useGetBlogCommentPostId = <
  * @summary 게시글 별 코멘트 작성
  */
 export const postBlogComment = (createBlogCommentDto: CreateBlogCommentDto) => {
-  return customAxios<BlogPostsComment[]>({
+  return customAxios<BlogPostsComment>({
     url: `/v1/blog/comment`,
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
