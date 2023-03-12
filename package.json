@@ -7,7 +7,7 @@
     "build": "cross-env NODE_ENV=production next build",
     "clean": "npx rimraf .next",
     "start": "yarn build && cross-env NODE_ENV=production next start -p 3031",
-    "start-with-clean": "npm run clean && yarn build && cross-env NODE_ENV=production next start -p 3031",
+    "start-with-clean": "yarn clean && yarn build && cross-env NODE_ENV=production next start -p 3031",
     "dev-backup": "cross-env NODE_ENV=development nodemon",
     "build-backup": "next build",
     "generate-orval": "cross-env npx orval --config stores/remoteStore/orval.config.ts",
