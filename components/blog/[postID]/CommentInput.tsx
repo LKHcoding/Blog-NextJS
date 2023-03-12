@@ -1,8 +1,8 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { useGetUsers } from '../../../stores/remoteStore/endpoints/user/user';
-import githubLogin from '../../../utils/githubLogin';
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import githubLogin from 'utils/githubLogin';
 import { useRouter } from 'next/router';
 import { useImmer } from 'use-immer';
 import Button from '@material-ui/core/Button';
@@ -10,9 +10,9 @@ import CreateIcon from '@material-ui/icons/Create';
 import {
   getGetBlogCommentPostIdQueryKey,
   usePostBlogComment,
-} from '../../../stores/remoteStore/endpoints/blog/blog';
+} from 'stores/remoteStore/endpoints/blog/blog';
 import { useQueryClient } from '@tanstack/react-query';
-import toast from '../../../utils/toast';
+import toast from 'utils/toast';
 
 const useStyles = makeStyles((_theme: Theme) =>
   createStyles({
@@ -52,6 +52,10 @@ const CommentInput = () => {
   const onClick = async () => {
     if (!state.input.trim()) {
       toast.error('댓글 내용을 입력해주세요.');
+      return;
+    }
+    if (!isLoggedIn) {
+      toast.error('로그인 후 작성 가능합니다.(어떻게 접근한거지..?)');
       return;
     }
 
@@ -97,7 +101,11 @@ const CommentInput = () => {
             });
           }
         }}
-        label={isLoggedIn ? '새로운 댓글' : '댓글을 작성하려면 여기를 클릭해 로그인 해주세요.'}
+        label={
+          isLoggedIn
+            ? '새로운 댓글'
+            : '댓글을 작성하려면 여기를 클릭해 로그인 해주세요.'
+        }
         multiline
         minRows={3}
         maxRows={7}
@@ -105,7 +113,13 @@ const CommentInput = () => {
         variant="outlined"
       />
       <div className={classes.buttonWrapper}>
-        <Button variant="contained" color="primary" endIcon={<CreateIcon />} onClick={onClick}>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<CreateIcon />}
+          onClick={onClick}
+          disabled={!isLoggedIn}
+        >
           댓글 작성
         </Button>
       </div>
