@@ -13,6 +13,7 @@ import {
 } from 'stores/remoteStore/endpoints/blog/blog';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'utils/toast';
+import clsx from 'clsx';
 
 const useStyles = makeStyles((_theme: Theme) =>
   createStyles({
@@ -20,6 +21,11 @@ const useStyles = makeStyles((_theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       flex: 1,
+    },
+    unAuthedContainer: {
+      '& *': {
+        cursor: 'pointer',
+      },
     },
     root: {
       width: '100%',
@@ -89,8 +95,8 @@ const CommentInput = () => {
             dr.input = e.target.value;
           });
         }}
-        className={classes.root}
         disabled={!isLoggedIn}
+        className={clsx(classes.root, !isLoggedIn && classes.unAuthedContainer)}
         onClick={() => {
           if (!isLoggedIn) {
             githubLogin({
