@@ -24,7 +24,7 @@ const useStyles = makeStyles((_theme: Theme) =>
     },
     unAuthedContainer: {
       '& *': {
-        cursor: 'pointer',
+        cursor: 'pointer !important',
       },
     },
     root: {
