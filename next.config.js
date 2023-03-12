@@ -12,18 +12,19 @@ module.exports = withBundleAnalyzer({
     webpack5: true,
   },
   webpack(config) {
-    let prod = process.env.NODE_ENV === 'production';
+    let isProd = process.env.NODE_ENV === 'production';
     let plugins = [...config.plugins];
-    if (prod) {
+    if (isProd) {
       plugins.push(new CompressionPlugin());
     }
+    config.resolve.modules.push(__dirname);
 
     return {
       ...config,
-      mode: prod ? 'production' : 'development',
+      mode: isProd ? 'production' : 'development',
       // devtool: prod ? 'hidden-source-map' : 'eval',
       // devtool: prod ? 'hidden-source-map' : 'source-map',
-      devtool: prod ? 'hidden-source-map' : 'inline-source-map',
+      devtool: isProd ? 'hidden-source-map' : 'inline-source-map',
       plugins,
       // plugins: [
       //   ...config.plugins,

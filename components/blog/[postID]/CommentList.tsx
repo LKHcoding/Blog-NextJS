@@ -7,9 +7,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import { useGetBlogCommentPostId } from '../../../stores/remoteStore/endpoints/blog/blog';
-import getPassedTimeString from '../../../utils/getPassedTimeString';
-import Link from 'next/link';
+import { useGetBlogCommentPostId } from 'stores/remoteStore/endpoints/blog/blog';
+import { useRouter } from 'next/router';
+import toast from 'utils/toast';
+import getPassedTimeString from 'utils/getPassedTimeString';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,6 +22,11 @@ const useStyles = makeStyles((theme: Theme) =>
     avatarWrapper: {
       minWidth: 0,
     },
+    avatar: {
+      '&:hover': {
+        cursor: 'pointer',
+      },
+    },
     titleContainer: {
       display: 'flex',
       alignItems: 'center',
@@ -28,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
     userName: {
       '&:hover': {
         textDecoration: 'underline',
+        cursor: 'pointer',
       },
     },
     updatedAt: {
@@ -45,8 +52,17 @@ type CommentListProps = {
 
 const CommentList = ({ postId }: CommentListProps) => {
   const classes = useStyles();
+  const router = useRouter();
 
   const { data } = useGetBlogCommentPostId(postId);
+
+  const onClick = (blogUserId: string) => {
+    if (!blogUserId) {
+      toast.error('유저에 대한 정보가 없습니다.');
+      return;
+    }
+    router.push(`/blog/${blogUserId}`);
+  };
 
   if (!data || (data?.length ?? 0) < 1) {
     return null;
@@ -57,27 +73,30 @@ const CommentList = ({ postId }: CommentListProps) => {
         <Fragment key={item.id}>
           <ListItem alignItems="flex-start">
             <ListItemAvatar className={classes.avatarWrapper}>
-              <Link href={`/blog/${item.User.loginID}`} as={`/blog/${item.User.loginID}`}>
-                <a>
-                  <Avatar alt={item.User.loginID} src={item.User.avatarUrl} onClick={() => null} />
-                </a>
-              </Link>
+              <Avatar
+                className={classes.avatar}
+                alt={item.User.loginID}
+                src={item.User.avatarUrl}
+                onClick={() => onClick(item.User.loginID)}
+              />
             </ListItemAvatar>
 
             <ListItemText
               style={{ marginLeft: '16px' }}
               primary={
                 <div className={classes.titleContainer}>
-                  <Link href={`/blog/${item.User.loginID}`} as={`/blog/${item.User.loginID}`}>
-                    <a>
-                      <div className={classes.userName}>{`${item.User.loginID}`}</div>
-                    </a>
-                  </Link>
+                  <div
+                    className={classes.userName}
+                    onClick={() => onClick(item.User.loginID)}
+                  >
+                    {`${item.User.loginID}`}
+                  </div>
 
                   <Typography
                     variant="caption"
                     className={classes.updatedAt}
-                    color={'textSecondary'}>
+                    color={'textSecondary'}
+                  >
                     {`- ${getPassedTimeString(item.updatedAt)}`}
                   </Typography>
                 </div>
@@ -87,7 +106,8 @@ const CommentList = ({ postId }: CommentListProps) => {
                   component={'p'}
                   variant="body2"
                   style={{ whiteSpace: 'pre-line' }}
-                  color="textPrimary">
+                  color="textPrimary"
+                >
                   {item.content}
                 </Typography>
               }

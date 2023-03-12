@@ -16,30 +16,35 @@ import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { dehydrate, QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Flip, toast } from 'react-toastify';
-import MarkDownContents from '../../../components/blog/[postID]/MarkDownContents';
-import Toc from '../../../components/blog/[postID]/Toc';
-import ActionButton from '../../../components/common/ActionButton';
-import UpdateDialog from '../../../components/write/update/UpdateDialog';
-import { useStyles } from '../../../styles/muiStyles/blog/[BlogUserId]/[postId]Style';
+import {
+  dehydrate,
+  QueryClient,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import MarkDownContents from 'components/blog/[postID]/MarkDownContents';
+import Toc from 'components/blog/[postID]/Toc';
+import ActionButton from 'components/common/ActionButton';
+import UpdateDialog from 'components/write/update/UpdateDialog';
+import { useStyles } from 'styles/muiStyles/blog/[BlogUserId]/[postId]Style';
 import {
   getAllPostInfoApi,
   getOneUserDataApi,
   getOneUserPostInfoDataApi,
   getPostInfoDataApi,
-} from '../../../utils/queryAPI';
-import ConfirmDialog from './../../../components/common/ConfirmDialog';
-import CustomHeader from './../../../components/common/SEO/CustomHeader';
+} from 'utils/queryAPI';
+import ConfirmDialog from 'components/common/ConfirmDialog';
+import CustomHeader from 'components/common/SEO/CustomHeader';
 import removeMD from 'remove-markdown';
-import BottomProfile from '../../../components/blog/[postID]/BottomProfile';
-import CommentList from '../../../components/blog/[postID]/CommentList';
+import BottomProfile from 'components/blog/[postID]/BottomProfile';
+import CommentList from 'components/blog/[postID]/CommentList';
 import {
   getBlogCommentPostId,
   getGetBlogCommentPostIdQueryKey,
-} from '../../../stores/remoteStore/endpoints/blog/blog';
-import CommentInput from '../../../components/blog/[postID]/CommentInput';
-import { useGetUsers } from '../../../stores/remoteStore/endpoints/user/user';
+} from 'stores/remoteStore/endpoints/blog/blog';
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import CommentInput from 'components/blog/[postID]/CommentInput';
+import toast from 'utils/toast';
 
 interface Props {
   params: { BlogUserId: string; postId: string; tag?: string };
@@ -63,7 +68,11 @@ const Post = ({ params }: Props) => {
 
   const { data: userPostData, refetch: userPostDataRefetch } = useQuery(
     [`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`],
-    () => getOneUserPostInfoDataApi.apiCall(params.BlogUserId, params.tag ? params.tag : 'all')
+    () =>
+      getOneUserPostInfoDataApi.apiCall(
+        params.BlogUserId,
+        params.tag ? params.tag : 'all'
+      )
   );
 
   // 수정 Dialog state
@@ -76,14 +85,6 @@ const Post = ({ params }: Props) => {
   const handleLike = async (action: string) => {
     if (!myUserData) {
       toast.error(`로그인이 필요합니다.`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
         onClick: () => {
           router.push('/login');
         },
@@ -103,19 +104,9 @@ const Post = ({ params }: Props) => {
       .catch((err) => err);
 
     if (result?.response) {
-      toast.error(`${result.response.data.statusCode}-${result.response.data.message}`, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-        // onClick: () => {
-        //   router.push('/');
-        // },
-      });
+      toast.error(
+        `${result.response.data.statusCode}-${result.response.data.message}`
+      );
     } else {
       postRefetch();
     }
@@ -131,43 +122,22 @@ const Post = ({ params }: Props) => {
 
   const handleDelete = async () => {
     const deleteResult = await axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URL}/v1/blog/delete-post/${params.postId}`, {
-        withCredentials: true,
-      })
+      .delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/blog/delete-post/${params.postId}`,
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => res)
       .catch((err) => err);
 
     // 에러 메세지 띄워주기
     if (deleteResult?.response) {
-      toast.error(`${deleteResult.response.data.message}`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-        // onClick: () => {
-        //   router.push('/');
-        // },
-      });
+      toast.error(`${deleteResult.response.data.message}`);
     }
 
     if (deleteResult.status === 200) {
-      toast.error(`게시글이 삭제 되었습니다.`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-        // onClick: () => {
-        //   router.push('/');
-        // },
-      });
+      toast.error(`게시글이 삭제 되었습니다.`);
 
       // 데이터 refetch를 위한 영역
 
@@ -179,7 +149,9 @@ const Post = ({ params }: Props) => {
       await queryClient.invalidateQueries([`${getAllPostInfoApi.key}`]);
 
       // 특정 게시물 데이터
-      await queryClient.invalidateQueries([`${getPostInfoDataApi.key}-${params.postId}`]);
+      await queryClient.invalidateQueries([
+        `${getPostInfoDataApi.key}-${params.postId}`,
+      ]);
 
       router.push('/');
 
@@ -192,16 +164,7 @@ const Post = ({ params }: Props) => {
 
   useEffect(() => {
     if (!postData) {
-      toast.error(`존재하지 않는 게시물 입니다.`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-      });
+      toast.error(`존재하지 않는 게시물 입니다.`);
 
       router.push('/');
       // router.back();
@@ -218,7 +181,8 @@ const Post = ({ params }: Props) => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <CircularProgress />
         {/* <Backdrop className={classes.backdrop} open={backDropOpen}>
           <CircularProgress color="inherit" />
@@ -248,7 +212,8 @@ const Post = ({ params }: Props) => {
       <div className={classes.root}>
         <Paper
           // style={{ borderRadius: '10px', margin: '100px 30px 0 30px', position: 'relative' }}
-          elevation={3}>
+          elevation={3}
+        >
           {/* region 블로그 상단 회원정보 소개 영역 */}
           <div
             style={{
@@ -256,8 +221,12 @@ const Post = ({ params }: Props) => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-            }}>
-            <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
+            }}
+          >
+            <Link
+              href={`/blog/${userData?.loginID}`}
+              as={`/blog/${userData?.loginID}`}
+            >
               <a>
                 <Avatar
                   className={classes.avatarImg}
@@ -272,18 +241,25 @@ const Post = ({ params }: Props) => {
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-              }}>
+              }}
+            >
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
                   alignItems: 'center',
-                }}>
-                <Link href={`/blog/${userData?.loginID}`} as={`/blog/${userData?.loginID}`}>
+                }}
+              >
+                <Link
+                  href={`/blog/${userData?.loginID}`}
+                  as={`/blog/${userData?.loginID}`}
+                >
                   {/* <a> */}
                   <a style={{ margin: '18px 0 0.875rem' }}>
-                    <h3 className={classes.blogTitleStyle}>{`${userData?.loginID}'s Blog`}</h3>
+                    <h3
+                      className={classes.blogTitleStyle}
+                    >{`${userData?.loginID}'s Blog`}</h3>
                   </a>
                 </Link>
               </div>
@@ -297,7 +273,8 @@ const Post = ({ params }: Props) => {
               style={{
                 position: 'sticky',
                 top: '150px',
-              }}>
+              }}
+            >
               <Grow in timeout={1000}>
                 {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
                 <div>
@@ -316,7 +293,8 @@ const Post = ({ params }: Props) => {
               width: '100%',
               height: '100%',
               justifyContent: 'center',
-            }}>
+            }}
+          >
             <div
               style={{
                 display: 'flex',
@@ -325,7 +303,8 @@ const Post = ({ params }: Props) => {
                 height: '100%',
                 maxWidth: '1200px',
                 justifyContent: 'center',
-              }}>
+              }}
+            >
               {/* 메인 컨텐츠 영역 */}
               <div
                 style={{
@@ -335,18 +314,24 @@ const Post = ({ params }: Props) => {
                   maxWidth: '760px',
                   justifyContent: 'center',
                   position: 'relative',
-                }}>
+                }}
+              >
                 <Typography style={{ overflowWrap: 'anywhere' }} variant="h3">
                   {postData && postData.title}
                 </Typography>
-                <Typography variant="subtitle2" gutterBottom style={{ marginLeft: '3px' }}>
+                <Typography
+                  variant="subtitle2"
+                  gutterBottom
+                  style={{ marginLeft: '3px' }}
+                >
                   {dayjs(postData?.updatedAt).format('YYYY-MM-DD A h:mm:ss')}
                 </Typography>
                 <div
                   className={classes.tagList}
                   style={{
                     display: 'flex',
-                  }}>
+                  }}
+                >
                   {postData &&
                     postData.Tags.map((item, idx) => (
                       <div key={item.tagName + idx}>
@@ -391,7 +376,8 @@ const Post = ({ params }: Props) => {
                     style={{
                       position: 'sticky',
                       top: '150px',
-                    }}>
+                    }}
+                  >
                     <Grow in timeout={1000}>
                       {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
                       <div className={classes.btnList}>
@@ -405,11 +391,13 @@ const Post = ({ params }: Props) => {
                             }}
                             badgeContent={
                               postData
-                                ? postData.LikeDisLike.filter((item) => item.actionType === 'Like')
-                                    .length
+                                ? postData.LikeDisLike.filter(
+                                    (item) => item.actionType === 'Like'
+                                  ).length
                                 : 0
                             }
-                            color="error">
+                            color="error"
+                          >
                             <ThumbUpIcon
                               color={isLiked('Like')}
                               style={{ height: '27px', width: '27px' }}
@@ -418,7 +406,10 @@ const Post = ({ params }: Props) => {
                           {/* </IconButton> */}
                         </Fab>
 
-                        <Fab aria-label="dislike" onClick={() => handleLike('DisLike')}>
+                        <Fab
+                          aria-label="dislike"
+                          onClick={() => handleLike('DisLike')}
+                        >
                           {/* <IconButton color="default"> */}
                           <Badge
                             overlap={'rectangular'}
@@ -433,7 +424,8 @@ const Post = ({ params }: Props) => {
                                   ).length
                                 : 0
                             }
-                            color="primary">
+                            color="primary"
+                          >
                             <ThumbDownIcon
                               color={isLiked('DisLike')}
                               style={{ height: '27px', width: '27px' }}
@@ -444,7 +436,8 @@ const Post = ({ params }: Props) => {
 
                         <ActionButton
                           isMyPost={
-                            myUserData?.id === postData?.UserId || myUserData?.role === 'admin'
+                            myUserData?.id === postData?.UserId ||
+                            myUserData?.role === 'admin'
                           }
                           setUpdateDialogOpen={setUpdateDialogOpen}
                           setDeleteDialogOpen={setDeleteDialogOpen}
