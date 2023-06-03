@@ -1,12 +1,15 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+
 import { Backdrop } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+
 import axios from 'axios';
-import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
-import SelectModal from 'components/github-login/selectModal';
+
+import SelectModal from 'components/github-login/SelectModal';
+import toast from 'utils/toast';
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 import { useStyles } from './github-login.style';
-import toast from 'utils/toast';
 
 const githubLogin = () => {
   const classes = useStyles();
@@ -19,7 +22,7 @@ const githubLogin = () => {
   const [backDropOpen, setBackDropOpen] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, _setSelectedValue] = useState('');
 
   const handleClose = (selectedValue: string) => {
     //모달창에서 포지션을 선택한 경우
@@ -98,7 +101,7 @@ const githubLogin = () => {
     if (result?.isSignUpUser === false) {
       githubUserData.current = result.githubUserData;
       setModalOpen(true);
-      // 가입한적 없는 유저라면 모달창을 띄워야한다. 그뒤에 로직들도 실행 하지 않음.
+      // 가입한적 없는 유저라면 모달창을 띄워야한다.
       return;
     }
 
