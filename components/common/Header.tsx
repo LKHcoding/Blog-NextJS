@@ -27,14 +27,17 @@ import axios from 'axios';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useCallback } from 'react';
-import { Flip, toast } from 'react-toastify';
+import React, { useEffect, useRef, useState } from 'react';
 import useLoadingStore from '../../stores/useLoadingStore';
 import FullScreenDialog from '../write/FullScreenDialog';
 import useMenuStore from './../../stores/useMenuStore';
 import { Autocomplete } from './Autocomplete/Autocomplete';
-import { getGetUsersQueryKey, useGetUsers } from '../../stores/remoteStore/endpoints/user/user';
+import {
+  getGetUsersQueryKey,
+  useGetUsers,
+} from 'stores/remoteStore/endpoints/user/user';
 import { useQueryClient } from '@tanstack/react-query';
+import toast from 'utils/toast';
 
 const drawerWidth = 160;
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,10 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
         '0px 2px 10px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 7%), 0px 1px 3px 0px rgb(0 0 0 / 6%)',
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
-        // 들어갈때
         duration: 400,
-        // duration: theme.transitions.duration.shortest,
-        // duration: theme.transitions.duration.leavingScreen,
       }),
     },
     appBarShift: {
@@ -59,28 +59,13 @@ const useStyles = makeStyles((theme: Theme) =>
       width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
-        // 튀어나올때
         duration: 650,
-        // duration: theme.transitions.duration.shortest,
-        // duration: theme.transitions.duration.enteringScreen,
       }),
     },
     menuButton: {
       marginRight: 36,
     },
-    hide: {
-      // display: 'none',
-      // overflow: 'hidden',
-      // padding: 0,
-      // width: 0,
-      // margin: 0,
-      // transition: theme.transitions.create(['width', 'margin', 'padding'], {
-      //   easing: theme.transitions.easing.sharp,
-      //   duration: theme.transitions.duration.shortest,
-      //   // duration: theme.transitions.duration.enteringScreen,
-      // }),
-    },
-
+    hide: {},
     search: {
       position: 'relative',
       border: '1px solid rgba(0, 0, 0, 0.12)',
@@ -114,7 +99,6 @@ const useStyles = makeStyles((theme: Theme) =>
           minWidth: '500px',
         },
       },
-      // maxHeight: '15px',
       [theme.breakpoints.up(960)]: {
         display: 'flex',
         marginLeft: theme.spacing(3),
@@ -139,7 +123,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
       transition: theme.transitions.create('width'),
       width: '100%',
@@ -151,10 +134,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     sectionDesktop: {
-      // display: 'none',
       display: 'flex',
       marginRight: '10px',
-
       [theme.breakpoints.up('md')]: {
         display: 'flex',
       },
@@ -183,12 +164,6 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       margin: theme.spacing(1),
     },
-    // sectionMobile: {
-    //   display: 'flex',
-    //   [theme.breakpoints.up('md')]: {
-    //     display: 'none',
-    //   },
-    // },
   })
 );
 
@@ -208,16 +183,18 @@ const header = () => {
     openMenu();
   };
 
-  const [dropDownOpen, setDropDownOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [dropDownOpen, setDropDownOpen] = useState(false);
+  const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
     setDropDownOpen((prevOpen) => !prevOpen);
   };
-  //
 
   const handleClose = (event: React.MouseEvent<EventTarget>) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
       return;
     }
 
@@ -225,7 +202,10 @@ const header = () => {
   };
 
   const handleLogout = async (event: React.MouseEvent<EventTarget>) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
       return;
     }
     setDropDownOpen(false);
@@ -236,16 +216,7 @@ const header = () => {
       .catch((err) => err);
 
     if (logoutResult.status === 200) {
-      toast.error(`로그아웃 완료`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-      });
+      toast.error(`로그아웃 완료`);
       queryClient.resetQueries({
         queryKey: getGetUsersQueryKey(),
         type: 'all',
@@ -260,30 +231,25 @@ const header = () => {
     }
   }
 
-  // return focus to the button when we transitioned from !dropDownOpen -> dropDownOpen
-  const prevOpen = React.useRef(dropDownOpen);
-  React.useEffect(() => {
-    if (prevOpen.current === true && dropDownOpen === false) {
+  const prevOpen = useRef(dropDownOpen);
+  useEffect(() => {
+    if (prevOpen.current && !dropDownOpen) {
       anchorRef.current?.focus();
     }
 
     prevOpen.current = dropDownOpen;
   }, [dropDownOpen]);
 
-  const handleWriteBtn = useCallback(() => {
-    router.push(`/blog/write`);
-  }, []);
-
   return (
     <>
-      {/* div에 flex줘야함 */}
       <div className={classes.root}>
         <AppBar
           color="inherit"
           position="fixed"
           className={clsx(classes.appBar, {
             [classes.appBarShift]: open,
-          })}>
+          })}
+        >
           <Toolbar>
             <IconButton
               color="inherit"
@@ -292,7 +258,8 @@ const header = () => {
               edge="start"
               className={clsx(classes.menuButton, {
                 [classes.hide]: open,
-              })}>
+              })}
+            >
               <MenuIcon />
             </IconButton>
             <Link href={`/`} as={`/`}>
@@ -303,38 +270,25 @@ const header = () => {
               </a>
             </Link>
 
-            {/* 서치인풋박스 시작 */}
-            {/* <div className={classes.search}> */}
-            {/* <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-              /> */}
-            {/* </div> */}
-            {/* 서치인풋박스 끝 */}
             <div className={classes.algoliaSearch}>
               <Autocomplete placeholder="Search" openOnFocus={true} />
-              {/* <Autocomplete placeholder="Search" openOnFocus={true} debug={true} /> */}
             </div>
 
-            {/* 네비바 우측 아이콘 모음 시작 */}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               {data && (
                 <>
                   <FullScreenDialog />
-
                   <IconButton
                     className={clsx(classes.largeIcon)}
                     aria-label="show 17 new notifications"
-                    color="default">
-                    <Badge badgeContent={17} color="secondary" overlap={'rectangular'}>
+                    color="default"
+                  >
+                    <Badge
+                      badgeContent={17}
+                      color="secondary"
+                      overlap={'rectangular'}
+                    >
                       <NotificationsIcon style={{ height: '27px', width: '27px' }} />
                     </Badge>
                   </IconButton>
@@ -348,8 +302,8 @@ const header = () => {
                 aria-haspopup="true"
                 onClick={handleToggle}
                 edge="end"
-                color="default">
-                {/* <AccountCircle /> */}
+                color="default"
+              >
                 <Avatar
                   color="default"
                   alt="User Profile Icon"
@@ -363,25 +317,31 @@ const header = () => {
                 anchorEl={anchorRef.current}
                 role={undefined}
                 transition
-                disablePortal>
+                disablePortal
+              >
                 {({ TransitionProps, placement }) => (
                   <Grow
                     {...TransitionProps}
                     style={{
-                      transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                    }}>
+                      transformOrigin:
+                        placement === 'bottom' ? 'center top' : 'center bottom',
+                    }}
+                  >
                     <Paper className={clsx(classes.dropDownMenu)}>
                       <ClickAwayListener onClickAway={handleClose}>
                         <MenuList
                           autoFocusItem={dropDownOpen}
                           id="menu-list-grow"
-                          onKeyDown={handleListKeyDown}>
+                          onKeyDown={handleListKeyDown}
+                        >
                           {/* 로그인 안한 상태 */}
                           {!data && [
                             <Link href={`/login`} as={`/login`} key="logIn">
                               <a>
                                 <MenuItem onClick={handleClose}>
-                                  <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                  <ListItemIcon
+                                    className={clsx(classes.dropDownMenuIcon)}
+                                  >
                                     <VerifiedUserIcon fontSize="small" />
                                   </ListItemIcon>
                                   <Typography variant="inherit" noWrap>
@@ -390,11 +350,12 @@ const header = () => {
                                 </MenuItem>
                               </a>
                             </Link>,
-                            // <Link href={`/signup`} as={`/signup`} key="signUp">
                             <Link href={`/login`} as={`/login`} key="signUp">
                               <a>
                                 <MenuItem onClick={handleClose}>
-                                  <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                  <ListItemIcon
+                                    className={clsx(classes.dropDownMenuIcon)}
+                                  >
                                     <PersonAddIcon fontSize="small" />
                                   </ListItemIcon>
                                   <Typography variant="inherit" noWrap>
@@ -410,10 +371,13 @@ const header = () => {
                             <Link
                               href={`/profile/${data.loginID}`}
                               as={`/profile/${data.loginID}`}
-                              key="profile">
+                              key="profile"
+                            >
                               <a>
                                 <MenuItem onClick={handleClose}>
-                                  <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                  <ListItemIcon
+                                    className={clsx(classes.dropDownMenuIcon)}
+                                  >
                                     <PersonIcon fontSize="small" />
                                   </ListItemIcon>
                                   <Typography variant="inherit" noWrap>
@@ -425,10 +389,13 @@ const header = () => {
                             <Link
                               href={`/blog/${data.loginID}`}
                               as={`/blog/${data.loginID}`}
-                              key="blog">
+                              key="blog"
+                            >
                               <a>
                                 <MenuItem onClick={handleClose}>
-                                  <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                                  <ListItemIcon
+                                    className={clsx(classes.dropDownMenuIcon)}
+                                  >
                                     <LibraryBooksIcon fontSize="small" />
                                   </ListItemIcon>
                                   <Typography variant="inherit" noWrap>
@@ -438,7 +405,9 @@ const header = () => {
                               </a>
                             </Link>,
                             <MenuItem onClick={handleLogout} key="logOut">
-                              <ListItemIcon className={clsx(classes.dropDownMenuIcon)}>
+                              <ListItemIcon
+                                className={clsx(classes.dropDownMenuIcon)}
+                              >
                                 <ExitToAppIcon fontSize="small" />
                               </ListItemIcon>
                               <Typography variant="inherit" noWrap>
@@ -453,8 +422,6 @@ const header = () => {
                 )}
               </Popper>
             </div>
-
-            {/* 네비바 우측 아이콘 모음 끝 */}
           </Toolbar>
           {isLoading && <LinearProgress />}
         </AppBar>

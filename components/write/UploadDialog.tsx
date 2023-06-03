@@ -8,17 +8,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper, { PaperProps } from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   getAllPostInfoApi,
   getOneUserPostInfoDataApi,
   getOneUserTagInfoDataApi,
-} from '../../utils/queryAPI';
-import { Flip, toast } from 'react-toastify';
-import { useGetUsers } from '../../stores/remoteStore/endpoints/user/user';
+} from 'utils/queryAPI';
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import toast from 'utils/toast';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       '& .MuiDialog-paperWidthSm': {
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
         justifyContent: 'center',
       },
     },
-    btnDisabledborderColor: {
+    btnDisabledBorderColor: {
       border: '1px solid white !important',
     },
   })
@@ -40,16 +40,13 @@ interface Props {
 }
 
 export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
-  const queryClient = useQueryClient();
-
-  const { data } = useGetUsers();
-
   const classes = useStyles();
 
+  const queryClient = useQueryClient();
+  const { data } = useGetUsers();
+
   const [canSave, setCanSave] = useState(false);
-
   const [open, setOpen] = useState(false);
-
   const imageFile = useRef<File[]>();
 
   const handleClickOpen = () => {
@@ -65,22 +62,15 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
       if (imageFile.current.length > 0) {
         const result = await handleSave(imageFile.current);
         if (result === 'success') {
-          await queryClient.invalidateQueries([`${getOneUserTagInfoDataApi.key}-${data?.loginID}`]);
+          await queryClient.invalidateQueries([
+            `${getOneUserTagInfoDataApi.key}-${data?.loginID}`,
+          ]);
           await queryClient.invalidateQueries([
             `${getOneUserPostInfoDataApi.key}-${data?.loginID}`,
           ]);
           await queryClient.invalidateQueries([`${getAllPostInfoApi.key}`]);
 
-          toast.info(`새 글 작성이 완료되었습니다.`, {
-            position: 'top-center',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            transition: Flip,
-          });
+          toast.info(`새 글 작성이 완료되었습니다.`);
 
           setOpen(false);
         }
@@ -91,27 +81,28 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
   return (
     <div>
       <Button
-        className={classes.btnDisabledborderColor}
+        className={classes.btnDisabledBorderColor}
         disabled={conditionSave}
         autoFocus
         variant="outlined"
         color="inherit"
-        onClick={handleClickOpen}>
+        onClick={handleClickOpen}
+      >
         save
       </Button>
       <Dialog
         className={classes.root}
         open={open}
-        // onClose={handleClose}
         PaperComponent={PaperComponent}
-        aria-labelledby="draggable-dialog-title">
+        aria-labelledby="draggable-dialog-title"
+      >
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
           Thumbnail - Image
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            작성한 게시글을 대표하는 썸네일 이미지를 업로드 후 완료 버튼을 눌러 주세요😀 (추천:
-            16:9)
+            작성한 게시글을 대표하는 썸네일 이미지를 업로드 후 완료 버튼을 눌러
+            주세요😀 (추천: 16:9)
           </DialogContentText>
 
           <DropzoneArea
@@ -136,7 +127,8 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
             style={{ width: '70px' }}
             variant="outlined"
             onClick={handleUpload}
-            color="primary">
+            color="primary"
+          >
             완료
           </Button>
         </DialogActions>
@@ -147,7 +139,10 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
 
 function PaperComponent(props: PaperProps) {
   return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
     </Draggable>
   );

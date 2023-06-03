@@ -5,10 +5,9 @@ import ShareIcon from '@material-ui/icons/Share';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import React, { useRef, useState } from 'react';
-import { Flip, toast } from 'react-toastify';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import UpdateDialog from '../write/update/UpdateDialog';
+import toast from 'utils/toast';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,7 +17,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     exampleWrapper: {
       position: 'relative',
-      // marginTop: theme.spacing(3),
       height: 380,
       '& > div': {
         top: '0px !important',
@@ -47,26 +45,23 @@ interface Props {
   setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SpeedDials({ setUpdateDialogOpen, isMyPost, setDeleteDialogOpen }: Props) {
+export default function SpeedDials({
+  setUpdateDialogOpen,
+  isMyPost,
+  setDeleteDialogOpen,
+}: Props) {
   const router = useRouter();
-  const currentPathUrl = useRef('');
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   const handleDialogOpen = () => {
     setUpdateDialogOpen(true);
-    /**
-     * toggle 영역이 아래 버튼들까지 겹쳐있어서 false를 주면 닫히지않음
-     */
     setOpen(false);
   };
 
   const handleDeleteDialogOpen = () => {
     setDeleteDialogOpen(true);
-    /**
-     * toggle 영역이 아래 버튼들까지 겹쳐있어서 false를 주면 닫히지않음
-     */
     setOpen(false);
   };
 
@@ -75,45 +70,15 @@ export default function SpeedDials({ setUpdateDialogOpen, isMyPost, setDeleteDia
       navigator.clipboard
         .writeText(`${process.env.NEXT_PUBLIC_API_URL}${router.asPath}`)
         .then(() => {
-          toast.info(`클립보드에 주소가 복사 되었습니다.`, {
-            position: 'top-center',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            transition: Flip,
-          });
+          toast.info(`클립보드에 주소가 복사 되었습니다.`);
         })
         .catch((err) => {
-          toast.info(`err : ${err}`, {
-            position: 'top-center',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            transition: Flip,
-          });
+          toast.error(`err : ${err}`);
         });
-
-      // document.execCommand('copy');
     } else {
       toast.info(
         `클립보드 복사가
-      지원되지 않는 브라우저 입니다.`,
-        {
-          position: 'top-center',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          transition: Flip,
-        }
+      지원되지 않는 브라우저 입니다.`
       );
     }
 
@@ -133,14 +98,14 @@ export default function SpeedDials({ setUpdateDialogOpen, isMyPost, setDeleteDia
           icon={<SpeedDialIcon />}
           onClick={toggleBtn}
           open={open}
-          direction={'down'}>
+          direction={'down'}
+        >
           {isMyPost && [
             <SpeedDialAction
               key={'수정'}
               icon={<EditIcon />}
               tooltipTitle={'수정'}
               onClick={handleDialogOpen}
-              // onClick={() => handleCopyToClipboard}
               tooltipPlacement={'right'}
             />,
 

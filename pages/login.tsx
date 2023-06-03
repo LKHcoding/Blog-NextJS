@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,11 +15,11 @@ import axios from 'axios';
 import useInput from '../hooks/useInput';
 import { useRouter } from 'next/router';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import { Flip, toast } from 'react-toastify';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Head from 'next/head';
-import { useGetUsers } from '../stores/remoteStore/endpoints/user/user';
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 import githubLogin from '../utils/githubLogin';
+import toast from 'utils/toast';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,27 +51,20 @@ const useStyles = makeStyles((theme) => ({
 const LogIn = () => {
   const router = useRouter();
 
-  const { data, isLoading, isError, error, refetch } = useGetUsers();
+  const { data, isLoading, refetch } = useGetUsers();
 
   const [loginID, onChangeLoginID] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const classes = useStyles();
 
-  const handleLogInFormSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+  const handleLogInFormSubmit: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
     e.preventDefault();
 
     if (loginID === '' || password === '') {
-      toast.error(`아이디 또는 비밀번호를 입력 해 주세요.`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-      });
+      toast.error(`아이디 또는 비밀번호를 입력 해 주세요.`);
       return;
     }
 
@@ -86,23 +79,11 @@ const LogIn = () => {
       .then((res) => res)
       .catch((err) => err);
 
-    // console.dir(result);
-
     if (result?.data) {
-      toast.info(`${result.data.loginID}님 반갑습니다!`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-      });
+      toast.info(`${result.data.loginID}님 반갑습니다!`);
       refetch();
     }
 
-    // 에러 메세지 띄워주기
     if (result?.response) {
       let errMessage = '';
       const isMessageArray = Array.isArray(result.response.data.message);
@@ -113,19 +94,7 @@ const LogIn = () => {
       } else {
         errMessage = result.response.data.message;
       }
-      toast.error(`${errMessage}`, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-        // onClick: () => {
-        //   router.push('/');
-        // },
-      });
+      toast.error(`${errMessage}`);
     }
   };
 
@@ -138,7 +107,8 @@ const LogIn = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <CircularProgress />
       </div>
     );
@@ -160,7 +130,8 @@ const LogIn = () => {
             justifyContent: 'center',
             alignItems: 'center',
             fontSize: '2rem',
-          }}>
+          }}
+        >
           이미 로그인 한 유저는 접근 할 수 없습니다.
         </div>
       </>
@@ -215,38 +186,38 @@ const LogIn = () => {
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}>
+              className={classes.submit}
+            >
               LogIn
             </Button>
             <Button
               fullWidth
               variant="outlined"
               className={classes.github}
-              onClick={() => githubLogin()}>
+              onClick={() => githubLogin()}
+            >
               <GitHubIcon fontSize="small" />
               <div style={{ marginLeft: '5px' }}>github login</div>
             </Button>
 
             <Grid container>
               <Grid item xs>
-                {/* <Link href="/"> */}
                 <MaterialLink
                   href="#"
                   variant="body2"
-                  onClick={() => alert('현재 Github Login만 사용 가능합니다.')}>
+                  onClick={() => toast.error('현재 Github Login만 사용 가능합니다.')}
+                >
                   비밀번호 찾기
                 </MaterialLink>
-                {/* </Link> */}
               </Grid>
               <Grid item>
-                {/* <Link href="/"> */}
                 <MaterialLink
                   href="#"
                   variant="body2"
-                  onClick={() => alert('현재 Github Login만 사용 가능합니다.')}>
+                  onClick={() => toast.error('현재 Github Login만 사용 가능합니다.')}
+                >
                   {'회원가입'}
                 </MaterialLink>
-                {/* </Link> */}
               </Grid>
             </Grid>
           </form>
