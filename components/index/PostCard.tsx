@@ -21,12 +21,12 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 import removeMD from 'remove-markdown';
 
-import { IAllPostInfoType } from 'types/AllPostInfoType';
+import { AllPostInfo } from 'types/AllPostInfo';
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 import { useStyles } from './PostCard.style';
 
 type PostCardProps = {
-  postInfo: IAllPostInfoType;
+  postInfo: AllPostInfo;
 };
 
 const PostCard = ({ postInfo }: PostCardProps) => {

@@ -136,9 +136,8 @@ https://example.com
 const FullScreenDialog = () => {
   const classes = useStyles();
 
-  const { data, refetch, isFetching } = useQuery(
-    [getAllTagInfoApi.key],
-    getAllTagInfoApi.apiCall
+  const { data, refetch, isFetching } = useQuery([getAllTagInfoApi.key], () =>
+    getAllTagInfoApi.apiCall()
   );
 
   const [state, setState, ref] = useImmerRef({

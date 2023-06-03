@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { IAllPostInfoType } from 'types/AllPostInfoType';
-import { IAllTagInfoType } from 'types/AllTagInfoType';
-import { IPostInfoType } from 'types/PostInfoType';
-import { ITagInfoType } from 'types/TagInfoType';
-import { IUser } from 'types/UserType';
+import { AllPostInfo } from 'types/AllPostInfo';
+import { AllTagInfo } from 'types/AllTagInfo';
+import { PostInfo } from 'types/PostInfo';
+import { TagInfo } from 'types/TagInfo';
+import { User } from 'types/User';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -13,12 +13,10 @@ const api = axios.create({
  *  이 파일은 백엔드에서 스웨거만 다 작성해주면 모두 제거할 예정
  *  ( orval 로 작성된 코드로 대체 가능 ) */
 
-/**
- * 유저 1명의 데이터 가져오기
- */
+// 유저 1명의 데이터 가져오기
 export const getOneUserDataApi = {
   key: 'getOneUserData',
-  apiCall: async (loginID: string, Authentication?: any): Promise<IUser> => {
+  apiCall: async (loginID: string, Authentication?: string): Promise<User> => {
     return await api
       .get(
         `/v1/users/${loginID}`,
@@ -41,12 +39,10 @@ export const getOneUserDataApi = {
   },
 };
 
-/**
- * 유저 한명의 Tag info 가져오기
- */
+// 유저 한명의 Tag info 가져오기
 export const getOneUserTagInfoDataApi = {
   key: 'getOneUserTagInfoData',
-  apiCall: async (userID: string, Authentication?: any): Promise<ITagInfoType> => {
+  apiCall: async (userID: string, Authentication?: string): Promise<TagInfo> => {
     // console.log(Authentication);
     return await api
       .get(
@@ -70,16 +66,14 @@ export const getOneUserTagInfoDataApi = {
   },
 };
 
-/**
- * 유저 한명의 Posts info List 가져오기
- */
+// 유저 한명의 Posts info List 가져오기
 export const getOneUserPostInfoDataApi = {
   key: 'getOneUserPostInfoData',
   apiCall: async (
     BlogUserId: string,
     tag: string,
-    Authentication?: any
-  ): Promise<IPostInfoType[]> => {
+    Authentication?: string
+  ): Promise<PostInfo[]> => {
     return await api
       .get(
         `/v1/blog/posts-info/${BlogUserId}/${tag}`,
@@ -102,12 +96,10 @@ export const getOneUserPostInfoDataApi = {
   },
 };
 
-/**
- * 특정 Post info 가져오기
- */
+// 특정 Post info 가져오기
 export const getPostInfoDataApi = {
   key: 'getPostInfoData',
-  apiCall: async (postId: string, Authentication?: any): Promise<IPostInfoType> => {
+  apiCall: async (postId: string, Authentication?: string): Promise<PostInfo> => {
     return await api
       .get(
         `/v1/blog/post-info/${postId}`,
@@ -130,12 +122,10 @@ export const getPostInfoDataApi = {
   },
 };
 
-/**
- * 모든 Posts info 가져오기
- */
+// 모든 Posts info 가져오기
 export const getAllPostInfoApi = {
   key: 'getAllPostInfoApi',
-  apiCall: async (Authentication?: any): Promise<IAllPostInfoType[]> => {
+  apiCall: async (Authentication?: string): Promise<AllPostInfo[]> => {
     return await api
       .get(
         `v1/blog/all-posts-info`,
@@ -158,12 +148,10 @@ export const getAllPostInfoApi = {
   },
 };
 
-/**
- * 포지션별 모든 Tags info 가져오기
- */
+// 포지션별 모든 Tags info 가져오기
 export const getAllTagInfoApi = {
   key: 'getAllTagInfoApi',
-  apiCall: async (Authentication?: any): Promise<IAllTagInfoType[]> => {
+  apiCall: async (Authentication?: string): Promise<AllTagInfo[]> => {
     return await api
       .get(
         `v1/blog/tags-info`,

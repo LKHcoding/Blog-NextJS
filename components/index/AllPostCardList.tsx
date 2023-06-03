@@ -12,7 +12,9 @@ import { useStyles } from './AllPostCardList.style';
 const AllPostCardList = () => {
   const classes = useStyles();
 
-  const { data } = useQuery([getAllPostInfoApi.key], getAllPostInfoApi.apiCall);
+  const { data } = useQuery([getAllPostInfoApi.key], () =>
+    getAllPostInfoApi.apiCall()
+  );
 
   if (!data) {
     return (

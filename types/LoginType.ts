@@ -1,4 +1,4 @@
-export enum loginType {
-  Local = 'local',
-  Github = 'github',
-}
+export const LoginType = {
+  Local: 'local',
+  Github: 'github',
+} as const;

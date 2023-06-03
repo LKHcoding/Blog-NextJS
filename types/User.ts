@@ -1,34 +1,20 @@
-import { loginType } from './LoginType';
-import { UserRole } from './UserRoleType';
+import { LoginType } from './LoginType';
+import { UserRole } from './UserRole';
 
-export interface IUser {
+export type User = {
   id: number;
-
   githubID: string | null;
-
   positionType: string;
-
   email: string | null;
-
   nickname: string | null;
-
   loginID: string;
-
   blog: string | null;
-
   bio: string | null;
-
   avatarUrl: string | null;
-
   githubPageUrl: string | null;
-
-  loginType: loginType;
-
-  role: UserRole;
-
+  loginType: (typeof LoginType)[keyof typeof LoginType];
+  role: (typeof UserRole)[keyof typeof UserRole];
   createdAt: string;
-
   updatedAt: string;
-
   deletedAt: string;
-}
+};

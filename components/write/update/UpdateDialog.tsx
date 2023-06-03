@@ -46,7 +46,7 @@ import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import UpdateUploadDialog from './UpdateUploadDialog';
 import { getAllTagInfoApi } from 'utils/queryAPI';
-import { IPostInfoType } from 'types/PostInfoType';
+import { PostInfo } from 'types/PostInfo';
 import { useStyles } from './UpdateDialog.style';
 
 SyntaxHighlighter.registerLanguage('bash', bash);
@@ -79,7 +79,7 @@ const initialEditorInput = `
 type UpdateDialogProps = {
   updateDialogOpen: boolean;
   setUpdateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  postData: IPostInfoType | undefined;
+  postData: PostInfo | undefined;
 };
 
 const UpdateDialog: FC<UpdateDialogProps> = ({
@@ -89,9 +89,8 @@ const UpdateDialog: FC<UpdateDialogProps> = ({
 }) => {
   const classes = useStyles();
 
-  const { data, refetch, isFetching } = useQuery(
-    [getAllTagInfoApi.key],
-    getAllTagInfoApi.apiCall
+  const { data, refetch, isFetching } = useQuery([getAllTagInfoApi.key], () =>
+    getAllTagInfoApi.apiCall()
   );
 
   const [state, setState, ref] = useImmerRef({

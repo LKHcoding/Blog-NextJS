@@ -14,8 +14,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'wrap',
       justifyContent: 'center',
 
-      marginTop: '10px',
-
       '& > .MuiPaper-root': {
         boxShadow:
           '0 16px 24px 2px rgb(0 0 0 / 14%), 0 6px 30px 5px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%)',

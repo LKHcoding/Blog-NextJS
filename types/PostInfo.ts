@@ -1,4 +1,4 @@
-export interface IPostInfoType {
+export type PostInfo = {
   id: number;
   title: string;
   content: string;
@@ -9,4 +9,4 @@ export interface IPostInfoType {
   deletedAt: Date | null;
   Tags: [{ tagName: string }];
   LikeDisLike: [{ actionType: string; UserId: number }];
-}
+};
