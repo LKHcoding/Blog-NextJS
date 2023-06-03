@@ -12,16 +12,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .then((res) => res.data)
     .catch((err) => err);
 
-  interface postDataType {
+  type postDataType = {
     changefreq: string;
     priority: number;
     loc: string;
-  }
+  };
   const fields: postDataType[] = [];
 
   // Add static pages
   const pages = ['/'];
-  pages.map((url) => {
+  pages.forEach((url) => {
     fields.push({
       loc: `${api_url}${url}`,
       changefreq: 'daily',
@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   });
 
   // Add posts data
-  postList?.map(
+  postList?.forEach(
     (post: { id: number; updatedAt: Date; User: { loginID: string } }) => {
       fields.push({
         loc: `${api_url}/blog/${post.User.loginID}/${post.id}`,
@@ -39,20 +39,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       });
     }
   );
-  // const fields = [
-  //   {
-  //     loc: 'https://example.com', // Absolute url
-  //     lastmod: new Date().toISOString(),
-  //     // changefreq
-  //     // priority
-  //   },
-  //   {
-  //     loc: 'https://example.com/dynamic-path-2', // Absolute url
-  //     lastmod: new Date().toISOString(),
-  //     // changefreq
-  //     // priority
-  //   },
-  // ];
 
   return getServerSideSitemap(ctx, fields);
 };
