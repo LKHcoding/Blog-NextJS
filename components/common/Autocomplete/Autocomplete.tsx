@@ -1,16 +1,19 @@
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
+
+import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
+import { Hit } from '@algolia/client-search';
+import { Avatar } from '@material-ui/core';
+import algoliasearch from 'algoliasearch/lite';
 import {
   AutocompleteOptions,
   AutocompleteState,
   createAutocomplete,
 } from '@algolia/autocomplete-core';
-import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
-import { Hit } from '@algolia/client-search';
-import { Avatar } from '@material-ui/core';
-import algoliasearch from 'algoliasearch/lite';
-import Link from 'next/link';
-import React from 'react';
 
-// const searchClient = algoliasearch('latency', '6be0576ff61c053d5f9a3225e2a90f76');
+import { useStyles } from './autocomplete.style';
+import clsx from 'clsx';
+
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || '',
   process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY || ''
@@ -37,7 +40,9 @@ type AutocompleteItem = Hit<{
 }>;
 
 export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem>>) {
-  const [autocompleteState, setAutocompleteState] = React.useState<
+  const classes = useStyles();
+
+  const [autocompleteState, setAutocompleteState] = useState<
     AutocompleteState<AutocompleteItem>
   >({
     collections: [],
@@ -48,7 +53,8 @@ export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem
     activeItemId: null,
     status: 'idle',
   });
-  const autocomplete = React.useMemo(
+
+  const autocomplete = useMemo(
     () =>
       createAutocomplete<
         AutocompleteItem,
@@ -72,7 +78,7 @@ export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem
                       query,
                       params: {
                         hitsPerPage: 300,
-                        highlightPreTag: '<mark>',
+                        highlightPreTag: '<mark style="background-color: yellow;">',
                         highlightPostTag: '</mark>',
                       },
                     },
@@ -80,7 +86,6 @@ export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem
                 });
               },
               getItemUrl({ item }) {
-                // return item.url;
                 return `${process.env.NEXT_PUBLIC_API_URL}/blog/${item.User.loginID}/${item.id}`;
               },
             },
@@ -91,12 +96,12 @@ export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem
     [props]
   );
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const formRef = React.useRef<HTMLFormElement>(null);
-  const panelRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const { getEnvironmentProps } = autocomplete;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!formRef.current || !panelRef.current || !inputRef.current) {
       return undefined;
     }
@@ -121,7 +126,8 @@ export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem
       <form
         ref={formRef}
         className="aa-Form"
-        {...autocomplete.getFormProps({ inputElement: inputRef.current })}>
+        {...autocomplete.getFormProps({ inputElement: inputRef.current })}
+      >
         <div className="aa-InputWrapperPrefix">
           <label className="aa-Label" {...autocomplete.getLabelProps({})}>
             <button className="aa-SubmitButton" type="submit" title="Submit">
@@ -153,7 +159,8 @@ export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem
           ]
             .filter(Boolean)
             .join(' ')}
-          {...autocomplete.getPanelProps({})}>
+          {...autocomplete.getPanelProps({})}
+        >
           <div className="aa-PanelLayout aa-Panel--scrollable">
             {autocompleteState.collections.map((collection, index) => {
               const { source, items } = collection;
@@ -167,11 +174,13 @@ export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem
                           <Link
                             href={`/blog/${item.User.loginID}/${item.id}`}
                             as={`/blog/${item.User.loginID}/${item.id}`}
-                            key={item.objectID}>
+                            key={item.objectID}
+                          >
                             <a>
                               <li
                                 className="aa-Item"
-                                {...autocomplete.getItemProps({ item, source })}>
+                                {...autocomplete.getItemProps({ item, source })}
+                              >
                                 <div className="aa-ItemWrapper">
                                   <div className="aa-ItemContent">
                                     <div className="aa-ItemIcon aa-ItemIcon--picture aa-ItemIcon--alignTop">
@@ -186,44 +195,46 @@ export function Autocomplete(props: Partial<AutocompleteOptions<AutocompleteItem
                                       <div
                                         className="aa-ItemContentTitle"
                                         dangerouslySetInnerHTML={{
-                                          __html: item._highlightResult!.title!.value,
+                                          __html:
+                                            item._highlightResult!.title!.value,
                                         }}
                                       />
                                       <div
                                         className="aa-ItemContentTitle"
                                         dangerouslySetInnerHTML={{
-                                          __html: item._highlightResult!.content!.value,
+                                          __html:
+                                            item._highlightResult!.content!.value,
                                         }}
                                       />
-                                      {/* <div className="aa-ItemContentTitle">
-                                    {item._highlightResult!.content!.value}
-                                  </div> */}
                                       <div
-                                        className="aa-ItemContentDescription"
-                                        style={{ display: 'flex', alignItems: 'center' }}>
+                                        className={clsx(
+                                          'aa-ItemContentDescription',
+                                          classes.writerInfoContainer
+                                        )}
+                                      >
                                         <Avatar
                                           color="default"
                                           alt="User Profile Icon"
                                           src={`${item.User.avatarUrl || ''}`}
-                                          style={{
-                                            height: '20px',
-                                            width: '20px',
-                                            marginRight: '4px',
-                                          }}
+                                          className={classes.avatar}
                                         />
-                                        <strong style={{ paddingTop: '2px' }}>
+                                        <strong className={classes.loginId}>
                                           {item.User.loginID}
                                         </strong>
-                                        {/* in{' '}<strong>{item.categories[0]}</strong> */}
                                       </div>
                                     </div>
                                   </div>
                                   <div className="aa-ItemActions">
                                     <button
-                                      className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
+                                      className={clsx(
+                                        'aa-ItemActionButton',
+                                        'aa-DesktopOnly',
+                                        'aa-ActiveOnly',
+                                        classes.actionButton
+                                      )}
                                       type="button"
                                       title="Select"
-                                      style={{ pointerEvents: 'none' }}>
+                                    >
                                       <svg fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
                                       </svg>
