@@ -26,7 +26,6 @@ import MarkDownContents from 'components/blog/[postID]/MarkDownContents';
 import Toc from 'components/blog/[postID]/Toc';
 import ActionButton from 'components/common/ActionButton';
 import UpdateDialog from 'components/write/update/UpdateDialog';
-import { useStyles } from 'styles/muiStyles/blog/[BlogUserId]/[postId]Style';
 import {
   getAllPostInfoApi,
   getOneUserDataApi,
@@ -45,28 +44,27 @@ import {
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 import CommentInput from 'components/blog/[postID]/CommentInput';
 import toast from 'utils/toast';
+import { useStyles } from './[postId].style';
 
-interface Props {
+type PostProps = {
   params: { BlogUserId: string; postId: string; tag?: string };
-}
-const Post = ({ params }: Props) => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
+};
+const Post = ({ params }: PostProps) => {
   const classes = useStyles();
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
 
   const { data: myUserData } = useGetUsers();
-
-  const { data: userData, refetch: userRefetch } = useQuery(
+  const { data: userData } = useQuery(
     [`${getOneUserDataApi.key}-${params.BlogUserId}`],
     () => getOneUserDataApi.apiCall(params.BlogUserId)
   );
-
   const { data: postData, refetch: postRefetch } = useQuery(
     [`${getPostInfoDataApi.key}-${params.postId}`],
     () => getPostInfoDataApi.apiCall(params.postId)
   );
-
-  const { data: userPostData, refetch: userPostDataRefetch } = useQuery(
+  const { refetch: userPostDataRefetch } = useQuery(
     [`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`],
     () =>
       getOneUserPostInfoDataApi.apiCall(
@@ -139,10 +137,6 @@ const Post = ({ params }: Props) => {
     if (deleteResult.status === 200) {
       toast.error(`게시글이 삭제 되었습니다.`);
 
-      // 데이터 refetch를 위한 영역
-
-      // 한명의 유저 게시물 데이터
-      // await queryClient.invalidateQueries(`${getOneUserPostInfoDataApi.key}-${params.BlogUserId}`);
       userPostDataRefetch();
 
       // 모든 게시물 데이터
@@ -154,9 +148,6 @@ const Post = ({ params }: Props) => {
       ]);
 
       router.push('/');
-
-      // router.back();
-
       return true;
     }
     return false;
@@ -167,26 +158,14 @@ const Post = ({ params }: Props) => {
       toast.error(`존재하지 않는 게시물 입니다.`);
 
       router.push('/');
-      // router.back();
     }
   }, []);
 
   //글 삭제 후 오류 방지
   if (!postData) {
     return (
-      <div
-        style={{
-          width: '100%',
-          height: '81vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <div className={classes.loadingContainer}>
         <CircularProgress />
-        {/* <Backdrop className={classes.backdrop} open={backDropOpen}>
-          <CircularProgress color="inherit" />
-        </Backdrop> */}
       </div>
     );
   }
@@ -210,19 +189,9 @@ const Post = ({ params }: Props) => {
         twitterImageURL={`${process.env.NEXT_PUBLIC_API_URL}/${postData.thumbnail}`}
       />
       <div className={classes.root}>
-        <Paper
-          // style={{ borderRadius: '10px', margin: '100px 30px 0 30px', position: 'relative' }}
-          elevation={3}
-        >
-          {/* region 블로그 상단 회원정보 소개 영역 */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
+        <Paper elevation={3}>
+          {/* region 게시글 상단 회원정보 소개 영역 */}
+          <div className={classes.paperHeader}>
             <Link
               href={`/blog/${userData?.loginID}`}
               as={`/blog/${userData?.loginID}`}
@@ -233,30 +202,17 @@ const Post = ({ params }: Props) => {
                   color="default"
                   alt="User Profile Icon"
                   src={`${userData?.avatarUrl || ''}`}
-                  style={{ marginTop: '-82px', height: '160px', width: '160px' }}
                 />
               </a>
             </Link>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
+
+            <div className={classes.blogNameWrapper}>
+              <div className={classes.blogName}>
                 <Link
                   href={`/blog/${userData?.loginID}`}
                   as={`/blog/${userData?.loginID}`}
                 >
-                  {/* <a> */}
-                  <a style={{ margin: '18px 0 0.875rem' }}>
+                  <a>
                     <h3
                       className={classes.blogTitleStyle}
                     >{`${userData?.loginID}'s Blog`}</h3>
@@ -269,14 +225,9 @@ const Post = ({ params }: Props) => {
 
           {/* 우측 toc 영역 시작 */}
           <div className={classes.tocSection}>
-            <div
-              style={{
-                position: 'sticky',
-                top: '150px',
-              }}
-            >
+            <div>
               <Grow in timeout={1000}>
-                {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
+                {/* 이유는 모르지만 transition 사용할때 div 로 한번 감싸줘야 애니메이션 적용됨 */}
                 <div>
                   <Toc content={postData ? postData.content : ''} />
                 </div>
@@ -286,52 +237,23 @@ const Post = ({ params }: Props) => {
           {/* 우측 toc 영역 끝 */}
 
           {/* 메인 컨텐츠 영역 시작 */}
-          <div
-            style={{
-              display: 'flex',
-              padding: '0px 20px',
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                marginTop: '30px',
-                width: '100%',
-                height: '100%',
-                maxWidth: '1200px',
-                justifyContent: 'center',
-              }}
-            >
+          <div className={classes.postBodyContainer}>
+            <div>
               {/* 메인 컨텐츠 영역 */}
-              <div
-                style={{
-                  marginBottom: '80px',
-                  width: '100%',
-                  height: '100%',
-                  maxWidth: '760px',
-                  justifyContent: 'center',
-                  position: 'relative',
-                }}
-              >
-                <Typography style={{ overflowWrap: 'anywhere' }} variant="h3">
+              <div>
+                <Typography variant="h3" className={classes.postTitle}>
                   {postData && postData.title}
                 </Typography>
+
                 <Typography
                   variant="subtitle2"
                   gutterBottom
-                  style={{ marginLeft: '3px' }}
+                  className={classes.postSubTitle}
                 >
                   {dayjs(postData?.updatedAt).format('YYYY-MM-DD A h:mm:ss')}
                 </Typography>
-                <div
-                  className={classes.tagList}
-                  style={{
-                    display: 'flex',
-                  }}
-                >
+
+                <div className={classes.tagList}>
                   {postData &&
                     postData.Tags.map((item, idx) => (
                       <div key={item.tagName + idx}>
@@ -340,8 +262,6 @@ const Post = ({ params }: Props) => {
                           label={item.tagName}
                           clickable
                           color="primary"
-                          //  onDelete={handleDelete}
-                          //  deleteIcon={<DoneIcon />}
                           variant="outlined"
                         />
                       </div>
@@ -349,9 +269,9 @@ const Post = ({ params }: Props) => {
                 </div>
 
                 {/* region 게시글 본문 */}
-                <div style={{ width: '100%', height: '100%', marginTop: '25px' }}>
+                <div className={classes.contentContainer}>
                   <img
-                    style={{ marginBottom: '25px', width: '100%' }}
+                    className={classes.postBannerImage}
                     src={`${process.env.NEXT_PUBLIC_API_URL}/${postData?.thumbnail}`}
                     alt={`${postData?.title}`}
                   />
@@ -372,17 +292,10 @@ const Post = ({ params }: Props) => {
 
                 {/* region 좌측 ActionButton (Like 등) 영역 시작 */}
                 <div className={classes.leftBtnsSection}>
-                  <div
-                    style={{
-                      position: 'sticky',
-                      top: '150px',
-                    }}
-                  >
+                  <div>
                     <Grow in timeout={1000}>
-                      {/* 이유는 모르지만 transition 사용할때 div로 한번 감싸줘야 애니메이션 적용됨 */}
                       <div className={classes.btnList}>
                         <Fab aria-label="like" onClick={() => handleLike('Like')}>
-                          {/* <IconButton color="default"> */}
                           <Badge
                             overlap={'rectangular'}
                             anchorOrigin={{
@@ -400,17 +313,15 @@ const Post = ({ params }: Props) => {
                           >
                             <ThumbUpIcon
                               color={isLiked('Like')}
-                              style={{ height: '27px', width: '27px' }}
+                              className={classes.thumbIcon}
                             />
                           </Badge>
-                          {/* </IconButton> */}
                         </Fab>
 
                         <Fab
                           aria-label="dislike"
                           onClick={() => handleLike('DisLike')}
                         >
-                          {/* <IconButton color="default"> */}
                           <Badge
                             overlap={'rectangular'}
                             anchorOrigin={{
@@ -428,10 +339,9 @@ const Post = ({ params }: Props) => {
                           >
                             <ThumbDownIcon
                               color={isLiked('DisLike')}
-                              style={{ height: '27px', width: '27px' }}
+                              className={classes.thumbIcon}
                             />
                           </Badge>
-                          {/* </IconButton> */}
                         </Fab>
 
                         <ActionButton
@@ -442,7 +352,6 @@ const Post = ({ params }: Props) => {
                           setUpdateDialogOpen={setUpdateDialogOpen}
                           setDeleteDialogOpen={setDeleteDialogOpen}
                         />
-                        {/* <Toc content={postData ? postData.content : ''} /> */}
                       </div>
                     </Grow>
                   </div>
@@ -476,7 +385,7 @@ const Post = ({ params }: Props) => {
 export default Post;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { query, req, params } = context;
+  const { req, params } = context;
 
   const queryClient = new QueryClient();
 

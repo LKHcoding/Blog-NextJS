@@ -2,19 +2,19 @@ import Paper from '@material-ui/core/Paper';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { VFC } from 'react';
+import React from 'react';
 import BlogProfile from '../../components/blog/BlogProfile';
 import PostList from '../../components/blog/PostList';
 import TagList from '../../components/blog/TagList';
-import { useStyles } from '../../styles/muiStyles/blog/[BlogUserId]Style';
+import { useStyles } from './[BlogUserId].style';
 
-interface Props {
+type BlogPageProps = {
   params: {
     BlogUserId: string;
   };
-}
+};
 
-const BlogPage = ({ params }: Props) => {
+const BlogPage = ({ params }: BlogPageProps) => {
   const classes = useStyles();
   const router = useRouter();
 
@@ -28,7 +28,10 @@ const BlogPage = ({ params }: Props) => {
         <title>{`${params.BlogUserId}'s Blog - Develogger`}</title>
       </Head>
       <div className={classes.root}>
-        <Paper style={{ borderRadius: '10px', margin: '100px 30px 15px 30px' }} elevation={3}>
+        <Paper
+          style={{ borderRadius: '10px', margin: '100px 30px 15px 30px' }}
+          elevation={3}
+        >
           <BlogProfile params={params} />
 
           <div className={classes.container}>
@@ -53,18 +56,9 @@ export default BlogPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, req, params } = context;
-  // const queryClient = new QueryClient();
-
-  // await queryClient.prefetchQuery(getOneUserDataApi.key, () =>
-  //   getOneUserDataApi.apiCall(
-  //     params && 'loginID' in params && typeof params.loginID === 'string' ? params.loginID : '',
-  //     req.cookies?.Authentication
-  //   )
-  // );
 
   return {
     props: {
-      // dehydratedState: dehydrate(queryClient),
       params,
     },
   };

@@ -7,7 +7,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       minWidth: '250px',
       backgroundColor: theme.palette.background.paper,
       marginRight: '70px',
-      // marginLeft: '30px',
       [theme.breakpoints.down(1094)]: {
         display: 'none',
       },
