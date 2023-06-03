@@ -39,8 +39,17 @@ export const PostListStyle = makeStyles((theme: Theme) =>
         WebkitBoxOrient: 'vertical',
       },
     },
+    thumbsContainer: {
+      width: '112px',
+      whiteSpace: 'nowrap',
+    },
+    postInfoContainer: {
+      color: `rgba(0, 0, 0, 0.50)`,
+      marginTop: '8px',
+    },
     tagList: {
       display: 'flex',
+      margin: '0 12px 12px 12px',
       justifyContent: 'flex-start',
       flexWrap: 'wrap',
       '& > *': {
