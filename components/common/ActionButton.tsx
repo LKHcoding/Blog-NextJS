@@ -1,55 +1,28 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import ShareIcon from '@material-ui/icons/Share';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+
 import toast from 'utils/toast';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      transform: 'translateZ(0px)',
-      flexGrow: 1,
-    },
-    exampleWrapper: {
-      position: 'relative',
-      height: 380,
-      '& > div': {
-        top: '0px !important',
-        left: '0px !important',
-      },
-    },
-    radioGroup: {
-      margin: theme.spacing(1, 0),
-    },
-    speedDial: {
-      position: 'absolute',
-      '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
-        bottom: theme.spacing(2),
-        right: theme.spacing(2),
-      },
-      '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
-        top: theme.spacing(2),
-        left: theme.spacing(2),
-      },
-    },
-  })
-);
-interface Props {
+import { useStyles } from './ActionButton.style';
+
+type ActionButtonProps = {
   setUpdateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isMyPost: boolean;
   setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
-export default function SpeedDials({
+export default function ActionButton({
   setUpdateDialogOpen,
   isMyPost,
   setDeleteDialogOpen,
-}: Props) {
+}: ActionButtonProps) {
   const router = useRouter();
 
   const classes = useStyles();
@@ -76,10 +49,7 @@ export default function SpeedDials({
           toast.error(`err : ${err}`);
         });
     } else {
-      toast.info(
-        `클립보드 복사가
-      지원되지 않는 브라우저 입니다.`
-      );
+      toast.info(`클립보드 복사가\n지원되지 않는 브라우저 입니다.`);
     }
 
     setOpen(false);

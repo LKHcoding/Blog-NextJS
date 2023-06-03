@@ -13,6 +13,7 @@ import { Typography } from '@material-ui/core';
 import Draggable from 'react-draggable';
 
 import useInput from 'hooks/useInput';
+import { useStyles } from './ConfirmDialog.style';
 
 type ConfirmDialogProps = {
   deleteDialogOpen: boolean;
@@ -35,13 +36,14 @@ const ConfirmDialog: FC<ConfirmDialogProps> = ({
   callbackConfirm,
   postTitle,
 }) => {
+  const classes = useStyles();
   const handleClose = async () => {
     setOpen(false);
   };
 
   const handleConfirm = async () => {
     const result = await callbackConfirm();
-    if (result === true) {
+    if (result) {
       setOpen(false);
     }
   };
@@ -58,7 +60,7 @@ const ConfirmDialog: FC<ConfirmDialogProps> = ({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle
-          style={{ cursor: 'move' }}
+          className={classes.title}
           id="draggable-dialog-title"
         >{`${dialogTitle}`}</DialogTitle>
         <DialogContent>
@@ -68,7 +70,7 @@ const ConfirmDialog: FC<ConfirmDialogProps> = ({
             variant="body1"
           >{`Title: ${postTitle}`}</Typography>
           <TextField
-            style={{ marginTop: '5px' }}
+            className={classes.input}
             fullWidth
             error={inputTitle !== '' && inputTitle !== postTitle}
             size="small"

@@ -1,29 +1,12 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core';
-import { createStyles, Theme } from '@material-ui/core/styles';
+import React, { FC, ReactNode } from 'react';
 import Footer from './Footer';
+import { useStyles } from './MainSection.style';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    toolbar: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      padding: theme.spacing(0, 1),
-      ...theme.mixins.toolbar,
-    },
-    content: {
-      flexGrow: 1,
-      minWidth: 0,
-    },
-  })
-);
+type MainSectionProps = {
+  children: ReactNode;
+};
 
-interface Props {
-  children: React.ReactNode;
-}
-
-const MainSection: React.FC<Props> = ({ children }) => {
+const MainSection: FC<MainSectionProps> = ({ children }) => {
   const classes = useStyles();
 
   return (
@@ -32,9 +15,6 @@ const MainSection: React.FC<Props> = ({ children }) => {
       <div>{children}</div>
 
       <Footer />
-
-      {/* 경로에 따라 Footer를 안보여주려면 이렇게 */}
-      {/* {router.pathname !== '/blog/write' && <Footer />} */}
     </main>
   );
 };

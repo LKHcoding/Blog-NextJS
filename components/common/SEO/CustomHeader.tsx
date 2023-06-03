@@ -1,44 +1,30 @@
 import Head from 'next/head';
 import React, { FC } from 'react';
 
-interface Props {
-  /**
-   * 사이트 제목
-   */
+type CustomHeaderProps = {
+  //사이트 제목
   title?: string;
 
-  /**
-   * 사이트 설명
-   */
+  // 사이트 설명
   description?: string;
 
-  /**
-   * 사이트 키워드 - string[]형태로 넣어주면 콤마 붙여서 메타태그로 작성됨
-   */
+  // 사이트 키워드 - string[]형태로 넣어주면 콤마 붙여서 메타태그로 작성됨
   keywords?: string[];
 
-  /**
-   * 사이트명
-   */
+  // 사이트명
   author?: string;
 
-  /**
-   * 대표 URL
-   */
+  // 대표 URL
   canonical?: string;
 
-  /**
-   * 오픈그래프 이미지 url
-   */
+  // 오픈그래프 이미지 url
   ogImageURL?: string;
 
-  /**
-   * 트위터 오픈그래프 이미지 url
-   */
+  // 트위터 오픈그래프 이미지 url
   twitterImageURL?: string;
-}
+};
 
-const CustomHeader: FC<Props> = ({
+const CustomHeader: FC<CustomHeaderProps> = ({
   title = 'Develogger',
   description = '개발자를 위한 블로그 커뮤니티. 디벨로거는 개발 트렌드 데이터와 블로그 서비스를 제공합니다.',
   keywords = ['Develogger', '디벨로거', '디밸로거', '개발블로그', '블로그'],
@@ -62,15 +48,11 @@ const CustomHeader: FC<Props> = ({
       <meta property="og:description" content={description} />
       <meta property="og:site_name" content={author} />
       <meta property="og:image" content={ogImageURL} />
-      {/* <meta property="og:image:width" content="1200" /> */}
-      {/* <meta property="og:image:height" content="630" /> */}
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta property="twitter:image" content={twitterImageURL} />
-      {/* <meta name="twitter:image:width" content="1024" /> */}
-      {/* <meta name="twitter:image:height" content="512" /> */}
     </Head>
   );
 };
