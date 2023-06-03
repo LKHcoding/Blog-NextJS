@@ -6,11 +6,6 @@ type State = {
   closeMenu: () => void;
   openMenu: () => void;
 };
-// interface Test {
-//   open: boolean;
-// closeMenu: () => void;
-// openMenu: () => void;
-// }
 
 const useMenuStore = create<State>(
   devtools((set) => ({

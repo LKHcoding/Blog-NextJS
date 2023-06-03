@@ -1,3 +1,16 @@
+import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+
+import Avatar from '@material-ui/core/Avatar';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import MenuIcon from '@material-ui/icons/Menu';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import PersonIcon from '@material-ui/icons/Person';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   alpha,
   AppBar,
@@ -13,31 +26,21 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import PersonIcon from '@material-ui/icons/Person';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+
 import axios from 'axios';
 import clsx from 'clsx';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
-import useLoadingStore from '../../stores/useLoadingStore';
+import toast from 'utils/toast';
+import { useQueryClient } from '@tanstack/react-query';
+
+import useLoadingStore from 'stores/useLoadingStore';
+import useMenuStore from 'stores/useMenuStore';
+
 import FullScreenDialog from '../write/FullScreenDialog';
-import useMenuStore from './../../stores/useMenuStore';
 import { Autocomplete } from './Autocomplete/Autocomplete';
 import {
   getGetUsersQueryKey,
   useGetUsers,
 } from 'stores/remoteStore/endpoints/user/user';
-import { useQueryClient } from '@tanstack/react-query';
-import toast from 'utils/toast';
 
 const drawerWidth = 160;
 const useStyles = makeStyles((theme: Theme) =>
@@ -168,8 +171,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const header = () => {
-  const router = useRouter();
-
   const { data } = useGetUsers();
 
   const queryClient = useQueryClient();

@@ -1,3 +1,14 @@
+import React, { FC } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import clsx from 'clsx';
+
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import { createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import {
   Divider,
   Drawer,
@@ -8,17 +19,8 @@ import {
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import { createStyles, Theme, useTheme } from '@material-ui/core/styles';
-import React, { ChangeEvent, FC, MouseEventHandler } from 'react';
-import clsx from 'clsx';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import useMenuStore from '../../stores/useMenuStore';
-import Footer from './Footer';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+
+import useMenuStore from 'stores/useMenuStore';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,10 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: 'hidden',
-      // width: theme.spacing(7.5) + 1,
       width: 0,
       [theme.breakpoints.up('sm')]: {
-        // width: theme.spacing(7.5) + 1,
         width: 0,
       },
     },
@@ -56,13 +56,11 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'flex-end',
       padding: theme.spacing(0, 1),
-      // necessary for content to be below app bar
       ...theme.mixins.toolbar,
     },
     content: {
       flexGrow: 1,
       minWidth: 0,
-      // padding: theme.spacing(3),
     },
   })
 );
@@ -80,11 +78,6 @@ const SideBar: FC = ({ children }) => {
     await closeMenu();
   };
 
-  const handleSup = (e: any) => {
-    e.preventDefault();
-    router.push('/sup');
-  };
-
   return (
     <>
       <div className={classes.root}>
@@ -99,10 +92,15 @@ const SideBar: FC = ({ children }) => {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open,
             }),
-          }}>
+          }}
+        >
           <div className={classes.toolbar}>
             <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              {theme.direction === 'rtl' ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
             </IconButton>
           </div>
           <Divider />
@@ -115,7 +113,9 @@ const SideBar: FC = ({ children }) => {
             </Link>
             {['검색'].map((text, index) => (
               <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
@@ -124,7 +124,9 @@ const SideBar: FC = ({ children }) => {
           <List>
             {['Front-End', 'Back-End', 'Full-Stack'].map((text, index) => (
               <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
