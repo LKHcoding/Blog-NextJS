@@ -27,13 +27,6 @@ export default defineConfig({
               },
             },
           },
-          // getApiContentsFaqSearch: {
-          //   query: {
-          //     useInfinite: true,
-          //     useInfiniteQueryParam: 'offset',
-          //     signal: true,
-          //   },
-          // },
         },
         query: {
           useQuery: true,

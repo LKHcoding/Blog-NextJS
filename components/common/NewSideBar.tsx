@@ -31,7 +31,7 @@ const NewSideBar = () => {
   const closeMenu = useMenuStore((state) => state.closeMenu);
 
   const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
+    (_anchor: Anchor, _open: boolean) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
         event.type === 'keydown' &&
@@ -63,22 +63,8 @@ const NewSideBar = () => {
             </ListItem>
           </a>
         </Link>
-        {/* {['검색', '통계'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <MailIcon /> : <InboxIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))} */}
       </List>
       <Divider />
-      {/* <List>
-        {['Front-End', 'Back-End', 'Full-Stack'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <MailIcon /> : <InboxIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List> */}
     </nav>
   );
 
