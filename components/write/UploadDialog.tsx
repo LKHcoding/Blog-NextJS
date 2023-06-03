@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,40 +7,26 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper, { PaperProps } from '@material-ui/core/Paper';
+
 import Draggable from 'react-draggable';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { createStyles, makeStyles } from '@material-ui/core';
 import { useQueryClient } from '@tanstack/react-query';
+
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import toast from 'utils/toast';
+import { useStyles } from './UploadDialog.style';
 import {
   getAllPostInfoApi,
   getOneUserPostInfoDataApi,
   getOneUserTagInfoDataApi,
 } from 'utils/queryAPI';
-import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
-import toast from 'utils/toast';
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      '& .MuiDialog-paperWidthSm': {
-        maxWidth: '750px',
-      },
-      '& .MuiGrid-container': {
-        justifyContent: 'center',
-      },
-    },
-    btnDisabledBorderColor: {
-      border: '1px solid white !important',
-    },
-  })
-);
-
-interface Props {
+type UploadDialogProps = {
   handleSave: (file: File[]) => Promise<'success' | undefined>;
   conditionSave: boolean;
-}
+};
 
-export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
+export const UploadDialog = ({ handleSave, conditionSave }: UploadDialogProps) => {
   const classes = useStyles();
 
   const queryClient = useQueryClient();
@@ -96,7 +83,7 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
       >
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+        <DialogTitle className={classes.dialogTitle} id="draggable-dialog-title">
           Thumbnail - Image
         </DialogTitle>
         <DialogContent>
@@ -118,13 +105,17 @@ export const UploadDialog = ({ handleSave, conditionSave }: Props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button style={{ width: '70px' }} onClick={handleClose} color="primary">
+          <Button
+            className={classes.cancelButton}
+            onClick={handleClose}
+            color="primary"
+          >
             취소
           </Button>
           <Button
             disabled={!canSave}
             autoFocus
-            style={{ width: '70px' }}
+            className={classes.completeButton}
             variant="outlined"
             onClick={handleUpload}
             color="primary"

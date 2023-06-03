@@ -242,7 +242,7 @@ const UpdateDialog: FC<UpdateDialogProps> = ({
   return (
     <div>
       <Dialog
-        disableEscapeKeyDown={true}
+        disableEscapeKeyDown
         fullScreen
         open={open}
         onClose={handleClose}
@@ -267,7 +267,7 @@ const UpdateDialog: FC<UpdateDialogProps> = ({
                 : ''}
             </div>
             <UpdateUploadDialog
-              isUpdate={true}
+              isUpdate
               handleSave={handleSave}
               handleSaveWithOutThumbnail={handleSaveWithOutThumbnail}
               postId={postData?.id || null}
@@ -329,10 +329,10 @@ const UpdateDialog: FC<UpdateDialogProps> = ({
                 });
               }
             }}
-            autoComplete={true}
-            autoHighlight={true}
-            freeSolo={true}
-            filterSelectedOptions={true}
+            autoComplete
+            autoHighlight
+            freeSolo
+            filterSelectedOptions
             renderInput={(params) => (
               <TextField
                 {...params}

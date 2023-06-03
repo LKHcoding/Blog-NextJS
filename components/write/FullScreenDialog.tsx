@@ -4,7 +4,6 @@ import React, {
   Ref,
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import dynamic from 'next/dynamic';
@@ -21,10 +20,8 @@ import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { TransitionProps } from '@material-ui/core/transitions';
 
-import useInput from 'hooks/useInput';
 import gfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import ReactMarkdown from 'react-markdown';
@@ -50,6 +47,8 @@ import {
 import { UploadDialog } from './UploadDialog';
 import { getAllTagInfoApi } from 'utils/queryAPI';
 import 'react-markdown-editor-lite/lib/index.css';
+import { useStyles } from './FullScreenDialog.style';
+import { useImmerRef } from 'use-immer-ref';
 
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('css', css);
@@ -63,26 +62,6 @@ SyntaxHighlighter.registerLanguage('typescript', ts);
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
 });
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    appBar: {
-      position: 'relative',
-    },
-    title: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
-    },
-    button: {
-      margin: theme.spacing(1),
-      display: 'none',
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-        margin: theme.spacing(1),
-      },
-    },
-  })
-);
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children?: ReactElement },
@@ -155,40 +134,42 @@ https://example.com
 `;
 
 const FullScreenDialog = () => {
+  const classes = useStyles();
+
   const { data, refetch, isFetching } = useQuery(
     [getAllTagInfoApi.key],
     getAllTagInfoApi.apiCall
   );
 
-  //글 내용
-  const [contentInput, setContentInput] = useState<string>(initialEditorInput);
+  const [state, setState, ref] = useImmerRef({
+    // 내용
+    contentInput: initialEditorInput,
+    // 제목
+    inputTitle: '',
+    // 모든 태그 리스트
+    tagValues: [] as string[],
+    //선택된 태그 값
+    selectedTagList: [] as string[],
+    //태그 관련
+    tagListOpen: false,
+    //선택된 태그가 있는지 없는지 여부
+    selectedTagInfo: false,
 
-  //글 제목
-  const [inputTitle, onChangeInputTitle, setInputTitle] = useInput('');
-
-  //글 태그 전체 리스트
-  const [tagValues, setTagValues] = useState<string[]>([]);
-
-  //선택된 태그 값
-  const selectedTagList = useRef<string[]>();
-
-  //태그 관련
-  const [tagListOpen, setTagListOpen] = useState(false);
+    open: false,
+  });
 
   const loading = isFetching;
 
-  //선택된 태그가 있는지 없는지 여부
-  const [selectedTagInfo, setSelectedTagInfo] = useState(false);
-
-  const classes = useStyles();
-  const [open, setOpen] = useState(false);
-
   const handleClickOpen = () => {
-    setOpen(true);
+    setState((dr) => {
+      dr.open = true;
+    });
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setState((dr) => {
+      dr.open = false;
+    });
   };
 
   const handleSave = useCallback(
@@ -207,9 +188,9 @@ const FullScreenDialog = () => {
           .post(
             `${process.env.NEXT_PUBLIC_API_URL}/v1/blog`,
             {
-              title: inputTitle,
-              tags: selectedTagList.current,
-              content: contentInput,
+              title: state.inputTitle,
+              tags: ref.current.selectedTagList,
+              content: state.contentInput,
               thumbnail: imagePath,
             },
             { withCredentials: true }
@@ -218,24 +199,32 @@ const FullScreenDialog = () => {
           .catch((err) => err);
 
         if (result.status === 201) {
-          setInputTitle('');
-          setContentInput(initialEditorInput);
+          setState((dr) => {
+            dr.inputTitle = '';
+            dr.contentInput = initialEditorInput;
+          });
           refetch();
-          setOpen(false);
+          setState((dr) => {
+            dr.open = false;
+          });
           return 'success';
         }
       }
     },
-    [inputTitle, selectedTagList.current, contentInput]
+    [state.inputTitle, ref.current.selectedTagList, state.contentInput]
   );
 
   useEffect(() => {
     if (data) {
-      setTagValues(data.map((item) => item.tagName));
+      setState((dr) => {
+        dr.tagValues = data.map((item) => item.tagName);
+      });
     }
     return () => {
-      setTagValues([]);
-      setSelectedTagInfo(false);
+      setState((dr) => {
+        dr.tagValues = [];
+        dr.selectedTagInfo = false;
+      });
     };
   }, [data, open]);
 
@@ -251,9 +240,9 @@ const FullScreenDialog = () => {
         New Log
       </Button>
       <Dialog
-        disableEscapeKeyDown={true}
+        disableEscapeKeyDown
         fullScreen
-        open={open}
+        open={state.open}
         onClose={handleClose}
         TransitionComponent={Transition}
       >
@@ -270,71 +259,74 @@ const FullScreenDialog = () => {
             <Typography variant="h6" className={classes.title}>
               Editor
             </Typography>
-            <div style={{ marginRight: '5px' }}>
-              {contentInput.length > 65535
-                ? `글자수 초과(현재:${contentInput.length}, 최대:65535) `
+            <div className={classes.exceedLength}>
+              {state.contentInput.length > 65535
+                ? `글자수 초과(현재:${state.contentInput.length}, 최대:65535) `
                 : ''}
             </div>
             <UploadDialog
               handleSave={handleSave}
               conditionSave={
-                contentInput.length > 65535 ||
-                contentInput.length === 0 ||
-                inputTitle.length === 0 ||
-                !selectedTagInfo
+                state.contentInput.length > 65535 ||
+                state.contentInput.length === 0 ||
+                state.inputTitle.length === 0 ||
+                !state.selectedTagInfo
               }
             />
           </Toolbar>
         </AppBar>
 
         {/* 에디터 시작 */}
-        <div style={{ display: 'flex', width: '100%' }}>
+        <div className={classes.editorContainer}>
           <TextField
             id="standard-basic"
             label="글 제목"
-            value={inputTitle}
-            onChange={onChangeInputTitle}
-            style={{
-              width: '50%',
-              marginBottom: '8px',
-              marginTop: '10px',
-              marginLeft: '10px',
-              marginRight: '10px',
+            value={state.inputTitle}
+            onChange={(e) => {
+              setState((dr) => {
+                dr.inputTitle = e.target.value;
+              });
             }}
+            className={classes.textField}
           />
 
           <Autocomplete
-            style={{
-              width: '50%',
-              marginTop: '13px',
-              marginLeft: '10px',
-              marginRight: '10px',
-            }}
+            className={classes.autoComplete}
             id="size-small-standard-multi"
-            open={tagListOpen}
+            open={state.tagListOpen}
             onOpen={() => {
-              setTagListOpen(true);
+              setState((dr) => {
+                dr.tagListOpen = true;
+              });
             }}
             onClose={() => {
-              setTagListOpen(false);
+              setState((dr) => {
+                dr.tagListOpen = false;
+              });
             }}
             getOptionLabel={(option) => option}
-            options={tagValues}
+            options={state.tagValues}
             loading={loading}
             multiple
             size="small"
             onChange={(event, value) => {
-              selectedTagList.current = value;
+              setState((dr) => {
+                dr.selectedTagList = value;
+              });
               if (value.length > 0) {
-                setSelectedTagInfo(true);
+                setState((dr) => {
+                  dr.selectedTagInfo = true;
+                });
               } else {
-                setSelectedTagInfo(false);
+                setState((dr) => {
+                  dr.selectedTagInfo = false;
+                });
               }
             }}
-            autoComplete={true}
-            autoHighlight={true}
-            freeSolo={true}
-            filterSelectedOptions={true}
+            autoComplete
+            autoHighlight
+            freeSolo
+            filterSelectedOptions
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -358,8 +350,11 @@ const FullScreenDialog = () => {
         </div>
 
         <MdEditor
+          /* FIXME: kunhee.lim
+           *  MdEditor 컴포넌트가 className 속성을 줄 수 없음
+           *  인라인 스타일 말고 다른 방법을 찾아볼 것 */
           style={{ zIndex: 1101, flex: 1, overflow: 'auto' }}
-          value={contentInput}
+          value={state.contentInput}
           renderHTML={(text) => (
             <ReactMarkdown
               className="markdown-body"
@@ -371,7 +366,9 @@ const FullScreenDialog = () => {
             </ReactMarkdown>
           )}
           onChange={({ html, text }) => {
-            setContentInput(text);
+            setState((dr) => {
+              dr.contentInput = text;
+            });
           }}
         />
       </Dialog>

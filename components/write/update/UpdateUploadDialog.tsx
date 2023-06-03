@@ -125,7 +125,7 @@ const UpdateUploadDialog = ({
             acceptedFiles={['image/*']}
             dropzoneText={'Drag and drop an image here or Click!'}
             filesLimit={1}
-            showFileNames={true}
+            showFileNames
             maxFileSize={5 * 1024 * 1024} // 5MB
             onChange={(files) => {
               imageFile.current = files;
