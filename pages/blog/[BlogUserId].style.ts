@@ -7,6 +7,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexWrap: 'wrap',
       justifyContent: 'center',
 
+      marginTop: '10px',
+
       '& > *': {
         margin: theme.spacing(1),
         boxShadow:
