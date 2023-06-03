@@ -1,38 +1,28 @@
-import { Backdrop, createStyles, makeStyles, Theme } from '@material-ui/core';
+import { Backdrop } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Flip, toast } from 'react-toastify';
 import SelectModal from '../../components/github-login/selectModal';
-import { useGetUsers } from '../../stores/remoteStore/endpoints/user/user';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    backdrop: {
-      zIndex: theme.zIndex.modal + 1,
-      color: '#fff',
-    },
-  })
-);
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import { useStyles } from './github-login.style';
+import toast from 'utils/toast';
 
 const githubLogin = () => {
+  const classes = useStyles();
   const router = useRouter();
   const { code, blogUserId, postId } = router.query;
+
   const { refetch } = useGetUsers();
+
   const githubUserData = useRef(null);
-
-  //backdrop 시작 ----------
-  const classes = useStyles();
   const [backDropOpen, setBackDropOpen] = useState(false);
-  //backdrop 끝 ------------
 
-  // 모달 설정 시작 ------
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState('');
 
-  //모달창에서 포지션을 선택한 경우
   const handleClose = (selectedValue: string) => {
+    //모달창에서 포지션을 선택한 경우
     setBackDropOpen(true);
     let convertedString = '';
     if (selectedValue === 'Front-End Developper') {
@@ -59,11 +49,15 @@ const githubLogin = () => {
       })
       .then((res) => res.data)
       .catch((err) => {
-        alert(err.response.status === 400 ? '인증 실패(데이터가 유효하지않습니다)' : err.message);
+        alert(
+          err.response.status === 400
+            ? '인증 실패(데이터가 유효하지않습니다)'
+            : err.message
+        );
       });
 
     if (result?.token) {
-      const gitLogin = await axios
+      await axios
         .post(
           '/api/gitLogin',
           { token: result.token },
@@ -76,16 +70,7 @@ const githubLogin = () => {
 
       refetch();
 
-      toast.info(`${result.user.loginID}님 반갑습니다!`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-      });
+      toast.info(`${result.user.loginID}님 반갑습니다!`);
       if (blogUserId && postId) {
         router.push(`blog/${blogUserId}/${postId}`);
         return;
@@ -94,10 +79,9 @@ const githubLogin = () => {
       return;
     }
 
-    console.log('토큰이 없습니다.');
+    // 토큰이 없는 케이스 ( 로그인으로 보낸다 )
     router.push('/login');
   };
-  // 모달 설정 끝 -------
 
   const gitApi = async (code: string | string[] | undefined) => {
     const data = {
@@ -119,7 +103,7 @@ const githubLogin = () => {
     }
 
     if (result?.token) {
-      const gitLogin = await axios
+      await axios
         .post(
           '/api/gitLogin',
           { token: result.token },
@@ -132,16 +116,7 @@ const githubLogin = () => {
 
       refetch();
 
-      toast.info(`${result.githubUserData.loginID}님 반갑습니다!`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-      });
+      toast.info(`${result.githubUserData.loginID}님 반갑습니다!`);
 
       if (blogUserId && postId) {
         router.push(`blog/${blogUserId}/${postId}`);
@@ -149,55 +124,37 @@ const githubLogin = () => {
         router.push('/');
       }
     } else {
-      console.log('토큰이 유효하지 않습니다. 다시 로그인을 시도해 주세요.');
-      toast.error(`토큰이 유효하지 않습니다. 다시 로그인을 시도해 주세요.`, {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        transition: Flip,
-      });
+      toast.error(`토큰이 유효하지 않습니다. 다시 로그인을 시도해 주세요.`);
 
-      const logoutResult = await axios
+      await axios
         .get('/api/logout')
         .then((res) => res)
         .catch((err) => err);
-      console.log('로그아웃을 시도하여 토큰을 제거합니다 : ', logoutResult);
 
       router.push('/login');
     }
   };
 
   useEffect(() => {
-    // const { code } = router.query;
-
     if (code) {
       gitApi(code);
     }
   }, [code]);
 
   return (
-    <>
-      <div
-        style={{
-          width: '100%',
-          height: '81vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <CircularProgress />
-        <div>
-          <SelectModal selectedValue={selectedValue} open={modalOpen} onClose={handleClose} />
-        </div>
-        <Backdrop className={classes.backdrop} open={backDropOpen}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
+    <div className={classes.root}>
+      <CircularProgress />
+      <div>
+        <SelectModal
+          selectedValue={selectedValue}
+          open={modalOpen}
+          onClose={handleClose}
+        />
       </div>
-    </>
+      <Backdrop className={classes.backdrop} open={backDropOpen}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
   );
 };
 
