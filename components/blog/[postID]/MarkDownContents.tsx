@@ -1,23 +1,29 @@
 import React, { FC, memo } from 'react';
+
 import ReactMarkdown from 'react-markdown';
-import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
+import {
+  NormalComponents,
+  SpecialComponents,
+} from 'react-markdown/src/ast-to-react';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+
 import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
 import rehypeRaw from 'rehype-raw';
 import gfm from 'remark-gfm';
 
-interface Props {
+type MarkDownContentsProps = {
   contents: string;
-}
+};
 
-const MarkDownContents: FC<Props> = ({ contents }) => {
+const MarkDownContents: FC<MarkDownContentsProps> = ({ contents }) => {
   return (
     <>
       <ReactMarkdown
         className="markdown-body"
         components={components}
         remarkPlugins={[gfm]}
-        rehypePlugins={[rehypeRaw]}>
+        rehypePlugins={[rehypeRaw]}
+      >
         {contents}
       </ReactMarkdown>
     </>
@@ -44,7 +50,12 @@ const components: Partial<NormalComponents & SpecialComponents> = {
       if (typeof item === 'string') {
         str += item;
       } else {
-        if (item && typeof item !== 'number' && typeof item !== 'boolean' && 'props' in item) {
+        if (
+          item &&
+          typeof item !== 'number' &&
+          typeof item !== 'boolean' &&
+          'props' in item
+        ) {
           str += item?.props?.children[0];
         }
       }
@@ -57,7 +68,12 @@ const components: Partial<NormalComponents & SpecialComponents> = {
       if (typeof item === 'string') {
         str += item;
       } else {
-        if (item && typeof item !== 'number' && typeof item !== 'boolean' && 'props' in item) {
+        if (
+          item &&
+          typeof item !== 'number' &&
+          typeof item !== 'boolean' &&
+          'props' in item
+        ) {
           str += item?.props?.children[0];
         }
       }
@@ -70,22 +86,22 @@ const components: Partial<NormalComponents & SpecialComponents> = {
       if (typeof item === 'string') {
         str += item;
       } else {
-        if (item && typeof item !== 'number' && typeof item !== 'boolean' && 'props' in item) {
+        if (
+          item &&
+          typeof item !== 'number' &&
+          typeof item !== 'boolean' &&
+          'props' in item
+        ) {
           str += item?.props?.children[0];
         }
       }
     });
     return <h3 id={`${str !== '' ? str : children}`}>{children}</h3>;
   },
-  code({ node, inline, className, children, ...props }) {
+  code({ _node, inline, className, children, ...props }) {
     const match = /language-(\w+)/.exec(className || '');
     return !inline && match ? (
-      <SyntaxHighlighter
-        style={prism}
-        language={match[1]}
-        PreTag="div"
-        // children={String(children).replace(/\n$/, '')}
-        {...props}>
+      <SyntaxHighlighter style={prism} language={match[1]} PreTag="div" {...props}>
         {String(children).replace(/\n$/, '')}{' '}
       </SyntaxHighlighter>
     ) : (

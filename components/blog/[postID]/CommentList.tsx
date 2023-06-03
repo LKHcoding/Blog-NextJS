@@ -1,50 +1,19 @@
 import React, { Fragment } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { useRouter } from 'next/router';
+
+import Avatar from '@material-ui/core/Avatar';
+import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
+import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import { useGetBlogCommentPostId } from 'stores/remoteStore/endpoints/blog/blog';
-import { useRouter } from 'next/router';
-import toast from 'utils/toast';
-import getPassedTimeString from 'utils/getPassedTimeString';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: '100px',
-      width: '100%',
-      backgroundColor: theme.palette.background.paper,
-    },
-    avatarWrapper: {
-      minWidth: 0,
-    },
-    avatar: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
-    titleContainer: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    userName: {
-      '&:hover': {
-        textDecoration: 'underline',
-        cursor: 'pointer',
-      },
-    },
-    updatedAt: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignSelf: 'end',
-      marginLeft: '6px',
-    },
-  })
-);
+import toast from 'utils/toast';
+
+import getPassedTimeString from 'utils/getPassedTimeString';
+import { useGetBlogCommentPostId } from 'stores/remoteStore/endpoints/blog/blog';
+import { useStyles } from './CommentList.style';
 
 type CommentListProps = {
   postId: string;
@@ -82,7 +51,7 @@ const CommentList = ({ postId }: CommentListProps) => {
             </ListItemAvatar>
 
             <ListItemText
-              style={{ marginLeft: '16px' }}
+              className={classes.listItemText}
               primary={
                 <div className={classes.titleContainer}>
                   <div
@@ -105,7 +74,7 @@ const CommentList = ({ postId }: CommentListProps) => {
                 <Typography
                   component={'p'}
                   variant="body2"
-                  style={{ whiteSpace: 'pre-line' }}
+                  className={classes.listItemSubText}
                   color="textPrimary"
                 >
                   {item.content}

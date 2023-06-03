@@ -9,6 +9,10 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
+/* TODO: kunhee.lim
+ *  이 파일은 백엔드에서 스웨거만 다 작성해주면 모두 제거할 예정
+ *  ( orval 로 작성된 코드로 대체 가능 ) */
+
 /**
  * 유저 1명의 데이터 가져오기
  */

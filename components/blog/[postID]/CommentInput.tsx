@@ -1,43 +1,22 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
-import githubLogin from 'utils/githubLogin';
 import { useRouter } from 'next/router';
-import { useImmer } from 'use-immer';
+
 import Button from '@material-ui/core/Button';
 import CreateIcon from '@material-ui/icons/Create';
+import TextField from '@material-ui/core/TextField';
+
+import clsx from 'clsx';
+import toast from 'utils/toast';
+import { useImmer } from 'use-immer';
+import { useQueryClient } from '@tanstack/react-query';
+
+import githubLogin from 'utils/githubLogin';
+import { useStyles } from './CommentInput.style';
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 import {
   getGetBlogCommentPostIdQueryKey,
   usePostBlogComment,
 } from 'stores/remoteStore/endpoints/blog/blog';
-import { useQueryClient } from '@tanstack/react-query';
-import toast from 'utils/toast';
-import clsx from 'clsx';
-
-const useStyles = makeStyles((_theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      flex: 1,
-    },
-    unAuthedContainer: {
-      '& *': {
-        cursor: 'pointer !important',
-      },
-    },
-    root: {
-      width: '100%',
-      marginTop: '50px',
-      marginBottom: '20px',
-    },
-    buttonWrapper: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-  })
-);
 
 const CommentInput = () => {
   const classes = useStyles();
@@ -72,7 +51,6 @@ const CommentInput = () => {
       },
     });
     if (result.content) {
-      // 게시글 작성 성공
       await queryClient.resetQueries({
         queryKey: getGetBlogCommentPostIdQueryKey(postId),
         type: 'all',
