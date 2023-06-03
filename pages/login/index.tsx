@@ -1,62 +1,36 @@
 import React from 'react';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
+
+import axios from 'axios';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Link as MaterialLink } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Container from '@material-ui/core/Container';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import GitHubIcon from '@material-ui/icons/GitHub';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import axios from 'axios';
-import useInput from '../hooks/useInput';
-import { useRouter } from 'next/router';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Head from 'next/head';
-import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
-import githubLogin from '../utils/githubLogin';
-import toast from 'utils/toast';
+import { Link as MaterialLink } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: '120px',
-    minHeight: '500px',
-    height: '80vh',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(2, 0, 2),
-  },
-  github: {
-    margin: theme.spacing(0, 0, 2),
-  },
-}));
+import githubLogin from 'utils/githubLogin';
+import toast from 'utils/toast';
+import useInput from 'hooks/useInput';
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import { useStyles } from './login.style';
 
 const LogIn = () => {
+  const classes = useStyles();
   const router = useRouter();
 
   const { data, isLoading, refetch } = useGetUsers();
 
   const [loginID, onChangeLoginID] = useInput('');
   const [password, onChangePassword] = useInput('');
-
-  const classes = useStyles();
 
   const handleLogInFormSubmit: React.FormEventHandler<HTMLFormElement> = async (
     e
@@ -100,15 +74,7 @@ const LogIn = () => {
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          width: '100%',
-          height: '81vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <div className={classes.loadingContainer}>
         <CircularProgress />
       </div>
     );
@@ -121,17 +87,7 @@ const LogIn = () => {
         <Head>
           <title>{`Login - Develogger`}</title>
         </Head>
-        <div
-          style={{
-            width: '100%',
-            minHeight: '500px',
-            height: '85vh',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontSize: '2rem',
-          }}
-        >
+        <div className={classes.inaccessibleContainer}>
           이미 로그인 한 유저는 접근 할 수 없습니다.
         </div>
       </>
@@ -144,7 +100,6 @@ const LogIn = () => {
         <title>{`Login - Develogger`}</title>
       </Head>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
@@ -193,11 +148,11 @@ const LogIn = () => {
             <Button
               fullWidth
               variant="outlined"
-              className={classes.github}
+              className={classes.githubLoginButton}
               onClick={() => githubLogin()}
             >
               <GitHubIcon fontSize="small" />
-              <div style={{ marginLeft: '5px' }}>github login</div>
+              <div className={classes.githubLoginText}>github login</div>
             </Button>
 
             <Grid container>
