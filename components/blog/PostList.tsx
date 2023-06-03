@@ -16,7 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import useLoadingStore from 'stores/useLoadingStore';
 import { getOneUserPostInfoDataApi } from 'utils/queryAPI';
-import { PostListStyles } from 'components/blog/PostList.style';
+import { useStyles } from './PostList.style';
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 
 type PostListProps = {
@@ -27,7 +27,7 @@ type PostListProps = {
 };
 
 const PostList: FC<PostListProps> = ({ params, tag }) => {
-  const classes = PostListStyles();
+  const classes = useStyles();
 
   const setLoading = useLoadingStore((state) => state.setLoading);
 
@@ -80,7 +80,6 @@ const PostList: FC<PostListProps> = ({ params, tag }) => {
                       </Typography>
 
                       <div className={classes.thumbsContainer}>
-                        {/* 좋아요 싫어요 영역 */}
                         <IconButton aria-label="Like count" className="actionIcon">
                           <ThumbUpIcon
                             color={
@@ -130,7 +129,6 @@ const PostList: FC<PostListProps> = ({ params, tag }) => {
                       ...
                     </Typography>
 
-                    {/* 날짜, 댓글 수 영역 */}
                     <div className={classes.postInfoContainer}>
                       <Typography variant="caption">
                         {`${dayjs(item.updatedAt).format(

@@ -10,7 +10,7 @@ import { Badge, Typography } from '@material-ui/core';
 import { useQuery } from '@tanstack/react-query';
 
 import { getOneUserTagInfoDataApi } from 'utils/queryAPI';
-import { TagListStyles } from 'components/blog/TagList.style';
+import { useStyles } from './TagList.style';
 
 type TagListProps = {
   params: {
@@ -20,7 +20,7 @@ type TagListProps = {
 };
 
 const TagList: FC<TagListProps> = ({ params, tag }) => {
-  const classes = TagListStyles();
+  const classes = useStyles();
 
   const { data } = useQuery(
     [`${getOneUserTagInfoDataApi.key}-${params.BlogUserId}`],
