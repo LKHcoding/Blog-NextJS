@@ -16,7 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import useLoadingStore from 'stores/useLoadingStore';
 import { getOneUserPostInfoDataApi } from 'utils/queryAPI';
-import { PostListStyle } from 'components/blog/PostList.style';
+import { PostListStyles } from 'components/blog/PostList.style';
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 
 type PostListProps = {
@@ -27,7 +27,7 @@ type PostListProps = {
 };
 
 const PostList: FC<PostListProps> = ({ params, tag }) => {
-  const classes = PostListStyle();
+  const classes = PostListStyles();
 
   const setLoading = useLoadingStore((state) => state.setLoading);
 

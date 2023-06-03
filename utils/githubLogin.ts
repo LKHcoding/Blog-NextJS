@@ -15,7 +15,6 @@ const githubLogin = (redirectInfo?: {
     );
   }
 
-  // OAuth app을 등록할때 작성했던 redirect url과 발급받은 CLIENT_ID를 바탕으로 URL을 생성합니다.
   location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL}`;
 };
 

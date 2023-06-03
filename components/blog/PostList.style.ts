@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { createStyles, Theme } from '@material-ui/core';
 
-export const PostListStyle = makeStyles((theme: Theme) =>
+export const PostListStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: '0px 15px',

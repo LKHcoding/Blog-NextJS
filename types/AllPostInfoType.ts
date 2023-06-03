@@ -10,15 +10,12 @@ export interface IAllPostInfoType {
   Tags: [
     {
       tagName: string;
-      // deletedAt: Date | null,
     }
   ];
   LikeDisLike: [
     {
       actionType: ActionType;
       UserId: number;
-      // PostId: number,
-      // createdAt: Date,
     }
   ];
   User: {
