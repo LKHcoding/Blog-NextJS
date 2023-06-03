@@ -6,7 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useQuery } from '@tanstack/react-query';
-import { getOneUserDataApi } from '../../../utils/queryAPI';
+import { getOneUserDataApi } from 'utils/queryAPI';
 import { Avatar } from '@material-ui/core';
 import Link from 'next/link';
 

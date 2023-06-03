@@ -3,9 +3,9 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
-import BlogProfile from '../../components/blog/BlogProfile';
-import PostList from '../../components/blog/PostList';
-import TagList from '../../components/blog/TagList';
+import BlogProfile from 'components/blog/BlogProfile';
+import PostList from 'components/blog/PostList';
+import TagList from 'components/blog/TagList';
 import { useStyles } from './[BlogUserId].style';
 
 type BlogPageProps = {

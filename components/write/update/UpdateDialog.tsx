@@ -1,17 +1,3 @@
-import AppBar from '@material-ui/core/AppBar';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Dialog from '@material-ui/core/Dialog';
-import IconButton from '@material-ui/core/IconButton';
-import Slide from '@material-ui/core/Slide';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Toolbar from '@material-ui/core/Toolbar';
-import { TransitionProps } from '@material-ui/core/transitions';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import axios from 'axios';
-import dynamic from 'next/dynamic';
 import React, {
   FC,
   forwardRef,
@@ -22,37 +8,57 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import dynamic from 'next/dynamic';
+
+import AppBar from '@material-ui/core/AppBar';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import CloseIcon from '@material-ui/icons/Close';
+import Dialog from '@material-ui/core/Dialog';
+import IconButton from '@material-ui/core/IconButton';
+import Slide from '@material-ui/core/Slide';
+import TextField from '@material-ui/core/TextField';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { TransitionProps } from '@material-ui/core/transitions';
+
+import axios from 'axios';
+import gfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
-import 'react-markdown-editor-lite/lib/index.css';
-import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
+import rehypeRaw from 'rehype-raw';
+import {
+  NormalComponents,
+  SpecialComponents,
+} from 'react-markdown/src/ast-to-react';
 import { useQuery } from '@tanstack/react-query';
 
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
-import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
-import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
-import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
-import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+import 'react-markdown-editor-lite/lib/index.css';
+
 import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
 import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
 import html from 'react-syntax-highlighter/dist/cjs/languages/prism/markup';
 import java from 'react-syntax-highlighter/dist/cjs/languages/prism/java';
+import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
+import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
+import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
+import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
+import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 
-import rehypeRaw from 'rehype-raw';
-import gfm from 'remark-gfm';
-import useInput from '../../../hooks/useInput';
-import { IPostInfoType } from '../../../types/PostInfoType';
-import { getAllTagInfoApi } from '../../../utils/queryAPI';
 import UpdateUploadDialog from './UpdateUploadDialog';
+import useInput from 'hooks/useInput';
+import { getAllTagInfoApi } from 'utils/queryAPI';
+import { IPostInfoType } from 'types/PostInfoType';
 
-SyntaxHighlighter.registerLanguage('javascript', js);
-SyntaxHighlighter.registerLanguage('jsx', jsx);
-SyntaxHighlighter.registerLanguage('typescript', ts);
-SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('css', css);
 SyntaxHighlighter.registerLanguage('html', html);
 SyntaxHighlighter.registerLanguage('java', java);
+SyntaxHighlighter.registerLanguage('javascript', js);
+SyntaxHighlighter.registerLanguage('jsx', jsx);
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('typescript', ts);
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
@@ -104,7 +110,10 @@ const UpdateDialog: FC<Props> = ({
   postData,
 }) => {
   // Tag data 가져오기
-  const { data, refetch, isFetching } = useQuery([getAllTagInfoApi.key], getAllTagInfoApi.apiCall);
+  const { data, refetch, isFetching } = useQuery(
+    [getAllTagInfoApi.key],
+    getAllTagInfoApi.apiCall
+  );
 
   //글 내용
   const [contentInput, setContentInput] = useState<string>('');
@@ -254,10 +263,16 @@ const UpdateDialog: FC<Props> = ({
         fullScreen
         open={open}
         onClose={handleClose}
-        TransitionComponent={Transition}>
+        TransitionComponent={Transition}
+      >
         <AppBar color="primary" className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
@@ -347,7 +362,9 @@ const UpdateDialog: FC<Props> = ({
                   ...params.InputProps,
                   endAdornment: (
                     <React.Fragment>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                      {loading ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : null}
                       {params.InputProps.endAdornment}
                     </React.Fragment>
                   ),
@@ -365,7 +382,8 @@ const UpdateDialog: FC<Props> = ({
               className="markdown-body"
               components={components}
               remarkPlugins={[gfm]}
-              rehypePlugins={[rehypeRaw]}>
+              rehypePlugins={[rehypeRaw]}
+            >
               {text}
             </ReactMarkdown>
           )}
@@ -389,7 +407,8 @@ const components: Partial<NormalComponents & SpecialComponents> = {
         language={match[1]}
         PreTag="div"
         // children={String(children).replace(/\n$/, '')}
-        {...props}>
+        {...props}
+      >
         {String(children).replace(/\n$/, '')}{' '}
       </SyntaxHighlighter>
     ) : (

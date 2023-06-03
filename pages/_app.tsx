@@ -10,9 +10,9 @@ import { QueryClient, QueryClientProvider, Hydrate } from '@tanstack/react-query
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Header from '../components/common/Header';
-import MainSection from '../components/common/MainSection';
-import NewSideBar from '../components/common/NewSideBar';
+import Header from 'components/common/Header';
+import MainSection from 'components/common/MainSection';
+import NewSideBar from 'components/common/NewSideBar';
 import '../styles/styles.scss';
 import theme from '../theme/theme';
 import toast from 'utils/toast';

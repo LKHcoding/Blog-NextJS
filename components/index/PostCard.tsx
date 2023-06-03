@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { MouseEventHandler, useState } from 'react';
-import { IAllPostInfoType } from '../../types/AllPostInfoType';
+import { IAllPostInfoType } from 'types/AllPostInfoType';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import removeMD from 'remove-markdown';
@@ -21,7 +21,7 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import { useRouter } from 'next/router';
 import { Chip, Tooltip } from '@material-ui/core';
-import { useGetUsers } from '../../stores/remoteStore/endpoints/user/user';
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -121,13 +121,18 @@ const PostCardList = ({ postInfo }: Props) => {
       <Link
         href={`/blog/${postInfo.User.loginID}/${postInfo.id}`}
         as={`/blog/${postInfo.User.loginID}/${postInfo.id}`}
-        key={`postcard-${postInfo.id}`}>
+        key={`postcard-${postInfo.id}`}
+      >
         <a>
           <CardHeader
             className={classes.cardHeaderTitle}
             avatar={
               <IconButton onClick={goToUserBlog}>
-                <Tooltip title={`${postInfo.User.loginID || ''}'s blog`} arrow placement="top">
+                <Tooltip
+                  title={`${postInfo.User.loginID || ''}'s blog`}
+                  arrow
+                  placement="top"
+                >
                   <Avatar
                     src={`${postInfo.User.avatarUrl || ''}`}
                     alt={`${postInfo.User.loginID || ''}`}
@@ -148,7 +153,12 @@ const PostCardList = ({ postInfo }: Props) => {
               title={`${postInfo.title}`}
             />
             <CardContent className={classes.postContent}>
-              <Typography variant="body2" color="textSecondary" component="p" gutterBottom>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="p"
+                gutterBottom
+              >
                 {removeMD(postInfo.content.slice(0, 300)).replaceAll('\n', ' ')}
               </Typography>
               <Typography variant="caption">
@@ -162,28 +172,34 @@ const PostCardList = ({ postInfo }: Props) => {
         <IconButton aria-label="Like count" className="actionIcon">
           <ThumbUpIcon
             color={
-              postInfo.LikeDisLike.filter((like) => like.actionType === 'Like').filter(
-                (like) => like.UserId === myUserData?.id
-              ).length !== 0
-                ? 'action'
-                : 'disabled'
-            }
-          />
-        </IconButton>
-        <span>{postInfo.LikeDisLike.filter((like) => like.actionType === 'Like').length}</span>
-        <IconButton aria-label="DisLike count" className="actionIcon">
-          <ThumbDownIcon
-            color={
-              postInfo.LikeDisLike.filter((dislike) => dislike.actionType === 'DisLike').filter(
-                (dislike) => dislike.UserId === myUserData?.id
-              ).length !== 0
+              postInfo.LikeDisLike.filter(
+                (like) => like.actionType === 'Like'
+              ).filter((like) => like.UserId === myUserData?.id).length !== 0
                 ? 'action'
                 : 'disabled'
             }
           />
         </IconButton>
         <span>
-          {postInfo.LikeDisLike.filter((dislike) => dislike.actionType === 'DisLike').length}
+          {postInfo.LikeDisLike.filter((like) => like.actionType === 'Like').length}
+        </span>
+        <IconButton aria-label="DisLike count" className="actionIcon">
+          <ThumbDownIcon
+            color={
+              postInfo.LikeDisLike.filter(
+                (dislike) => dislike.actionType === 'DisLike'
+              ).filter((dislike) => dislike.UserId === myUserData?.id).length !== 0
+                ? 'action'
+                : 'disabled'
+            }
+          />
+        </IconButton>
+        <span>
+          {
+            postInfo.LikeDisLike.filter(
+              (dislike) => dislike.actionType === 'DisLike'
+            ).length
+          }
         </span>
         <IconButton
           className={clsx(classes.expand, {
@@ -191,7 +207,8 @@ const PostCardList = ({ postInfo }: Props) => {
           })}
           onClick={handleExpandClick}
           aria-expanded={expanded}
-          aria-label="show more">
+          aria-label="show more"
+        >
           <ExpandMoreIcon />
         </IconButton>
       </CardActions>

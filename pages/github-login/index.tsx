@@ -3,7 +3,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
-import SelectModal from '../../components/github-login/selectModal';
+import SelectModal from 'components/github-login/selectModal';
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
 import { useStyles } from './github-login.style';
 import toast from 'utils/toast';

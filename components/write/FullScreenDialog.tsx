@@ -7,56 +7,58 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
+import dynamic from 'next/dynamic';
+
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import { TransitionProps } from '@material-ui/core/transitions';
-import CreateIcon from '@material-ui/icons/Create';
-import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import useInput from './../../hooks/useInput';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import CloseIcon from '@material-ui/icons/Close';
+import CreateIcon from '@material-ui/icons/Create';
+import Dialog from '@material-ui/core/Dialog';
+import IconButton from '@material-ui/core/IconButton';
+import Slide from '@material-ui/core/Slide';
+import TextField from '@material-ui/core/TextField';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { TransitionProps } from '@material-ui/core/transitions';
 
+import useInput from 'hooks/useInput';
 import gfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import ReactMarkdown from 'react-markdown';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
-
-import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
-import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
-import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
-import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
 import css from 'react-syntax-highlighter/dist/cjs/languages/prism/css';
 import html from 'react-syntax-highlighter/dist/cjs/languages/prism/markup';
 import java from 'react-syntax-highlighter/dist/cjs/languages/prism/java';
+import js from 'react-syntax-highlighter/dist/cjs/languages/prism/javascript';
+import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
+import prism from 'react-syntax-highlighter/dist/cjs/styles/prism/prism';
+import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
+import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 
-import { NormalComponents, SpecialComponents } from 'react-markdown/src/ast-to-react';
-import rehypeRaw from 'rehype-raw';
+import {
+  NormalComponents,
+  SpecialComponents,
+} from 'react-markdown/src/ast-to-react';
 
-import dynamic from 'next/dynamic';
-import 'react-markdown-editor-lite/lib/index.css';
-import ReactMarkdown from 'react-markdown';
-import removeMD from 'remove-markdown';
-import axios from 'axios';
 import { UploadDialog } from './UploadDialog';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { useQuery } from '@tanstack/react-query';
-import { getAllTagInfoApi } from '../../utils/queryAPI';
+import { getAllTagInfoApi } from 'utils/queryAPI';
+import 'react-markdown-editor-lite/lib/index.css';
 
-SyntaxHighlighter.registerLanguage('javascript', js);
-SyntaxHighlighter.registerLanguage('jsx', jsx);
-SyntaxHighlighter.registerLanguage('typescript', ts);
-SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('css', css);
 SyntaxHighlighter.registerLanguage('html', html);
 SyntaxHighlighter.registerLanguage('java', java);
+SyntaxHighlighter.registerLanguage('javascript', js);
+SyntaxHighlighter.registerLanguage('jsx', jsx);
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('typescript', ts);
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
@@ -152,16 +154,11 @@ https://example.com
 
 `;
 
-// 로딩
-
-// function sleep(delay = 0) {
-//   return new Promise((resolve) => {
-//     setTimeout(resolve, delay);
-//   });
-// }
-
 const FullScreenDialog = () => {
-  const { data, refetch, isFetching } = useQuery([getAllTagInfoApi.key], getAllTagInfoApi.apiCall);
+  const { data, refetch, isFetching } = useQuery(
+    [getAllTagInfoApi.key],
+    getAllTagInfoApi.apiCall
+  );
 
   //글 내용
   const [contentInput, setContentInput] = useState<string>(initialEditorInput);
@@ -171,23 +168,13 @@ const FullScreenDialog = () => {
 
   //글 태그 전체 리스트
   const [tagValues, setTagValues] = useState<string[]>([]);
-  // const [tagValues, setTagValues] = useState([
-  //   'Nest.js',
-  //   'Next.js',
-  //   'react.js',
-  //   'mysql',
-  //   '@tanstack/react-query',
-  //   'ssr',
-  // ]);
 
   //선택된 태그 값
   const selectedTagList = useRef<string[]>();
 
   //태그 관련
   const [tagListOpen, setTagListOpen] = useState(false);
-  // const [options, setOptions] = React.useState([]);
-  // const loading = true;
-  // const loading = tagListOpen && tagValues.length === 0;
+
   const loading = isFetching;
 
   //선택된 태그가 있는지 없는지 여부
@@ -206,7 +193,6 @@ const FullScreenDialog = () => {
 
   const handleSave = useCallback(
     async (file: File[]) => {
-      //file: file[0],
       const formData = new FormData();
       formData.append('image', file[0]);
 
@@ -260,7 +246,8 @@ const FullScreenDialog = () => {
         color="default"
         className={classes.button}
         startIcon={<CreateIcon />}
-        onClick={handleClickOpen}>
+        onClick={handleClickOpen}
+      >
         New Log
       </Button>
       <Dialog
@@ -268,10 +255,16 @@ const FullScreenDialog = () => {
         fullScreen
         open={open}
         onClose={handleClose}
-        TransitionComponent={Transition}>
+        TransitionComponent={Transition}
+      >
         <AppBar color="primary" className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
@@ -291,9 +284,6 @@ const FullScreenDialog = () => {
                 !selectedTagInfo
               }
             />
-            {/* <Button autoFocus color="inherit" onClick={handleSave}>
-              save
-            </Button> */}
           </Toolbar>
         </AppBar>
 
@@ -313,36 +303,6 @@ const FullScreenDialog = () => {
             }}
           />
 
-          {/* <Autocomplete
-            style={{
-              width: '50%',
-              marginTop: '13px',
-              marginLeft: '10px',
-              marginRight: '10px',
-            }}
-            multiple
-            id="size-small-standard-multi"
-            size="small"
-            onChange={(event, value) => {
-              selectedTagList.current = value;
-              if (value.length > 0) {
-                setSelectedTagInfo(true);
-              } else {
-                setSelectedTagInfo(false);
-              }
-            }}
-            autoComplete={true}
-            autoHighlight={true}
-            freeSolo={true}
-            filterSelectedOptions={true}
-            options={tagValues}
-            getOptionLabel={(option) => option}
-            // defaultValue={[tagValues[0]]}
-            renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Tags" placeholder="Tag + Enter" />
-            )}
-          /> */}
-
           <Autocomplete
             style={{
               width: '50%',
@@ -358,7 +318,6 @@ const FullScreenDialog = () => {
             onClose={() => {
               setTagListOpen(false);
             }}
-            // getOptionSelected={(option, value) => option.name === value.name}
             getOptionLabel={(option) => option}
             options={tagValues}
             loading={loading}
@@ -386,7 +345,9 @@ const FullScreenDialog = () => {
                   ...params.InputProps,
                   endAdornment: (
                     <React.Fragment>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                      {loading ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : null}
                       {params.InputProps.endAdornment}
                     </React.Fragment>
                   ),
@@ -404,7 +365,8 @@ const FullScreenDialog = () => {
               className="markdown-body"
               components={components}
               remarkPlugins={[gfm]}
-              rehypePlugins={[rehypeRaw]}>
+              rehypePlugins={[rehypeRaw]}
+            >
               {text}
             </ReactMarkdown>
           )}
@@ -423,12 +385,7 @@ const components: Partial<NormalComponents & SpecialComponents> = {
   code({ node, inline, className, children, ...props }) {
     const match = /language-(\w+)/.exec(className || '');
     return !inline && match ? (
-      <SyntaxHighlighter
-        style={prism}
-        language={match[1]}
-        PreTag="div"
-        // children={String(children).replace(/\n$/, '')}
-        {...props}>
+      <SyntaxHighlighter style={prism} language={match[1]} PreTag="div" {...props}>
         {String(children).replace(/\n$/, '')}{' '}
       </SyntaxHighlighter>
     ) : (

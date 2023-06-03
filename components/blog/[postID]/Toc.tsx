@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
+import { useIntersectionObserver } from 'hooks/useIntersectionObserver';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,7 +90,8 @@ const Toc = ({ content }: Props) => {
             fontSize: '0.9rem',
             marginLeft: '10px',
             color: '#909090',
-          }}>
+          }}
+        >
           목차
         </Typography>
         <Divider />
@@ -101,7 +102,8 @@ const Toc = ({ content }: Props) => {
           autoHide
           autoHeight
           autoHeightMax="calc(100vh - 250px)"
-          autoHeightMin="calc(100vh - 250px)">
+          autoHeightMin="calc(100vh - 250px)"
+        >
           {result.map((item, idx) => {
             // count는 샾개수에 따른 들여쓰기용 변수
             if (item?.count && item.count <= 30 && item?.title) {
@@ -115,7 +117,8 @@ const Toc = ({ content }: Props) => {
                     classes.btnStyle,
                     // activeId와 같은 list item만 스타일을 다르게 주어서 사용자에게 표시해준다.
                     activeId === item.title && classes.currentHeading
-                  )}>
+                  )}
+                >
                   <ListItemText
                     // 목차에 해당 하는 title을 넣는다.
                     primary={`${item.title}`}

@@ -1,17 +1,20 @@
 import React, { FC } from 'react';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
-import useInput from '../../hooks/useInput';
-import { Typography } from '@material-ui/core';
-import Draggable from 'react-draggable';
 import Paper, { PaperProps } from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import { Typography } from '@material-ui/core';
 
-interface Props {
+import Draggable from 'react-draggable';
+
+import useInput from 'hooks/useInput';
+
+type ConfirmDialogProps = {
   deleteDialogOpen: boolean;
   setDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   dialogTitle: string;
@@ -20,9 +23,9 @@ interface Props {
   confirmBtnTitle?: string;
   callbackConfirm: () => Promise<boolean>;
   postTitle: string;
-}
+};
 
-const ConfirmDialog: FC<Props> = ({
+const ConfirmDialog: FC<ConfirmDialogProps> = ({
   deleteDialogOpen: open,
   setDeleteDialogOpen: setOpen,
   dialogTitle,
@@ -32,12 +35,6 @@ const ConfirmDialog: FC<Props> = ({
   callbackConfirm,
   postTitle,
 }) => {
-  // const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = async () => {
     setOpen(false);
   };
@@ -49,7 +46,7 @@ const ConfirmDialog: FC<Props> = ({
     }
   };
 
-  const [inputTitle, onChangeInputTitle, setInputTitle] = useInput('');
+  const [inputTitle, onChangeInputTitle] = useInput('');
 
   return (
     <div>
@@ -58,17 +55,20 @@ const ConfirmDialog: FC<Props> = ({
         onClose={handleClose}
         PaperComponent={PaperComponent}
         aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description">
+        aria-describedby="alert-dialog-description"
+      >
         <DialogTitle
           style={{ cursor: 'move' }}
-          id="draggable-dialog-title">{`${dialogTitle}`}</DialogTitle>
+          id="draggable-dialog-title"
+        >{`${dialogTitle}`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">{`${dialogBody}`}</DialogContentText>
-          {/* <DialogContentText id="alert-dialog-description">{`${postTitle}`}</DialogContentText> */}
-          <Typography gutterBottom variant="body1">{`Title: ${postTitle}`}</Typography>
+          <Typography
+            gutterBottom
+            variant="body1"
+          >{`Title: ${postTitle}`}</Typography>
           <TextField
             style={{ marginTop: '5px' }}
-            // focused
             fullWidth
             error={inputTitle !== '' && inputTitle !== postTitle}
             size="small"
@@ -87,7 +87,8 @@ const ConfirmDialog: FC<Props> = ({
             onClick={handleConfirm}
             color="primary"
             variant="outlined"
-            disabled={inputTitle !== postTitle}>
+            disabled={inputTitle !== postTitle}
+          >
             {`${confirmBtnTitle}`}
           </Button>
         </DialogActions>
@@ -100,7 +101,10 @@ export default ConfirmDialog;
 
 function PaperComponent(props: PaperProps) {
   return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
     </Draggable>
   );

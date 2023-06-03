@@ -1,7 +1,7 @@
 import { Avatar, createStyles, makeStyles, Theme, Tooltip } from '@material-ui/core';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getOneUserDataApi } from '../../utils/queryAPI';
+import { getOneUserDataApi } from 'utils/queryAPI';
 import IconButton from '@material-ui/core/IconButton';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import MailIcon from '@material-ui/icons/Mail';
@@ -42,8 +42,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
   const classes = useStyles();
 
-  const { data, refetch } = useQuery([`${getOneUserDataApi.key}-${params.BlogUserId}`], () =>
-    getOneUserDataApi.apiCall(params.BlogUserId)
+  const { data, refetch } = useQuery(
+    [`${getOneUserDataApi.key}-${params.BlogUserId}`],
+    () => getOneUserDataApi.apiCall(params.BlogUserId)
   );
 
   return (
@@ -55,7 +56,8 @@ const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <Avatar
           color="default"
           alt="User Profile Icon"
@@ -66,36 +68,45 @@ const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
           style={{
             display: 'flex',
             flexDirection: 'row',
-          }}>
+          }}
+        >
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-            }}>
+            }}
+          >
             <h3 className={classes.blogTitleStyle}>{`${data?.loginID}'s Blog`}</h3>
             <h6 className={classes.blogSubTitleStyle}>{data?.positionType}</h6>
             <div>
               <Tooltip
                 title={`${
-                  data?.githubPageUrl !== '' ? data?.githubPageUrl : '등록된 정보가 없습니다.'
+                  data?.githubPageUrl !== ''
+                    ? data?.githubPageUrl
+                    : '등록된 정보가 없습니다.'
                 }`}
                 arrow
-                placement="top">
+                placement="top"
+              >
                 <a
                   href={`${data?.githubPageUrl !== '' ? data?.githubPageUrl : '#'}`}
                   target={`${data?.githubPageUrl !== '' ? '_blank' : ''}`}
-                  rel="noopener noreferrer">
+                  rel="noopener noreferrer"
+                >
                   <IconButton aria-label="github-icon">
                     <GitHubIcon />
                   </IconButton>
                 </a>
               </Tooltip>
               <Tooltip
-                title={`${data?.email !== '' ? data?.email : '등록된 정보가 없습니다.'}`}
+                title={`${
+                  data?.email !== '' ? data?.email : '등록된 정보가 없습니다.'
+                }`}
                 arrow
-                placement="top">
+                placement="top"
+              >
                 <a href={data?.email !== '' ? `mailto:${data?.email}` : '#'}>
                   <IconButton aria-label="mail-icon">
                     <MailIcon />
@@ -103,13 +114,17 @@ const BlogProfile = ({ params }: { params: { BlogUserId: string } }) => {
                 </a>
               </Tooltip>
               <Tooltip
-                title={`${data?.blog !== '' ? data?.blog : '등록된 정보가 없습니다.'}`}
+                title={`${
+                  data?.blog !== '' ? data?.blog : '등록된 정보가 없습니다.'
+                }`}
                 arrow
-                placement="top">
+                placement="top"
+              >
                 <a
                   href={`${data?.blog !== '' ? data?.blog : '#'}`}
                   target={`${data?.blog !== '' ? '_blank' : ''}`}
-                  rel="noopener noreferrer">
+                  rel="noopener noreferrer"
+                >
                   <IconButton aria-label="web-icon">
                     <LanguageIcon />
                   </IconButton>

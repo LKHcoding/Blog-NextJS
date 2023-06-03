@@ -40,3 +40,6 @@ yarn-error.log*
 public/.well-known/acme-challenge/
 
 .idea/inspectionProfiles/
+.idea
+
+.vscode

@@ -1,7 +1,7 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getAllPostInfoApi } from '../../utils/queryAPI';
+import { getAllPostInfoApi } from 'utils/queryAPI';
 import PostCard from './PostCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -26,7 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const AllPostCardList = () => {
   const classes = useStyles();
 
-  const { data, isLoading, refetch } = useQuery([getAllPostInfoApi.key], getAllPostInfoApi.apiCall);
+  const { data, isLoading, refetch } = useQuery(
+    [getAllPostInfoApi.key],
+    getAllPostInfoApi.apiCall
+  );
 
   if (!data) {
     return (
@@ -38,7 +41,8 @@ const AllPostCardList = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+        >
           <CircularProgress />
           {/* <div>
             <SelectModal selectedValue={selectedValue} open={modalOpen} onClose={handleClose} />
@@ -54,7 +58,13 @@ const AllPostCardList = () => {
   return (
     <>
       <div className={classes.root}>
-        <Grid container spacing={3} direction="row" justify="flex-start" alignItems="center">
+        <Grid
+          container
+          spacing={3}
+          direction="row"
+          justify="flex-start"
+          alignItems="center"
+        >
           {data &&
             data
               ?.filter((item) => item.UserId !== 30)
@@ -67,7 +77,8 @@ const AllPostCardList = () => {
                   md={4}
                   lg={3}
                   xl={3}
-                  key={item.id}>
+                  key={item.id}
+                >
                   <PostCard postInfo={item} />
                 </Grid>
               ))}
