@@ -28,10 +28,7 @@ const BlogPage = ({ params }: BlogPageProps) => {
         <title>{`${params.BlogUserId}'s Blog - Develogger`}</title>
       </Head>
       <div className={classes.root}>
-        <Paper
-          style={{ borderRadius: '10px', margin: '100px 30px 15px 30px' }}
-          elevation={3}
-        >
+        <Paper className={classes.paper} elevation={3}>
           <BlogProfile params={params} />
 
           <div className={classes.container}>
@@ -55,7 +52,7 @@ const BlogPage = ({ params }: BlogPageProps) => {
 export default BlogPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { query, req, params } = context;
+  const { params } = context;
 
   return {
     props: {
