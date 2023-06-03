@@ -1,110 +1,41 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import clsx from 'clsx';
+import React, { MouseEventHandler, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { MouseEventHandler, useState } from 'react';
-import { IAllPostInfoType } from 'types/AllPostInfoType';
-import dayjs from 'dayjs';
-import Link from 'next/link';
-import removeMD from 'remove-markdown';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import IconButton from '@material-ui/core/IconButton';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import { useRouter } from 'next/router';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import Typography from '@material-ui/core/Typography';
 import { Chip, Tooltip } from '@material-ui/core';
+
+import clsx from 'clsx';
+import dayjs from 'dayjs';
+import removeMD from 'remove-markdown';
+
+import { IAllPostInfoType } from 'types/AllPostInfoType';
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import { useStyles } from './PostCard.style';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      height: '100%',
-    },
-    media: {
-      height: 0,
-      paddingTop: '56.25%', // 16:9
-    },
-    expand: {
-      transform: 'rotate(0deg)',
-      marginLeft: 'auto',
-      transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-      }),
-    },
-    expandOpen: {
-      transform: 'rotate(180deg)',
-    },
-    avatar: {
-      backgroundColor: red[500],
-    },
-    cardHeaderTitle: {
-      padding: '4px 16px 4px 4px',
-      '& > .MuiCardHeader-avatar': {
-        marginRight: '4px',
-      },
-      '& > .MuiCardHeader-content': {
-        overflow: 'hidden',
-      },
-      '& > .MuiCardHeader-content > .MuiCardHeader-title': {
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        fontSize: '1rem',
-      },
-      '& > .MuiCardHeader-content > .MuiCardHeader-subheader': {
-        fontSize: '0.75rem',
-      },
-    },
-    postContent: {
-      '& > p': {
-        minHeight: '80px',
-        maxHeight: '150px',
-        overflow: 'hidden',
-        display: '-webkit-box',
-        WebkitLineClamp: 4,
-        WebkitBoxOrient: 'vertical',
-        color: `rgba(0, 0, 0, 0.8)`,
-      },
-      paddingBottom: '0px',
-      '& > .MuiTypography-caption': {
-        color: `rgba(0, 0, 0, 0.50)`,
-      },
-    },
-    actionIcons: {
-      '& > .actionIcon': {
-        padding: '8px',
-      },
-    },
-    tagList: {
-      display: 'flex',
-      justifyContent: 'flex-start',
-      flexWrap: 'wrap',
-      '& > *': {
-        marginRight: theme.spacing(0.5),
-        marginTop: theme.spacing(0.5),
-        marginBottom: theme.spacing(0.5),
-      },
-    },
-  })
-);
-interface Props {
+type PostCardProps = {
   postInfo: IAllPostInfoType;
-}
+};
 
-const PostCardList = ({ postInfo }: Props) => {
-  const router = useRouter();
-  const { data: myUserData } = useGetUsers();
+const PostCard = ({ postInfo }: PostCardProps) => {
   const classes = useStyles();
+  const router = useRouter();
+
   const [expanded, setExpanded] = useState(false);
+
+  const { data: myUserData } = useGetUsers();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -116,6 +47,7 @@ const PostCardList = ({ postInfo }: Props) => {
       router.push(`blog/${postInfo.User.loginID}`);
     }
   };
+
   return (
     <Card className={classes.root}>
       <Link
@@ -136,7 +68,6 @@ const PostCardList = ({ postInfo }: Props) => {
                   <Avatar
                     src={`${postInfo.User.avatarUrl || ''}`}
                     alt={`${postInfo.User.loginID || ''}`}
-                    // title={`${postInfo.User.loginID || ''}`}
                     aria-label="profile-image"
                     className={classes.avatar}
                   />
@@ -146,6 +77,7 @@ const PostCardList = ({ postInfo }: Props) => {
             title={`${postInfo.title}`}
             subheader={`${postInfo.User.loginID}`}
           />
+
           <CardActionArea title={`${postInfo.title}`}>
             <CardMedia
               className={classes.media}
@@ -168,6 +100,7 @@ const PostCardList = ({ postInfo }: Props) => {
           </CardActionArea>
         </a>
       </Link>
+
       <CardActions disableSpacing className={classes.actionIcons}>
         <IconButton aria-label="Like count" className="actionIcon">
           <ThumbUpIcon
@@ -180,9 +113,11 @@ const PostCardList = ({ postInfo }: Props) => {
             }
           />
         </IconButton>
+
         <span>
           {postInfo.LikeDisLike.filter((like) => like.actionType === 'Like').length}
         </span>
+
         <IconButton aria-label="DisLike count" className="actionIcon">
           <ThumbDownIcon
             color={
@@ -194,6 +129,7 @@ const PostCardList = ({ postInfo }: Props) => {
             }
           />
         </IconButton>
+
         <span>
           {
             postInfo.LikeDisLike.filter(
@@ -201,6 +137,7 @@ const PostCardList = ({ postInfo }: Props) => {
             ).length
           }
         </span>
+
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
@@ -212,6 +149,7 @@ const PostCardList = ({ postInfo }: Props) => {
           <ExpandMoreIcon />
         </IconButton>
       </CardActions>
+
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <div className={classes.tagList}>
@@ -234,4 +172,4 @@ const PostCardList = ({ postInfo }: Props) => {
   );
 };
 
-export default PostCardList;
+export default PostCard;
