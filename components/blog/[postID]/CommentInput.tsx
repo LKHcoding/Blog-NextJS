@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 
 import clsx from 'clsx';
 import toast from 'utils/toast';
-import { useImmer } from 'use-immer';
+import { useImmerRef } from 'use-immer-ref';
 import { useQueryClient } from '@tanstack/react-query';
 
 import githubLogin from 'utils/githubLogin';
@@ -21,7 +21,7 @@ import {
 const CommentInput = () => {
   const classes = useStyles();
   const router = useRouter();
-  const [state, setState] = useImmer({
+  const [state, setState] = useImmerRef({
     input: '',
   });
 

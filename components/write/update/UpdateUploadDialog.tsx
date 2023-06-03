@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,58 +7,35 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper, { PaperProps } from '@material-ui/core/Paper';
-import Draggable from 'react-draggable';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { createStyles, makeStyles } from '@material-ui/core';
+
+import Draggable from 'react-draggable';
 import { useQueryClient } from '@tanstack/react-query';
+
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import toast from 'utils/toast';
+import { useStyles } from './UpdateUploadDialog.style';
 import {
   getAllPostInfoApi,
   getOneUserPostInfoDataApi,
   getOneUserTagInfoDataApi,
   getPostInfoDataApi,
 } from 'utils/queryAPI';
-import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
-import toast from 'utils/toast';
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      '& .MuiDialog-paperWidthSm': {
-        maxWidth: '750px',
-      },
-      '& .MuiGrid-container': {
-        justifyContent: 'center',
-      },
-    },
-  })
-);
-
-function PaperComponent(props: PaperProps) {
-  return (
-    <Draggable
-      handle="#draggable-dialog-title"
-      cancel={'[class*="MuiDialogContent-root"]'}
-    >
-      <Paper {...props} />
-    </Draggable>
-  );
-}
-
-interface Props {
+type UpdateUploadDialogProps = {
   handleSave: (file: File[]) => Promise<'success' | undefined>;
   conditionSave: boolean;
   handleSaveWithOutThumbnail: () => Promise<'success' | undefined>;
   postId: number | null;
   isUpdate?: boolean;
-}
-
+};
 const UpdateUploadDialog = ({
   handleSave,
   conditionSave,
   handleSaveWithOutThumbnail,
   postId,
   isUpdate = false,
-}: Props) => {
+}: UpdateUploadDialogProps) => {
   const classes = useStyles();
 
   const queryClient = useQueryClient();
@@ -134,7 +112,7 @@ const UpdateUploadDialog = ({
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
       >
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+        <DialogTitle className={classes.dialogTitle} id="draggable-dialog-title">
           Thumbnail - Image
         </DialogTitle>
         <DialogContent>
@@ -156,14 +134,18 @@ const UpdateUploadDialog = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button style={{ width: '70px' }} onClick={handleClose} color="primary">
+          <Button
+            className={classes.cancelButton}
+            onClick={handleClose}
+            color="primary"
+          >
             취소
           </Button>
 
           {isUpdate && (
             <Button
+              className={classes.noChangeButton}
               disabled={canSave}
-              style={{ width: '90px' }}
               onClick={handleUploadWithOutThumbnail}
               variant="outlined"
               color="primary"
@@ -174,7 +156,7 @@ const UpdateUploadDialog = ({
           <Button
             disabled={!canSave}
             autoFocus
-            style={{ width: '70px' }}
+            className={classes.completeButton}
             variant="outlined"
             onClick={handleUpload}
             color="primary"
@@ -188,3 +170,14 @@ const UpdateUploadDialog = ({
 };
 
 export default UpdateUploadDialog;
+
+function PaperComponent(props: PaperProps) {
+  return (
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
+      <Paper {...props} />
+    </Draggable>
+  );
+}

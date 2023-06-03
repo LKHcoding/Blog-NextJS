@@ -1,3 +1,10 @@
+import React, { useEffect, useState } from 'react';
+import { GetServerSideProps } from 'next';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import {
   Avatar,
   Badge,
@@ -8,43 +15,40 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { GetServerSideProps } from 'next';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import removeMD from 'remove-markdown';
 import {
   dehydrate,
   QueryClient,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+
+import ActionButton from 'components/common/ActionButton';
+import BottomProfile from 'components/blog/[postID]/BottomProfile';
+import CommentInput from 'components/blog/[postID]/CommentInput';
+import CommentList from 'components/blog/[postID]/CommentList';
+import ConfirmDialog from 'components/common/ConfirmDialog';
+import CustomHeader from 'components/common/SEO/CustomHeader';
 import MarkDownContents from 'components/blog/[postID]/MarkDownContents';
 import Toc from 'components/blog/[postID]/Toc';
-import ActionButton from 'components/common/ActionButton';
 import UpdateDialog from 'components/write/update/UpdateDialog';
+import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
+import {
+  getBlogCommentPostId,
+  getGetBlogCommentPostIdQueryKey,
+} from 'stores/remoteStore/endpoints/blog/blog';
+
+import toast from 'utils/toast';
+import { useStyles } from './[postId].style';
 import {
   getAllPostInfoApi,
   getOneUserDataApi,
   getOneUserPostInfoDataApi,
   getPostInfoDataApi,
 } from 'utils/queryAPI';
-import ConfirmDialog from 'components/common/ConfirmDialog';
-import CustomHeader from 'components/common/SEO/CustomHeader';
-import removeMD from 'remove-markdown';
-import BottomProfile from 'components/blog/[postID]/BottomProfile';
-import CommentList from 'components/blog/[postID]/CommentList';
-import {
-  getBlogCommentPostId,
-  getGetBlogCommentPostIdQueryKey,
-} from 'stores/remoteStore/endpoints/blog/blog';
-import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
-import CommentInput from 'components/blog/[postID]/CommentInput';
-import toast from 'utils/toast';
-import { useStyles } from './[postId].style';
 
 type PostProps = {
   params: { BlogUserId: string; postId: string; tag?: string };

@@ -5,8 +5,6 @@ import React, {
   Ref,
   useCallback,
   useEffect,
-  useRef,
-  useState,
 } from 'react';
 import dynamic from 'next/dynamic';
 
@@ -20,18 +18,18 @@ import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { TransitionProps } from '@material-ui/core/transitions';
 
 import axios from 'axios';
 import gfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import { useQuery } from '@tanstack/react-query';
+import { useImmerRef } from 'use-immer-ref';
 import {
   NormalComponents,
   SpecialComponents,
 } from 'react-markdown/src/ast-to-react';
-import { useQuery } from '@tanstack/react-query';
 
 import 'react-markdown-editor-lite/lib/index.css';
 
@@ -47,9 +45,9 @@ import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import UpdateUploadDialog from './UpdateUploadDialog';
-import useInput from 'hooks/useInput';
 import { getAllTagInfoApi } from 'utils/queryAPI';
 import { IPostInfoType } from 'types/PostInfoType';
+import { useStyles } from './UpdateDialog.style';
 
 SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('css', css);
@@ -63,26 +61,6 @@ SyntaxHighlighter.registerLanguage('typescript', ts);
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
   ssr: false,
 });
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    appBar: {
-      position: 'relative',
-    },
-    title: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
-    },
-    button: {
-      margin: theme.spacing(1),
-      display: 'none',
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-        margin: theme.spacing(1),
-      },
-    },
-  })
-);
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children?: ReactElement },
@@ -98,51 +76,40 @@ const initialEditorInput = `
 
 `;
 
-interface Props {
+type UpdateDialogProps = {
   updateDialogOpen: boolean;
   setUpdateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   postData: IPostInfoType | undefined;
-}
+};
 
-const UpdateDialog: FC<Props> = ({
+const UpdateDialog: FC<UpdateDialogProps> = ({
   updateDialogOpen: open,
   setUpdateDialogOpen: setOpen,
   postData,
 }) => {
-  // Tag data 가져오기
+  const classes = useStyles();
+
   const { data, refetch, isFetching } = useQuery(
     [getAllTagInfoApi.key],
     getAllTagInfoApi.apiCall
   );
 
-  //글 내용
-  const [contentInput, setContentInput] = useState<string>('');
+  const [state, setState, ref] = useImmerRef({
+    // 내용
+    contentInput: '',
+    // 제목
+    inputTitle: '',
+    // 모든 태그 리스트
+    tagValues: [] as string[],
+    //선택된 태그 값
+    selectedTagList: [] as string[],
+    //태그 관련
+    tagListOpen: false,
+    //선택된 태그가 있는지 없는지 여부
+    selectedTagInfo: false,
+  });
 
-  //글 제목
-  const [inputTitle, onChangeInputTitle, setInputTitle] = useInput('');
-
-  //모든 태그 리스트
-  const [tagValues, setTagValues] = useState<string[]>([]);
-
-  //선택된 태그 값
-  const selectedTagList = useRef<string[]>();
-
-  //태그 관련
-  const [tagListOpen, setTagListOpen] = useState(false);
-  // const [options, setOptions] = React.useState([]);
-  // const loading = true;
-  // const loading = tagListOpen && tagValues.length === 0;
   const loading = isFetching;
-
-  //선택된 태그가 있는지 없는지 여부
-  const [selectedTagInfo, setSelectedTagInfo] = useState(false);
-
-  const classes = useStyles();
-  // const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -166,9 +133,9 @@ const UpdateDialog: FC<Props> = ({
             `${process.env.NEXT_PUBLIC_API_URL}/v1/blog/update-post`,
             {
               id: postData.id,
-              title: inputTitle,
-              tags: selectedTagList.current,
-              content: contentInput,
+              title: state.inputTitle,
+              tags: ref.current.selectedTagList,
+              content: state.contentInput,
               thumbnail: imagePath,
               prevThumbnail: postData.thumbnail,
             },
@@ -178,15 +145,17 @@ const UpdateDialog: FC<Props> = ({
           .catch((err) => err);
 
         if (result.status === 201) {
-          setInputTitle('');
-          setContentInput(initialEditorInput);
+          setState((dr) => {
+            dr.inputTitle = '';
+            dr.contentInput = initialEditorInput;
+          });
           refetch();
           setOpen(false);
           return 'success';
         }
       }
     },
-    [inputTitle, selectedTagList.current, contentInput]
+    [state.inputTitle, ref.current.selectedTagList, state.contentInput]
   );
 
   // 썸네일 변경 없이 글 수정하기
@@ -197,9 +166,9 @@ const UpdateDialog: FC<Props> = ({
           `${process.env.NEXT_PUBLIC_API_URL}/v1/blog/update-post`,
           {
             id: postData.id,
-            title: inputTitle,
-            tags: selectedTagList.current,
-            content: contentInput,
+            title: state.inputTitle,
+            tags: ref.current.selectedTagList,
+            content: state.contentInput,
             thumbnail: postData.thumbnail,
             prevThumbnail: '',
           },
@@ -209,8 +178,10 @@ const UpdateDialog: FC<Props> = ({
         .catch((err) => err);
 
       if (result.status === 201) {
-        setInputTitle('');
-        setContentInput(initialEditorInput);
+        setState((dr) => {
+          dr.inputTitle = '';
+          dr.contentInput = initialEditorInput;
+        });
         refetch();
         setOpen(false);
         return 'success';
@@ -220,41 +191,53 @@ const UpdateDialog: FC<Props> = ({
 
   useEffect(() => {
     if (data) {
-      setTagValues(data.map((item) => item.tagName));
+      setState((dr) => {
+        dr.tagValues = data.map((item) => item.tagName);
+      });
     }
     return () => {
-      setTagValues([]);
-      setInputTitle('');
+      setState((dr) => {
+        dr.inputTitle = '';
+        dr.tagValues = [];
+      });
     };
   }, [data]);
 
   useEffect(() => {
-    /**
-     * 글 수정하는곳은 닫았다가 열때마다 다시 원래 데이터를 채워넣어준다.
-     */
+    // 글 수정하는곳은 닫았다가 열때마다 다시 원래 데이터를 채워넣어준다.
     if (postData) {
-      setInputTitle(postData.title);
-      setContentInput(postData.content);
-      selectedTagList.current = postData.Tags.map((item) => item.tagName);
+      setState((dr) => {
+        dr.inputTitle = postData.title;
+        dr.contentInput = postData.content;
+        dr.selectedTagList = postData.Tags.map((item) => item.tagName);
+      });
     }
     return () => {
-      setInputTitle('');
-      setContentInput(initialEditorInput);
-      selectedTagList.current = [];
+      setState((dr) => {
+        dr.inputTitle = '';
+        dr.contentInput = initialEditorInput;
+        dr.selectedTagList = [];
+      });
     };
   }, [open, postData]);
 
   useEffect(() => {
     // 글 수정시에는 바로 데이터가 들어오므로 useEffect에서 save버튼 활성화를 컨트롤해준다.
-    if (selectedTagList.current && selectedTagList.current.length > 0) {
-      setSelectedTagInfo(true);
+    if (ref.current.selectedTagList && ref.current.selectedTagList.length > 0) {
+      setState((dr) => {
+        dr.selectedTagInfo = true;
+      });
     } else {
-      setSelectedTagInfo(false);
+      setState((dr) => {
+        dr.selectedTagInfo = false;
+      });
     }
     return () => {
-      setSelectedTagInfo(false);
+      setState((dr) => {
+        dr.selectedTagInfo = false;
+      });
     };
-  }, [selectedTagList.current]);
+  }, [ref.current.selectedTagList]);
 
   return (
     <div>
@@ -278,9 +261,9 @@ const UpdateDialog: FC<Props> = ({
             <Typography variant="h6" className={classes.title}>
               글 수정
             </Typography>
-            <div style={{ marginRight: '5px' }}>
-              {contentInput.length > 65535
-                ? `글자수 초과(현재:${contentInput.length}, 최대:65535) `
+            <div className={classes.exceedLength}>
+              {state.contentInput.length > 65535
+                ? `글자수 초과(현재:${state.contentInput.length}, 최대:65535) `
                 : ''}
             </div>
             <UpdateUploadDialog
@@ -289,63 +272,61 @@ const UpdateDialog: FC<Props> = ({
               handleSaveWithOutThumbnail={handleSaveWithOutThumbnail}
               postId={postData?.id || null}
               conditionSave={
-                contentInput.length > 65535 ||
-                contentInput.length === 0 ||
-                inputTitle.length === 0 ||
-                !selectedTagInfo
+                state.contentInput.length > 65535 ||
+                state.contentInput.length === 0 ||
+                state.inputTitle.length === 0 ||
+                !state.selectedTagInfo
               }
-              // conditionSave={true}
             />
-            {/* <Button autoFocus color="inherit" onClick={handleSave}>
-              save
-            </Button> */}
           </Toolbar>
         </AppBar>
 
         {/* 에디터 시작 */}
-        <div style={{ display: 'flex', width: '100%' }}>
+        <div className={classes.editorContainer}>
           <TextField
             id="standard-basic"
             label="글 제목"
-            value={inputTitle}
-            onChange={onChangeInputTitle}
-            style={{
-              width: '50%',
-              marginBottom: '8px',
-              marginTop: '10px',
-              marginLeft: '10px',
-              marginRight: '10px',
-            }}
+            value={state.inputTitle}
+            onChange={(e) =>
+              setState((dr) => {
+                dr.inputTitle = e.target.value;
+              })
+            }
+            className={classes.textField}
           />
 
           <Autocomplete
-            style={{
-              width: '50%',
-              marginTop: '13px',
-              marginLeft: '10px',
-              marginRight: '10px',
-            }}
+            className={classes.autoComplete}
             id="size-small-standard-multi"
-            open={tagListOpen}
+            open={state.tagListOpen}
             onOpen={() => {
-              setTagListOpen(true);
+              setState((dr) => {
+                dr.tagListOpen = true;
+              });
             }}
             onClose={() => {
-              setTagListOpen(false);
+              setState((dr) => {
+                dr.tagListOpen = false;
+              });
             }}
-            // getOptionSelected={(option, value) => option.name === value.name}
             defaultValue={postData ? postData.Tags.map((item) => item.tagName) : []}
             getOptionLabel={(option) => option}
-            options={tagValues}
+            options={state.tagValues}
             loading={loading}
             multiple
             size="small"
             onChange={(event, value) => {
-              selectedTagList.current = value;
+              setState((dr) => {
+                dr.selectedTagList = value;
+              });
               if (value.length > 0) {
-                setSelectedTagInfo(true);
+                setState((dr) => {
+                  dr.selectedTagInfo = true;
+                });
               } else {
-                setSelectedTagInfo(false);
+                setState((dr) => {
+                  dr.selectedTagInfo = false;
+                });
               }
             }}
             autoComplete={true}
@@ -375,8 +356,11 @@ const UpdateDialog: FC<Props> = ({
         </div>
 
         <MdEditor
+          /* FIXME: kunhee.lim
+           *  MdEditor 컴포넌트가 className 속성을 줄 수 없음
+           *  인라인 스타일 말고 다른 방법을 찾아볼 것 */
           style={{ height: '100%', zIndex: 1101 }}
-          value={contentInput}
+          value={state.contentInput}
           renderHTML={(text) => (
             <ReactMarkdown
               className="markdown-body"
@@ -388,7 +372,9 @@ const UpdateDialog: FC<Props> = ({
             </ReactMarkdown>
           )}
           onChange={({ html, text }) => {
-            setContentInput(text);
+            setState((dr) => {
+              dr.contentInput = text;
+            });
           }}
         />
       </Dialog>
@@ -402,13 +388,7 @@ const components: Partial<NormalComponents & SpecialComponents> = {
   code({ node, inline, className, children, ...props }) {
     const match = /language-(\w+)/.exec(className || '');
     return !inline && match ? (
-      <SyntaxHighlighter
-        style={prism}
-        language={match[1]}
-        PreTag="div"
-        // children={String(children).replace(/\n$/, '')}
-        {...props}
-      >
+      <SyntaxHighlighter style={prism} language={match[1]} PreTag="div" {...props}>
         {String(children).replace(/\n$/, '')}{' '}
       </SyntaxHighlighter>
     ) : (
