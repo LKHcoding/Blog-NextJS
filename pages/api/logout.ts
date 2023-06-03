@@ -1,38 +1,11 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import cookie from 'cookie';
-import axios from 'axios';
 
 type Data = {
   data?: string;
   error?: string;
 };
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  // const { data } = req.body;
-  // console.log(data);
-
-  // const result = await axios
-  //   .post(
-  //     `${process.env.API_URL}/v1/auth/logout`,
-  //     {},
-  //     {
-  //       withCredentials: true,
-  //       headers: {
-  //         Cookie: `Authentication=${req.cookies?.Authentication || ''}`,
-  //       },
-  //     }
-  //   )
-  //   .then((response) => {
-  //     // console.log('response : ', response.data);
-  //     return response.data;
-  //   })
-  //   .catch((error) => {
-  //     console.log(error.message);
-  //     return error.message;
-  //     // setLogInError(error.response?.data?.statusCode === 401);
-  //   });
-
-  // if (result?.data) {
   res.setHeader(
     'Set-Cookie',
     cookie.serialize('Authentication', '', {
@@ -53,7 +26,4 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     })
   );
   res.status(200).json({ data: '로그아웃 성공' });
-  // } else {
-  //   res.status(401).json({ data: 'logout 실패' });
-  // }
 };
