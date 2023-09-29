@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
-import { useStyles } from './[loginID].style';
+import { useStyles } from 'components/profile/[loginID].style';
 
 const Profile: FC = () => {
   const router = useRouter();

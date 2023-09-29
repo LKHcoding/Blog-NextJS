@@ -42,7 +42,7 @@ import {
 } from 'stores/remoteStore/endpoints/blog/blog';
 
 import toast from 'utils/toast';
-import { useStyles } from './[postId].style';
+import { useStyles } from 'components/blog/[postID]/[postId].style';
 import {
   getAllPostInfoApi,
   getOneUserDataApi,

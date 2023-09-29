@@ -6,7 +6,7 @@ import React from 'react';
 import BlogProfile from 'components/blog/BlogProfile';
 import PostList from 'components/blog/PostList';
 import TagList from 'components/blog/TagList';
-import { useStyles } from './[BlogUserId].style';
+import { useStyles } from 'components/blog/[BlogUserId].style';
 
 type BlogPageProps = {
   params: {

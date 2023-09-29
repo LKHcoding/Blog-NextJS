@@ -9,7 +9,7 @@ import axios from 'axios';
 import SelectModal from 'components/github-login/SelectModal';
 import toast from 'utils/toast';
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
-import { useStyles } from './github-login.style';
+import { useStyles } from 'components/github-login/github-login.style';
 
 const githubLogin = () => {
   const classes = useStyles();

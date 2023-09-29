@@ -21,7 +21,7 @@ import githubLogin from 'utils/githubLogin';
 import toast from 'utils/toast';
 import useInput from 'hooks/useInput';
 import { useGetUsers } from 'stores/remoteStore/endpoints/user/user';
-import { useStyles } from './login.style';
+import { useStyles } from 'components/login/login.style';
 
 const LogIn = () => {
   const classes = useStyles();
