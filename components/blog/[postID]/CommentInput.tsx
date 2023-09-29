@@ -75,16 +75,6 @@ const CommentInput = () => {
         }}
         disabled={!isLoggedIn}
         className={clsx(classes.root, !isLoggedIn && classes.unAuthedContainer)}
-        onClick={() => {
-          if (!isLoggedIn) {
-            githubLogin({
-              post: {
-                blogUserId,
-                postId,
-              },
-            });
-          }
-        }}
         label={
           isLoggedIn
             ? '새로운 댓글'
@@ -107,6 +97,20 @@ const CommentInput = () => {
           댓글 작성
         </Button>
       </div>
+
+      {!isLoggedIn && (
+        <div
+          className={clsx(classes.textFieldCover)}
+          onClick={() => {
+            githubLogin({
+              post: {
+                blogUserId,
+                postId,
+              },
+            });
+          }}
+        />
+      )}
     </div>
   );
 };
