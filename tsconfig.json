@@ -18,6 +18,7 @@
     // highly recommended (required by few utilities)
     "strictNullChecks": true,
     "baseUrl": ".",
+    "incremental": true,
     "paths": {
       "components/*": ["components/*"],
       "hooks/*": ["hooks/*"],

@@ -8,8 +8,12 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = withBundleAnalyzer({
   compress: process.env.NODE_ENV === 'production',
-  future: {
-    webpack5: true,
+  swcMinify: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
   webpack(config) {
     let isProd = process.env.NODE_ENV === 'production';

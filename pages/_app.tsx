@@ -6,7 +6,12 @@ import 'dayjs/locale/ko';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
-import { QueryClient, QueryClientProvider, Hydrate } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  Hydrate,
+  DehydratedState,
+} from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,7 +24,10 @@ import toast from 'utils/toast';
 
 dayjs.locale('ko');
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({
+  Component,
+  pageProps,
+}: AppProps<{ dehydratedState: DehydratedState }>) {
   const [queryClient] = React.useState(
     () =>
       new QueryClient({
