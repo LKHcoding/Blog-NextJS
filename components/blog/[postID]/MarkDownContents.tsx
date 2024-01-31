@@ -36,6 +36,15 @@ const components: Partial<NormalComponents & SpecialComponents> = {
   a(props) {
     const children = props?.children;
     const href = props?.href;
+    const target = props?.target;
+
+    if (target) {
+      return (
+        <a href={`${href}`} target={`${target}`} rel="noreferrer">
+          {children}
+        </a>
+      );
+    }
 
     return (
       <a href={`${href}`} target="_blank" rel="noreferrer">
